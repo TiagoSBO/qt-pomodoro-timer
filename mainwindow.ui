@@ -29,7 +29,7 @@
     <property name="frameShadow">
      <enum>QFrame::Shadow::Raised</enum>
     </property>
-    <widget class="QPushButton" name="b_config">
+    <widget class="QPushButton" name="button_settings">
      <property name="geometry">
       <rect>
        <x>0</x>
@@ -38,8 +38,18 @@
        <height>41</height>
       </rect>
      </property>
+     <property name="autoFillBackground">
+      <bool>false</bool>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: rgb(255, 255, 255);</string>
+     </property>
      <property name="text">
-      <string>x</string>
+      <string/>
+     </property>
+     <property name="icon">
+      <iconset>
+       <normaloff>assets/btton_setting.png</normaloff>assets/btton_setting.png</iconset>
      </property>
     </widget>
     <widget class="QLabel" name="labelTimer">
@@ -63,7 +73,7 @@
       <set>Qt::AlignmentFlag::AlignCenter</set>
      </property>
     </widget>
-    <widget class="QPushButton" name="b_startResume">
+    <widget class="QPushButton" name="button_startResume">
      <property name="geometry">
       <rect>
        <x>40</x>
@@ -76,7 +86,7 @@
       <string>Start</string>
      </property>
     </widget>
-    <widget class="QPushButton" name="b_stopDone">
+    <widget class="QPushButton" name="button_stopDone">
      <property name="geometry">
       <rect>
        <x>230</x>

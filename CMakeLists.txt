@@ -12,7 +12,10 @@ qt_add_executable(pomodoro_timer
     main.cpp        # Arquivo no diretório src/
     timer.cpp       # Arquivo no diretório src/
     timer.h             # Arquivo na raiz
-    mainwindow.ui       # Arquivo na raiz
+    mainwindow.ui
+    assets/btton_setting.png
+    settings.h settings.cpp settings.ui
+    # Arquivo na raiz
 )
 
 target_link_libraries(pomodoro_timer

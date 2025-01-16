@@ -1,5 +1,6 @@
 #include "timer.h"
 #include "ui_mainwindow.h"
+#include "settings.h"
 #include <QDebug>
 #include <QString>
 #include <QChar>
@@ -15,8 +16,10 @@ MainWindow::MainWindow(QWidget *parent)
     timer = new QTimer(this);
     connect(timer, &QTimer::timeout, this, &MainWindow::updateTimer);
 
-    connect(ui->b_startResume, &QPushButton::clicked, this, &MainWindow::btton_startResume_clicked);
-    connect(ui->b_stopDone, &QPushButton::clicked, this, &MainWindow::btton_stopDone_clicked);
+    connect(ui->button_settings, &QPushButton::clicked, this, &MainWindow::btton_settings_clicked);
+    connect(ui->button_startResume, &QPushButton::clicked, this, &MainWindow::btton_startResume_clicked);
+    connect(ui->button_stopDone, &QPushButton::clicked, this, &MainWindow::btton_stopDone_clicked);
+
 }
 
 MainWindow::~MainWindow()
@@ -39,7 +42,7 @@ void MainWindow::updateTimer()
         if (initialSeconds == 25 * 60){
             timer->stop();
             currentStatusTimer = FINISHED;
-            ui->b_startResume->setText("Start");
+            ui->button_startResume->setText("Start");
         }
     }
 }
@@ -49,31 +52,31 @@ void MainWindow::btton_startResume_clicked()
     if (currentStatusTimer == IDLE || currentStatusTimer == PAUSED){
         timer->start(1000);
         currentStatusTimer = RUNNING;
-        ui->b_startResume->setText("Pause");
+        ui->button_startResume->setText("Pause");
     }else if(currentStatusTimer == RUNNING){
         timer->stop();
         currentStatusTimer = PAUSED;
-        ui->b_startResume->setText("Resume");
+        ui->button_startResume->setText("Resume");
     }
-
 }
 
 void MainWindow::btton_stopDone_clicked()
 {
-    if (currentStatusTimer == RUNNING){
+    if (currentStatusTimer == RUNNING || PAUSED){
         timer->stop();
         currentStatusTimer = IDLE;
         initialSeconds = 0;
         ui->labelTimer->setText("00:00");
-        ui->b_startResume->setText("Start");
+        ui->button_startResume->setText("Start");
     }
 
     //QUando pausado -> setText("Done");
 }
 
-
-
-
-
+void MainWindow::btton_settings_clicked()
+{
+    Settings settingsScreen;
+    settingsScreen.exec();
+}
 
 

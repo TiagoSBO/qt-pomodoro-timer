@@ -29,6 +29,7 @@ private slots:
     void updateTimer();
     void btton_startResume_clicked();
     void btton_stopDone_clicked();
+    void btton_settings_clicked();
 
 private:
     Ui::MainWindow *ui;
