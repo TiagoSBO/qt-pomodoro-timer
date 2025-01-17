@@ -1,6 +1,6 @@
 #include "timer.h"
 #include "ui_mainwindow.h"
-#include "settings.h"
+#include "settingsdialog.h"
 #include <QDebug>
 #include <QString>
 #include <QChar>
@@ -9,12 +9,15 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
     , currentStatusTimer(IDLE)
-    , initialSeconds(0)
+    , initialSeconds(0) //BOXTIMEDURATION
 {
     ui->setupUi(this);
 
+    Settings *settings = new Settings(this);
+    // connect(settings, &Settings::valueChanged, this, &MainWindow::UpdateTimer)
+
     timer = new QTimer(this);
-    connect(timer, &QTimer::timeout, this, &MainWindow::updateTimer);
+    connect(timer, &QTimer::timeout, this, &MainWindow::defaultTimerFocus);
 
     connect(ui->button_settings, &QPushButton::clicked, this, &MainWindow::btton_settings_clicked);
     connect(ui->button_startResume, &QPushButton::clicked, this, &MainWindow::btton_startResume_clicked);
@@ -27,7 +30,7 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::updateTimer()
+void MainWindow::defaultTimerFocus()
 {
     if (currentStatusTimer == RUNNING){
         initialSeconds++;
@@ -47,6 +50,7 @@ void MainWindow::updateTimer()
     }
 }
 
+//TO-DO LATER = REFACTOR
 void MainWindow::btton_startResume_clicked()
 {
     if (currentStatusTimer == IDLE || currentStatusTimer == PAUSED){
@@ -57,9 +61,11 @@ void MainWindow::btton_startResume_clicked()
         timer->stop();
         currentStatusTimer = PAUSED;
         ui->button_startResume->setText("Resume");
+        ui->button_stopDone->setText("Done");
     }
 }
 
+//TO-DO LATER = REFACTOR
 void MainWindow::btton_stopDone_clicked()
 {
     if (currentStatusTimer == RUNNING || PAUSED){
@@ -69,8 +75,6 @@ void MainWindow::btton_stopDone_clicked()
         ui->labelTimer->setText("00:00");
         ui->button_startResume->setText("Start");
     }
-
-    //QUando pausado -> setText("Done");
 }
 
 void MainWindow::btton_settings_clicked()

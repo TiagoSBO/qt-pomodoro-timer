@@ -14,7 +14,7 @@ qt_add_executable(pomodoro_timer
     timer.h             # Arquivo na raiz
     mainwindow.ui
     assets/btton_setting.png
-    settings.h settings.cpp settings.ui
+    settingsdialog.h settingsdialog.cpp settingsdialog.ui
     # Arquivo na raiz
 )
 
