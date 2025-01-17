@@ -1,5 +1,5 @@
-#ifndef SETTINGS_H
-#define SETTINGS_H
+#ifndef SETTINGSDIALOG_H
+#define SETTINGSDIALOG_H
 
 #include <QDialog>
 
@@ -15,8 +15,14 @@ public:
     explicit Settings(QWidget *parent = nullptr);
     ~Settings();
 
+signals:
+    void valueChanged(int timeValue);
+
+private slots:
+    void emitTimeChanged();
+
 private:
     Ui::Settings *ui;
 };
 
-#endif // SETTINGS_H
+#endif // SETTINGSDIALOG_H
