@@ -7,8 +7,7 @@ namespace Ui {
 class Settings;
 }
 
-class Settings : public QDialog
-{
+class Settings : public QWidget {
     Q_OBJECT
 
 public:
@@ -16,7 +15,7 @@ public:
     ~Settings();
 
 signals:
-    void valueChanged(int timeValue);
+    void valueChanged(int newValue);
 
 private slots:
     void emitTimeChanged();
@@ -26,3 +25,4 @@ private:
 };
 
 #endif // SETTINGSDIALOG_H
+
