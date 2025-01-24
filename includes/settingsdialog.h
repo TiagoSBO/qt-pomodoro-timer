@@ -16,7 +16,7 @@ public:
     ~Settings();
 
 signals:
-    void valueChanged(int timeValue);
+    void valueChanged(int newValue);
 
 private slots:
     void emitTimeChanged();

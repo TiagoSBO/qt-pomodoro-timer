@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>453</width>
-    <height>203</height>
+    <width>460</width>
+    <height>322</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -35,17 +35,17 @@
       <attribute name="title">
        <string>Timer</string>
       </attribute>
-      <widget class="QSpinBox" name="boxTimerDuration">
+      <widget class="QSpinBox" name="boxSetTimerDuration">
        <property name="geometry">
         <rect>
-         <x>200</x>
+         <x>270</x>
          <y>40</y>
          <width>161</width>
          <height>31</height>
         </rect>
        </property>
       </widget>
-      <widget class="QLabel" name="labelTimerDuration">
+      <widget class="QLabel" name="label_TimerDuration">
        <property name="geometry">
         <rect>
          <x>10</x>
@@ -62,6 +62,93 @@
        </property>
        <property name="text">
         <string>Pomodoro duration:</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_shortBreakDuration">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>90</y>
+         <width>211</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>Short break duration:</string>
+       </property>
+      </widget>
+      <widget class="QSpinBox" name="boxSetShortduration">
+       <property name="geometry">
+        <rect>
+         <x>270</x>
+         <y>90</y>
+         <width>161</width>
+         <height>31</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_breakDuration">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>140</y>
+         <width>211</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>Long break duration:</string>
+       </property>
+      </widget>
+      <widget class="QSpinBox" name="boxSetLongDuration">
+       <property name="geometry">
+        <rect>
+         <x>270</x>
+         <y>140</y>
+         <width>161</width>
+         <height>31</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_longBreakDelay">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>190</y>
+         <width>211</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>Long break delay:</string>
+       </property>
+      </widget>
+      <widget class="QSpinBox" name="boxSetDelayDuration">
+       <property name="geometry">
+        <rect>
+         <x>270</x>
+         <y>190</y>
+         <width>161</width>
+         <height>31</height>
+        </rect>
        </property>
       </widget>
      </widget>

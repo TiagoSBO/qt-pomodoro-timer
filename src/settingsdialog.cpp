@@ -7,7 +7,7 @@ Settings::Settings(QWidget *parent)
 {
     ui->setupUi(this);
 
-    connect(ui->boxTimerDuration, QOverload<int>::of(&QSpinBox::valueChanged), this, &Settings::emitTimeChanged);
+    connect(ui->boxSetTimerDuration, QOverload<int>::of(&QSpinBox::valueChanged), this, &Settings::emitTimeChanged);
 }
 
 Settings::~Settings()
@@ -17,7 +17,7 @@ Settings::~Settings()
 
 void Settings::emitTimeChanged()
 {
-    emit valueChanged(ui->boxTimerDuration->value());
+    emit valueChanged(ui->boxSetTimerDuration->value());
 }
 
 

@@ -30,20 +30,16 @@ private slots:
     void btton_startResume_clicked();
     void btton_stopDone_clicked();
     void btton_settings_clicked();
+    void updateTimeValue(int newTime);
 
 private:
     Ui::MainWindow *ui;
     QTimer *timer;
 
     TimerState currentStatusTimer;
+
     int initialSeconds;
-
-
-    // void startTimer();
-    // void pauseTimer();
-    // void resetTimer();
-    // void incrementTimer();
-    // void updateLabel();
-    // bool isTimerStopped() const;
+    int customDuration;
+    int timeRemaining;
 };
 #endif // TIMER_H
