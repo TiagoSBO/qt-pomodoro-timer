@@ -1,27 +1,36 @@
 cmake_minimum_required(VERSION 3.19)
 project(pomodoro_timer LANGUAGES CXX)
 
+# Configuração básica do CMake
 set(CMAKE_AUTOUIC ON)
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTORCC ON)
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
+set(CMAKE_AUTOUIC_SEARCH_PATHS ${CMAKE_CURRENT_SOURCE_DIR}/ui)
 
 find_package(Qt6 6.5 REQUIRED COMPONENTS Core Widgets)
 
-qt_standard_project_setup()
-
 qt_add_executable(pomodoro_timer
     WIN32 MACOSX_BUNDLE
-    main.cpp        # Arquivo no diretório src/
-    timer.cpp       # Arquivo no diretório src/
-    timer.h             # Arquivo na raiz
-    mainwindow.ui
+    src/main.cpp
+    src/timer.cpp
+    src/settingsdialog.cpp
+    includes/timer.h
+    includes/settingsdialog.h
+    ui/mainwindow.ui
+    ui/settingsdialog.ui
     assets/btton_setting.png
-    settingsdialog.h settingsdialog.cpp settingsdialog.ui
-    # Arquivo na raiz
+)
+
+
+# Diretórios de inclusão
+target_include_directories(pomodoro_timer
+    PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}/includes  # Inclui a pasta includes/
 )
 
 target_link_libraries(pomodoro_timer
-    PRIVATE
-        Qt::Core
-        Qt::Widgets
+    PRIVATE Qt::Core Qt::Widgets
 )
 
 include(GNUInstallDirs)
