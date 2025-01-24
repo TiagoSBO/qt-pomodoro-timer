@@ -9,13 +9,16 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
     , currentStatusTimer(IDLE)
-    , customDuration(25)
-    , timeRemaining(customDuration * 60)
+    , defaultPomodoroDuration(25)
+    , defaultShortBreakDuration(5)
+    , defaultLongBreakDuration(15)
+    , defaultSessionsLongBreak(4)
+    , timeRemaining(defaultPomodoroDuration * 60)
 {
     ui->setupUi(this);
 
     ui->labelTimer->setText(QString("%1:%2")
-        .arg(customDuration, 2, 10, QChar('0'))
+        .arg(defaultPomodoroDuration, 2, 10, QChar('0'))
         .arg(0, 2, 10, QChar('0')));
 
     Settings *settings = new Settings(this);
@@ -66,7 +69,7 @@ void MainWindow::btton_startResume_clicked()
     if (currentStatusTimer == IDLE || currentStatusTimer == PAUSED) {
         if (currentStatusTimer == IDLE) {
             // Configura o tempo restante no início (em segundos)
-            timeRemaining = customDuration * 60;
+            timeRemaining = defaultPomodoroDuration * 60;
         }
 
         timer->start(1000); // Começa a contagem decrescente
@@ -89,12 +92,12 @@ void MainWindow::btton_stopDone_clicked()
         timer->stop();
         currentStatusTimer = IDLE; // Reseta o status do temporizador
 
-        // Reinicia o tempo restante com base no valor inicial (customDuration)
-        timeRemaining = customDuration * 60;
+        // Reinicia o tempo restante com base no valor inicial (defaultPomodoroDuration)
+        timeRemaining = defaultPomodoroDuration * 60;
 
         // Atualiza o rótulo do temporizador no formato "MM:SS"
         ui->labelTimer->setText(QString("%1:%2")
-            .arg(customDuration, 2, 10, QChar('0'))
+            .arg(defaultPomodoroDuration, 2, 10, QChar('0'))
             .arg(0, 2, 10, QChar('0')));
 
         ui->button_startResume->setText("Start");
@@ -110,12 +113,12 @@ void MainWindow::btton_settings_clicked()
 
 void MainWindow::updateTimeValue(int newTime)
 {
-    customDuration = newTime; // Atualiza a duração em minutos
-    timeRemaining = customDuration * 60; // Atualiza o tempo restante
+    defaultPomodoroDuration = newTime; // Atualiza a duração em minutos
+    timeRemaining = defaultPomodoroDuration * 60; // Atualiza o tempo restante
 
     // Atualiza o rótulo do temporizador com o novo valor
     ui->labelTimer->setText(QString("%1:%2")
-        .arg(customDuration, 2, 10, QChar('0'))
+        .arg(defaultPomodoroDuration, 2, 10, QChar('0'))
         .arg(0, 2, 10, QChar('0')));
 }
 

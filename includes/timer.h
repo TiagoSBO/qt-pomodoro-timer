@@ -25,6 +25,7 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+
 private slots:
     void defaultTimerFocus();
     void btton_startResume_clicked();
@@ -38,8 +39,11 @@ private:
 
     TimerState currentStatusTimer;
 
-    int initialSeconds;
-    int customDuration;
+    int defaultPomodoroDuration;
+    int defaultShortBreakDuration;
+    int defaultLongBreakDuration;
+    int defaultSessionsLongBreak;
+
     int timeRemaining;
 };
 #endif // TIMER_H
