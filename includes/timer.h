@@ -8,7 +8,9 @@ enum TimerState {
     IDLE,       // Antes do Start
     RUNNING,    // Cronômetro rodando
     PAUSED,     // Cronômetro pausado
-    FINISHED    // Pomodoro ou descanso concluído
+    FINISHED,
+    SHORT_BREAK,
+    LONG_BREAK    // Pomodoro ou descanso concluído
 };
 
 QT_BEGIN_NAMESPACE
@@ -39,6 +41,12 @@ private:
 
     TimerState currentStatusTimer;
 
+    void startPomodorSession();
+    void handleSessionCompletion();
+    void startBreak(TimerState breaktype);
+    void resetTimer();
+
+    int defaultPomodorSessions;
     int defaultPomodoroDuration;
     int defaultShortBreakDuration;
     int defaultLongBreakDuration;
