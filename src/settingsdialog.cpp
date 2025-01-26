@@ -15,9 +15,21 @@ Settings::~Settings()
     delete ui;
 }
 
+void Settings::setPomodorDuration(int duration)
+{
+    pomodoroDuration = duration;
+    ui->boxSetTimerDuration->setValue(duration);
+}
+
+int Settings::getPomodoroDuration() const
+{
+    return pomodoroDuration;
+}
+
 void Settings::emitTimeChanged()
 {
-    emit valueChanged(ui->boxSetTimerDuration->value());
+    pomodoroDuration = ui->boxSetTimerDuration->value();
+    emit valueChanged(pomodoroDuration);
 }
 
 

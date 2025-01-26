@@ -107,6 +107,8 @@ void MainWindow::btton_stopDone_clicked()
 void MainWindow::btton_settings_clicked()
 {
     Settings settingsScreen;
+    settingsScreen.setPomodorDuration(defaultPomodoroDuration); //Configura o valor inicial;
+
     connect(&settingsScreen, &Settings::valueChanged, this, &MainWindow::updateTimeValue);
     settingsScreen.exec();
 }
@@ -114,11 +116,14 @@ void MainWindow::btton_settings_clicked()
 void MainWindow::updateTimeValue(int newTime)
 {
     defaultPomodoroDuration = newTime; // Atualiza a duração em minutos
-    timeRemaining = defaultPomodoroDuration * 60; // Atualiza o tempo restante
+
+    if (currentStatusTimer == IDLE || currentStatusTimer == FINISHED){
+        timeRemaining = defaultPomodoroDuration * 60;
 
     // Atualiza o rótulo do temporizador com o novo valor
     ui->labelTimer->setText(QString("%1:%2")
         .arg(defaultPomodoroDuration, 2, 10, QChar('0'))
         .arg(0, 2, 10, QChar('0')));
+    }
 }
 

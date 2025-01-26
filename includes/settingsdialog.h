@@ -15,6 +15,9 @@ public:
     explicit Settings(QWidget *parent = nullptr);
     ~Settings();
 
+    void setPomodorDuration(int duration);
+    int getPomodoroDuration() const;
+
 signals:
     void valueChanged(int newValue);
 
@@ -23,6 +26,8 @@ private slots:
 
 private:
     Ui::Settings *ui;
+
+    int pomodoroDuration;
 };
 
 #endif // SETTINGSDIALOG_H
