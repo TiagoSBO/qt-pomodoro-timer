@@ -41,10 +41,6 @@ MainWindow::~MainWindow()
 
 void MainWindow::defaultTimerFocus()
 {
-    if (currentStatusTimer != RUNNING) {
-        return; // Garante que apenas estados RUNNING sejam processados
-    }
-
     if (currentStatusTimer == RUNNING) {
         if (timeRemaining > 0) {
             timeRemaining--;
@@ -60,27 +56,14 @@ void MainWindow::defaultTimerFocus()
 
         if (timeRemaining == 0) {
             timer->stop();
-            currentStatusTimer = FINISHED;
+            currentStatusTimer = FINISHED; // Sessão finalizada
 
-            // ui->button_startResume->setText("Start");
-            ui->button_stopDone->setText("Done");
-
-            handleSessionCompletion();
-        }
-
-        // if (timeRemaining == 0 || currentStatusTimer == PAUSED) {
-        //     ui->button_stopDone->setText("Done");
-        // }
-
-        if (timeRemaining == 0) {
-            timer->stop(); // Para o temporizador ao atingir 0
-            currentStatusTimer = FINISHED;
-
-            ui->button_stopDone->setText("Done");
-            handleSessionCompletion(); // Transição para o próximo estado
+            ui->button_stopDone->setText("Done"); // Muda o texto para "Done"
+            handleSessionCompletion(); // Inicia a próxima etapa após finalizar a sessão
         }
     }
 }
+
 
 void MainWindow::btton_startResume_clicked()
 {
@@ -111,34 +94,24 @@ void MainWindow::btton_startResume_clicked()
 
 void MainWindow::btton_stopDone_clicked()
 {
-    // if (currentStatusTimer == RUNNING || currentStatusTimer == PAUSED) {
-    //     // Para o timer e redefine para o estado inicial
-    //     timer->stop();
-    //     currentStatusTimer = IDLE;
-    //     resetTimer();
-    // } else if (currentStatusTimer == FINISHED) {
-    //     // Confirmação do "Done" para finalizar o estado atual
-    //     handleSessionCompletion();
-    // }
-    if (currentStatusTimer == RUNNING || currentStatusTimer == PAUSED) {
-        // Para o temporizador e redefine para o estado inicial
-        timer->stop();
-        currentStatusTimer = IDLE;
-        resetTimer();
-    }
-    else if (currentStatusTimer == FINISHED) {
-        // Conta o Pomodoro finalizado e inicia o próximo estado
-        defaultPomodorSessions++;
-        qDebug() << "Pomodoro Session Completed: " << defaultPomodorSessions;
+    qDebug() << "Stop/Done clicked. Current state: " << currentStatusTimer;
+    qDebug() << "Button Text: " << ui->button_stopDone->text(); // Log do texto do botão
 
-        handleSessionCompletion(); // Alterna para descanso ou novo Pomodoro
+    if (ui->button_stopDone->text() == "Stop") {
+        // Se o texto for "Stop" (quando o timer está pausado), apenas para o temporizador
+        timer->stop();
+        currentStatusTimer = IDLE; // Reseta o timer
+        ui->button_stopDone->setText("Stop"); // Texto do botão de volta para "Stop"
+        resetTimer(); // Reseta o contador de tempo
     }
-    else if (currentStatusTimer == SHORT_BREAK || currentStatusTimer == LONG_BREAK) {
-        // Se estiver no descanso, iniciar o próximo Pomodoro
-        startPomodorSession();
+    else if (ui->button_stopDone->text() == "Done") {
+        // Se o texto for "Done" (quando o Pomodoro ou o descanso terminou)
+        // Conta mais uma sessão e inicia o descanso (curto ou longo, dependendo do número de Pomodoros)
+        timer->stop(); // Garantir que o timer seja parado antes de fazer a transição
+        currentStatusTimer = FINISHED;  // Marca a sessão como finalizada
+        handleSessionCompletion(); // Processa a conclusão da sessão
     }
 }
-
 
 void MainWindow::btton_settings_clicked()
 {
@@ -156,24 +129,25 @@ void MainWindow::updateTimeValue(int newTime)
     if (currentStatusTimer == IDLE || currentStatusTimer == FINISHED){
         timeRemaining = defaultPomodoroDuration * 60;
 
-    // Atualiza o rótulo do temporizador com o novo valor
-    ui->labelTimer->setText(QString("%1:%2")
-        .arg(defaultPomodoroDuration, 2, 10, QChar('0'))
-        .arg(0, 2, 10, QChar('0')));
+        // Atualiza o rótulo do temporizador com o novo valor
+        ui->labelTimer->setText(QString("%1:%2")
+                                    .arg(defaultPomodoroDuration, 2, 10, QChar('0'))
+                                    .arg(0, 2, 10, QChar('0')));
     }
 }
 
-void MainWindow::startPomodorSession()
+void MainWindow::startPomodoroSession()
 {
-    timer->stop(); // Certifique-se de que o temporizador está parado
+    timer->stop(); // Para o temporizador antes de iniciar uma nova sessão
     currentStatusTimer = RUNNING;
-    timeRemaining = defaultPomodoroDuration * 60; // Reinicia o tempo do Pomodoro
+    timeRemaining = defaultPomodoroDuration * 60; // Configura o tempo padrão para o Pomodoro
 
-    // Atualiza a interface
+    // Atualiza o rótulo do temporizador
     ui->labelTimer->setText(QString("%1:%2")
-        .arg(timeRemaining / 60, 2, 10, QChar('0'))
-        .arg(0, 2, 10, QChar('0')));
+                                .arg(timeRemaining / 60, 2, 10, QChar('0'))
+                                .arg(0, 2, 10, QChar('0')));
 
+    // Ajusta os botões
     ui->button_startResume->setText("Pause");
     ui->button_stopDone->setText("Stop");
 
@@ -181,46 +155,43 @@ void MainWindow::startPomodorSession()
     qDebug() << "Pomodoro Session Started!";
 }
 
-void MainWindow::startBreak(TimerState breaktype)
+
+void MainWindow::startShortBreak()
 {
-    // {
-    //     if (breaktype == SHORT_BREAK) {
-    //         currentStatusTimer = SHORT_BREAK;
-    //         timeRemaining = defaultShortBreakDuration * 60; // Tempo do descanso curto
-    //     } else if (breaktype == LONG_BREAK) {
-    //         currentStatusTimer = LONG_BREAK;
-    //         timeRemaining = defaultLongBreakDuration * 60; // Tempo do descanso longo
-    //     }
+    timer->stop();
+    currentStatusTimer = SHORT_BREAK;
+    timeRemaining = defaultShortBreakDuration * 60; // Tempo de descanso curto
 
-    //     // Atualiza o rótulo do temporizador
-    //     ui->labelTimer->setText(QString("%1:%2")
-    //         .arg(timeRemaining / 60, 2, 10, QChar('0'))
-    //         .arg(0, 2, 10, QChar('0')));
-
-    //     // Ajusta os botões para o novo estado
-    //     ui->button_startResume->setText("Start");
-    //     ui->button_stopDone->setText("Stop");
-    // }
-
-    if (breaktype == SHORT_BREAK) {
-        currentStatusTimer = SHORT_BREAK;
-        timeRemaining = defaultShortBreakDuration * 60; // Tempo do descanso curto
-        qDebug() << "Short Break Started!";
-    }
-    else if (breaktype == LONG_BREAK) {
-        currentStatusTimer = LONG_BREAK;
-        timeRemaining = defaultLongBreakDuration * 60; // Tempo do descanso longo
-        qDebug() << "Long Break Started!";
-    }
-
-    // Atualiza o temporizador e os botões
+    // Atualiza o rótulo do temporizador
     ui->labelTimer->setText(QString("%1:%2")
-        .arg(timeRemaining / 60, 2, 10, QChar('0'))
-        .arg(0, 2, 10, QChar('0')));
+                                .arg(timeRemaining / 60, 2, 10, QChar('0'))
+                                .arg(0, 2, 10, QChar('0')));
 
     ui->button_startResume->setText("Start");
     ui->button_stopDone->setText("Done");
+
+    timer->start(1000); // Inicia o temporizador
+    qDebug() << "Short Break Started!";
 }
+
+void MainWindow::startLongBreak()
+{
+    timer->stop();
+    currentStatusTimer = LONG_BREAK;
+    timeRemaining = defaultLongBreakDuration * 60; // Tempo de descanso longo
+
+    // Atualiza o rótulo do temporizador
+    ui->labelTimer->setText(QString("%1:%2")
+                                .arg(timeRemaining / 60, 2, 10, QChar('0'))
+                                .arg(0, 2, 10, QChar('0')));
+
+    ui->button_startResume->setText("Start");
+    ui->button_stopDone->setText("Done");
+
+    timer->start(1000); // Inicia o temporizador
+    qDebug() << "Long Break Started!";
+}
+
 
 void MainWindow::resetTimer()
 {
@@ -228,8 +199,8 @@ void MainWindow::resetTimer()
     currentStatusTimer = IDLE;
 
     ui->labelTimer->setText(QString("%1:%2")
-        .arg(defaultPomodoroDuration, 2, 10, QChar('0'))
-        .arg(0, 2, 10, QChar('0')));
+                                .arg(defaultPomodoroDuration, 2, 10, QChar('0'))
+                                .arg(0, 2, 10, QChar('0')));
 
     ui->button_startResume->setText("Start");
     ui->button_stopDone->setText("Stop");
@@ -237,30 +208,27 @@ void MainWindow::resetTimer()
 
 void MainWindow::handleSessionCompletion()
 {
-    // if (currentStatusTimer == FINISHED) {
-    //     if (defaultPomodorSessions < defaultSessionsLongBreak) {
-    //         // Alterna para um descanso curto após cada pomodoro
-    //         defaultPomodorSessions++;
-    //         qDebug() << "Sessions +1: " << defaultPomodorSessions;
-    //         startBreak(SHORT_BREAK);
-    //     } else if (defaultPomodorSessions == defaultSessionsLongBreak) {
-    //         // Após 4 pomodoros, inicia o descanso longo
-    //         qDebug() << "4 Sessions completed " << defaultPomodorSessions;
-    //         defaultPomodorSessions = 0; // Reseta o contador de pomodoros
-    //         startBreak(LONG_BREAK);
-    //     }
-    // }
+    qDebug() << "Handling session completion. Current state: " << currentStatusTimer;
 
-    if (defaultPomodorSessions < defaultSessionsLongBreak) {
-        // Se menos de 4 sessões, inicia um descanso curto
-        qDebug() << "Starting Short Break. Sessions: " << defaultPomodorSessions;
-        startBreak(SHORT_BREAK);
+    // Só deve entrar aqui se a sessão foi finalizada e o estado for FINISHED
+    if (currentStatusTimer == FINISHED) {
+        defaultPomodorSessions++;  // Conta uma sessão de Pomodoro concluída
+
+        // Decida se é um descanso curto ou longo baseado no número de sessões
+        if (defaultPomodorSessions < defaultSessionsLongBreak) {
+            // Inicia um descanso curto
+            qDebug() << "Pomodoro Complete. Starting Short Break. Sessions: " << defaultPomodorSessions;
+            startShortBreak();  // Inicia o descanso curto
+        } else {
+            // Após 4 sessões, começa um descanso longo
+            qDebug() << "4 Pomodoro Sessions Complete. Starting Long Break.";
+            defaultPomodorSessions = 0;  // Reseta o contador de sessões
+            startLongBreak();  // Inicia o descanso longo
+        }
     }
-    else if (defaultPomodorSessions == defaultSessionsLongBreak) {
-        // Após 4 sessões de Pomodoro, inicia o descanso longo
-        qDebug() << "Starting Long Break. Sessions: " << defaultPomodorSessions;
-        defaultPomodorSessions = 0; // Reseta o contador de sessões
-        startBreak(LONG_BREAK);
+    // Caso o descanso tenha sido completado, reinicia o Pomodoro
+    else if (currentStatusTimer == SHORT_BREAK || currentStatusTimer == LONG_BREAK) {
+        qDebug() << "Break Complete. Starting New Pomodoro Session.";
+        startPomodoroSession();  // Inicia uma nova sessão de Pomodoro
     }
 }
-

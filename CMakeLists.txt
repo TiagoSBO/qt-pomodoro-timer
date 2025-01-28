@@ -8,15 +8,17 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOUIC_SEARCH_PATHS ${CMAKE_CURRENT_SOURCE_DIR}/ui)
 
-find_package(Qt6 6.5 REQUIRED COMPONENTS Core Widgets)
+find_package(Qt6 6.5 REQUIRED COMPONENTS Core Widgets Sql)
 
 qt_add_executable(pomodoro_timer
     WIN32 MACOSX_BUNDLE
     src/main.cpp
     src/timer.cpp
     src/settingsdialog.cpp
+    src/db/database.cpp
     includes/timer.h
     includes/settingsdialog.h
+    includes/db/database.h
     ui/mainwindow.ui
     ui/settingsdialog.ui
     assets/btton_setting.png
@@ -27,11 +29,15 @@ qt_add_executable(pomodoro_timer
 target_include_directories(pomodoro_timer
     PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/includes  # Inclui a pasta includes/
+        ${CMAKE_CURRENT_SOURCE_DIR}/includes/db
+        ${Qt6Core_INCLUDE_DIRS}  # Diretórios do Qt Core
+        ${Qt6Sql_INCLUDE_DIRS}   #
 )
 
 target_link_libraries(pomodoro_timer
-    PRIVATE Qt::Core Qt::Widgets
+    PRIVATE Qt::Core Qt::Widgets Qt::Sql
 )
+
 
 include(GNUInstallDirs)
 

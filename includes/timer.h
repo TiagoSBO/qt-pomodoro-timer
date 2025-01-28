@@ -4,13 +4,14 @@
 #include <QMainWindow>
 #include <QTimer>
 
+// Estados do Timer
 enum TimerState {
-    IDLE,       // Antes do Start
-    RUNNING,    // Cronômetro rodando
-    PAUSED,     // Cronômetro pausado
-    FINISHED,
-    SHORT_BREAK,
-    LONG_BREAK    // Pomodoro ou descanso concluído
+    IDLE,        // Antes do Start
+    RUNNING,     // Cronômetro rodando
+    PAUSED,      // Cronômetro pausado
+    FINISHED,    // Sessão finalizada
+    SHORT_BREAK, // Descanso curto
+    LONG_BREAK   // Descanso longo
 };
 
 QT_BEGIN_NAMESPACE
@@ -27,7 +28,6 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
-
 private slots:
     void defaultTimerFocus();
     void btton_startResume_clicked();
@@ -41,11 +41,15 @@ private:
 
     TimerState currentStatusTimer;
 
-    void startPomodorSession();
+    // Funções específicas para cada tipo de sessão
+    void startPomodoroSession();
+    void startShortBreak();
+    void startLongBreak();
+
     void handleSessionCompletion();
-    void startBreak(TimerState breaktype);
     void resetTimer();
 
+    int currentPomodorSessions;
     int defaultPomodorSessions;
     int defaultPomodoroDuration;
     int defaultShortBreakDuration;
@@ -54,4 +58,5 @@ private:
 
     int timeRemaining;
 };
+
 #endif // TIMER_H
