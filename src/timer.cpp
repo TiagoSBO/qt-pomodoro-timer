@@ -18,6 +18,7 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
+
     ui->labelTimer->setText(QString("%1:%2")
         .arg(defaultPomodoroDuration, 2, 10, QChar('0'))
         .arg(0, 2, 10, QChar('0')));
@@ -204,6 +205,14 @@ void MainWindow::resetTimer()
 
     ui->button_startResume->setText("Start");
     ui->button_stopDone->setText("Stop");
+}
+
+void MainWindow::setTimerDefaults(int pomodoroDuration, int shortBreak, int longBreak, int sessionsBeforeLong)
+{
+    defaultPomodoroDuration = pomodoroDuration;
+    defaultShortBreakDuration = shortBreak;
+    defaultLongBreakDuration = longBreak;
+    defaultSessionsLongBreak = sessionsBeforeLong;
 }
 
 void MainWindow::handleSessionCompletion()

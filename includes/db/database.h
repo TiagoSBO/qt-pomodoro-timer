@@ -9,9 +9,9 @@ class database
 {
 public:
     database();
-
     static bool initializeDatabase(const QString& dbName);
+    static bool saveSetting(int pomodoroDuration, int shortBreak, int longBreak, int sessionsBeforeLong);
+    static bool loadSettings(int &pomodoroDuration, int &shortBreak, int &longBreak, int &sessionsBeforeLong);
 };
 
-
-#endif // POMODORO_TIMER_DB_H
+#endif // DATABASE_H
