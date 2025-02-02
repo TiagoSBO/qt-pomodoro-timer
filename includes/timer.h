@@ -7,9 +7,9 @@
 // Estados do Timer
 enum TimerState {
     IDLE,        // Antes do Start
-    RUNNING,     // Cronômetro rodando
-    PAUSED,      // Cronômetro pausado
-    FINISHED,    // Sessão finalizada
+    RUNNING,     // Cronômetro rodando == "Start"
+    PAUSED,      // Cronômetro pausado == "Pause"
+    FINISHED,    // Sessão finalizada == Cronometro chegou ao tempo limite ou foi skipado
     SHORT_BREAK, // Descanso curto
     LONG_BREAK   // Descanso longo
 };
@@ -33,7 +33,7 @@ public:
 private slots:
     void defaultTimerFocus();
     void btton_startResume_clicked();
-    void btton_stopDone_clicked();
+    // void btton_stopDone_clicked();
     void btton_settings_clicked();
     void updateTimeValue(int newTime);
 

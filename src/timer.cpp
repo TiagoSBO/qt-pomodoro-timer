@@ -9,11 +9,11 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
     , currentStatusTimer(IDLE)
-    , defaultPomodorSessions(0)
+    , defaultPomodorSessions(0) //contagem inicial das sessões
     , defaultPomodoroDuration(25)
     , defaultShortBreakDuration(5)
     , defaultLongBreakDuration(15)
-    , defaultSessionsLongBreak(4)
+    , defaultSessionsLongBreak(4) //Long break interval
     , timeRemaining(defaultPomodoroDuration * 60)
 {
     ui->setupUi(this);
@@ -31,7 +31,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(ui->button_settings, &QPushButton::clicked, this, &MainWindow::btton_settings_clicked);
     connect(ui->button_startResume, &QPushButton::clicked, this, &MainWindow::btton_startResume_clicked);
-    connect(ui->button_stopDone, &QPushButton::clicked, this, &MainWindow::btton_stopDone_clicked);
+    // connect(ui->button_stopDone, &QPushButton::clicked, this, &MainWindow::btton_stopDone_clicked);
 
 }
 
@@ -59,7 +59,7 @@ void MainWindow::defaultTimerFocus()
             timer->stop();
             currentStatusTimer = FINISHED; // Sessão finalizada
 
-            ui->button_stopDone->setText("Done"); // Muda o texto para "Done"
+            ui->button_reset->setText("Done"); // Muda o texto para "Done"
             handleSessionCompletion(); // Inicia a próxima etapa após finalizar a sessão
         }
     }
@@ -82,37 +82,37 @@ void MainWindow::btton_startResume_clicked()
 
         // Atualiza o texto dos botões
         ui->button_startResume->setText("Pause");
-        ui->button_stopDone ->setText("Stop");
+        ui->button_reset ->setText("Stop");
     } else if (currentStatusTimer == RUNNING) {
         timer->stop();
         currentStatusTimer = PAUSED;
 
         // Atualiza o texto dos botões
         ui->button_startResume->setText("Resume");
-        ui->button_stopDone->setText("Done");
+        ui->button_reset->setText("Done");
     }
 }
 
-void MainWindow::btton_stopDone_clicked()
-{
-    qDebug() << "Stop/Done clicked. Current state: " << currentStatusTimer;
-    qDebug() << "Button Text: " << ui->button_stopDone->text(); // Log do texto do botão
+// void MainWindow::btton_stopDone_clicked()
+// {
+//     qDebug() << "Stop/Done clicked. Current state: " << currentStatusTimer;
+//     qDebug() << "Button Text: " << ui->button_stopDone->text(); // Log do texto do botão
 
-    if (ui->button_stopDone->text() == "Stop") {
-        // Se o texto for "Stop" (quando o timer está pausado), apenas para o temporizador
-        timer->stop();
-        currentStatusTimer = IDLE; // Reseta o timer
-        ui->button_stopDone->setText("Stop"); // Texto do botão de volta para "Stop"
-        resetTimer(); // Reseta o contador de tempo
-    }
-    else if (ui->button_stopDone->text() == "Done") {
-        // Se o texto for "Done" (quando o Pomodoro ou o descanso terminou)
-        // Conta mais uma sessão e inicia o descanso (curto ou longo, dependendo do número de Pomodoros)
-        timer->stop(); // Garantir que o timer seja parado antes de fazer a transição
-        currentStatusTimer = FINISHED;  // Marca a sessão como finalizada
-        handleSessionCompletion(); // Processa a conclusão da sessão
-    }
-}
+//     if (ui->button_stopDone->text() == "Stop") {
+//         // Se o texto for "Stop" (quando o timer está pausado), apenas para o temporizador
+//         timer->stop();
+//         currentStatusTimer = IDLE; // Reseta o timer
+//         ui->button_stopDone->setText("Stop"); // Texto do botão de volta para "Stop"
+//         resetTimer(); // Reseta o contador de tempo
+//     }
+//     else if (ui->button_stopDone->text() == "Done") {
+//         // Se o texto for "Done" (quando o Pomodoro ou o descanso terminou)
+//         // Conta mais uma sessão e inicia o descanso (curto ou longo, dependendo do número de Pomodoros)
+//         timer->stop(); // Garantir que o timer seja parado antes de fazer a transição
+//         currentStatusTimer = FINISHED;  // Marca a sessão como finalizada
+//         handleSessionCompletion(); // Processa a conclusão da sessão
+//     }
+// }
 
 void MainWindow::btton_settings_clicked()
 {
@@ -150,7 +150,7 @@ void MainWindow::startPomodoroSession()
 
     // Ajusta os botões
     ui->button_startResume->setText("Pause");
-    ui->button_stopDone->setText("Stop");
+    ui->button_reset->setText("Stop");
 
     timer->start(1000); // Inicia o temporizador
     qDebug() << "Pomodoro Session Started!";
@@ -169,7 +169,7 @@ void MainWindow::startShortBreak()
                                 .arg(0, 2, 10, QChar('0')));
 
     ui->button_startResume->setText("Start");
-    ui->button_stopDone->setText("Done");
+    ui->button_reset->setText("Done");
 
     timer->start(1000); // Inicia o temporizador
     qDebug() << "Short Break Started!";
@@ -187,7 +187,7 @@ void MainWindow::startLongBreak()
                                 .arg(0, 2, 10, QChar('0')));
 
     ui->button_startResume->setText("Start");
-    ui->button_stopDone->setText("Done");
+    ui->button_reset->setText("Done");
 
     timer->start(1000); // Inicia o temporizador
     qDebug() << "Long Break Started!";
@@ -204,7 +204,7 @@ void MainWindow::resetTimer()
                                 .arg(0, 2, 10, QChar('0')));
 
     ui->button_startResume->setText("Start");
-    ui->button_stopDone->setText("Stop");
+    ui->button_reset->setText("Stop");
 }
 
 void MainWindow::setTimerDefaults(int pomodoroDuration, int shortBreak, int longBreak, int sessionsBeforeLong)
