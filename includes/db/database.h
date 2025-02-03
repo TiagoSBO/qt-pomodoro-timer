@@ -10,8 +10,8 @@ class database
 public:
     database();
     static bool initializeDatabase(const QString& dbName);
-    static bool saveSetting(int pomodoroDuration, int shortBreak, int longBreak, int sessionsBeforeLong);
-    static bool loadSettings(int &pomodoroDuration, int &shortBreak, int &longBreak, int &sessionsBeforeLong);
+    static bool saveSetting(int pomodoroDuration, int shortBreak, int longBreak, int sessionsInterval);
+    static bool loadSettings(int &pomodoroDuration, int &shortBreak, int &longBreak, int &sessionsInterval);
 };
 
 #endif // DATABASE_H

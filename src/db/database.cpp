@@ -56,7 +56,7 @@ bool database::initializeDatabase(const QString& dbName){
     return true;
 }
 
-bool database::saveSetting(int pomodoroDuration, int shortBreak, int longBreak, int sessionsBeforeLong)
+bool database::saveSetting(int pomodoroDuration, int shortBreak, int longBreak, int sessionsInterval)
 {
     QSqlQuery query;
 
@@ -73,7 +73,7 @@ bool database::saveSetting(int pomodoroDuration, int shortBreak, int longBreak, 
     query.addBindValue(pomodoroDuration);
     query.addBindValue(shortBreak);
     query.addBindValue(longBreak);
-    query.addBindValue(sessionsBeforeLong);
+    query.addBindValue(sessionsInterval);
 
     if (!query.exec()) {
         qDebug() << "Erro ao salvar configurações:" << query.lastError().text();
