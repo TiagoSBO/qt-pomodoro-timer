@@ -89,7 +89,7 @@
            <string>Short break:</string>
           </property>
          </widget>
-         <widget class="QLabel" name="label_breakDuration">
+         <widget class="QLabel" name="label_longBreakDuration">
           <property name="geometry">
            <rect>
             <x>270</x>
@@ -147,7 +147,7 @@
            <string>Long break Interval:</string>
           </property>
          </widget>
-         <widget class="QSpinBox" name="boxSetDelayDuration">
+         <widget class="QSpinBox" name="boxSetIntervalDuration">
           <property name="geometry">
            <rect>
             <x>180</x>
