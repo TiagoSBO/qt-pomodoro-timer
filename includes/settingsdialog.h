@@ -16,18 +16,27 @@ public:
     ~Settings();
 
     void setPomodorDuration(int duration);
+    // void setShortBreakDuration(int duration);
+    // void setLongBreakInterval(int interval);
+    void setPomodoroRounds(int interval);
+
     int getPomodoroDuration() const;
+    // int getLongBreakInterval() const;
+    // int getShortBreakDuration() const;
+    int getPomodoroRounds() const;
 
 signals:
-    void valueChanged(int newValue);
+    void pomodoroDurationChanged(int newValue);
+    // void longBreakIntervalChanged(int newValue);
+    // void shortBreakDurationChanged(int newValue);
+    void pomodoroRoundsChanged(int newValue);
 
 private slots:
-    void emitTimeChanged();
+    void emitTimeValueChanged();
 
 private:
     Ui::Settings *ui;
 
-    int pomodoroDuration;
 };
 
 #endif // SETTINGSDIALOG_H

@@ -14,19 +14,19 @@ int main(int argc, char *argv[])
     }
 
     // Carregar configurações do banco
-    int pomodoroDuration, shortBreak, longBreak, sessionsBeforeLong;
-    if (database::loadSettings(pomodoroDuration, shortBreak, longBreak, sessionsBeforeLong)) {
+    int pomodoroDuration, shortBreak, longBreak, sessionsInterval;
+    if (database::loadSettings(pomodoroDuration, shortBreak, longBreak, sessionsInterval)) {
         qDebug() << "Configurações carregadas do banco:";
         qDebug() << "Pomodoro:" << pomodoroDuration
                  << "Curta Pausa:" << shortBreak
                  << "Longa Pausa:" << longBreak
-                 << "Sessões Antes da Longa Pausa:" << sessionsBeforeLong;
+                 << "Sessões Antes da Longa Pausa:" << sessionsInterval;
     } else {
         qDebug() << "Usando valores padrão.";
         pomodoroDuration = 25;
         shortBreak = 5;
         longBreak = 15;
-        sessionsBeforeLong = 4;
+        sessionsInterval = 4;
     }
 
     MainWindow w;
