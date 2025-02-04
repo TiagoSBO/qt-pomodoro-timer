@@ -15,20 +15,22 @@ public:
     explicit Settings(QWidget *parent = nullptr);
     ~Settings();
 
+    //SETS
     void setPomodorDuration(int duration);
-    // void setShortBreakDuration(int duration);
-    // void setLongBreakInterval(int interval);
+    void setShortBreakDuration(int duration);
+    void setLongBreakDuration(int duration);
     void setPomodoroRounds(int interval);
 
+    //GETS
     int getPomodoroDuration() const;
-    // int getLongBreakInterval() const;
-    // int getShortBreakDuration() const;
+    int getShortBreakDuration() const;
+    int getLongBreakDuration() const;
     int getPomodoroRounds() const;
 
 signals:
     void pomodoroDurationChanged(int newValue);
-    // void longBreakIntervalChanged(int newValue);
-    // void shortBreakDurationChanged(int newValue);
+    void shortBreakDurationChanged(int newValue);
+    void longBreakDurationChanged(int newValue);
     void pomodoroRoundsChanged(int newValue);
 
 private slots:

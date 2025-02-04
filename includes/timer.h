@@ -10,7 +10,8 @@
 enum TimerState {
     IDLE,        // Antes do Start
     RUNNING,     // Cronômetro rodando == "Start"
-    PAUSED,      // Cronômetro pausado == "Pause"
+    PAUSED,     // Cronômetro pausado == "Pause"
+    SKIPED,    // Cronômetro pulado
     FINISHED,    // Sessão finalizada == Cronometro chegou ao tempo limite ou foi skipado
     SHORT_BREAK, // Descanso curto
     LONG_BREAK   // Descanso longo
@@ -38,10 +39,12 @@ private slots:
     void btton_startResume_clicked();
     void btton_reset_clicked();
     void btton_settings_clicked();
-    // void btton_skip_clicked();
+    void btton_skip_clicked();
 
-    //Timer
+    //Spinboxes do Dialog
     void updatePomodoroDuration(int newTime);
+    void updateShortBreakDuration(int newTime);
+    void updateLongBreakDuration(int newTime);
     void updatePomodoroRounds(int newRounds);
 
 
@@ -52,7 +55,6 @@ private:
     TimerState currentStatusTimer;
     Settings *settingsScreen;
 
-
     // Funções específicas para cada tipo de sessão
     void startPomodoroSession();
     void startShortBreak();
@@ -60,11 +62,11 @@ private:
     void handleSessionCompletion();
 
     int currentPomodorSessions;
-    int defaultPomodorSessions;
+
     int defaultPomodoroDuration;
     int defaultShortBreakDuration;
     int defaultLongBreakDuration;
-    int defaultSessionsLongBreak;
+    int defaultRoundsSessions;
 
     int timeRemaining;
 };

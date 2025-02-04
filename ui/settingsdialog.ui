@@ -108,7 +108,7 @@
            <string>Long break:</string>
           </property>
          </widget>
-         <widget class="QSpinBox" name="boxSetLongDuration">
+         <widget class="QSpinBox" name="boxSetShortDuration">
           <property name="geometry">
            <rect>
             <x>140</x>
@@ -118,7 +118,7 @@
            </rect>
           </property>
          </widget>
-         <widget class="QSpinBox" name="boxSetShortduration">
+         <widget class="QSpinBox" name="boxSetLongDuration">
           <property name="geometry">
            <rect>
             <x>270</x>

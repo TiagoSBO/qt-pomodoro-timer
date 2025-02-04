@@ -9,11 +9,12 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
     , currentStatusTimer(IDLE)
-    , defaultPomodorSessions(0) //contagem inicial das sessões
+
+    , currentPomodorSessions(0) //contagem inicial das sessões
     , defaultPomodoroDuration(25)
     , defaultShortBreakDuration(5)
     , defaultLongBreakDuration(15)
-    , defaultSessionsLongBreak(4) //Long break interval
+    , defaultRoundsSessions(4) //Long break interval
     , timeRemaining(defaultPomodoroDuration * 60)
 {
     ui->setupUi(this);
@@ -25,23 +26,23 @@ MainWindow::MainWindow(QWidget *parent)
 
     ui->button_skip->hide();
 
-    // Settings *settings = new Settings(this);
     settingsScreen = new Settings(this);
 
     //Conexão dos botões do Settings
     connect(settingsScreen, &Settings::pomodoroDurationChanged, this, &MainWindow::updatePomodoroDuration);
-    // Connectar botão short_break
-    // conectar botão long_break
+    connect(settingsScreen, &Settings::shortBreakDurationChanged, this, &MainWindow::updateShortBreakDuration);
+    connect(settingsScreen, &Settings::longBreakDurationChanged, this, &MainWindow::updateLongBreakDuration);
     connect(settingsScreen, &Settings::pomodoroRoundsChanged, this, &MainWindow::updatePomodoroRounds);
 
-
+    //Criação do Timer
     timer = new QTimer(this);
     connect(timer, &QTimer::timeout, this, &MainWindow::defaultTimerFocus);
 
+    //Botões da Janela Principal
     connect(ui->button_settings, &QPushButton::clicked, this, &MainWindow::btton_settings_clicked);
     connect(ui->button_resumePause, &QPushButton::clicked, this, &MainWindow::btton_startResume_clicked);
     connect(ui->button_reset, &QPushButton::clicked, this, &MainWindow::btton_reset_clicked);
-    // connect(ui->button_skip, &QPushButton::clicked, this, &MainWindow::btton_skip_clicked);
+    connect(ui->button_skip, &QPushButton::clicked, this, &MainWindow::btton_skip_clicked);
 }
 
 MainWindow::~MainWindow()
@@ -116,9 +117,18 @@ void MainWindow::btton_reset_clicked()
 void MainWindow::btton_settings_clicked()
 {
     settingsScreen->setPomodorDuration(defaultPomodoroDuration); //Configura o valor inicial;
-    settingsScreen->setPomodoroRounds(defaultSessionsLongBreak);
+    settingsScreen->setPomodoroRounds(defaultRoundsSessions);
 
     settingsScreen->exec();
+}
+
+void MainWindow::btton_skip_clicked()
+{
+    qDebug() << "Clickado";
+    if (currentStatusTimer == RUNNING && defaultRoundsSessions <= 4){
+        currentStatusTimer = FINISHED;
+        handleSessionCompletion();
+    }
 }
 
 // Duração inicial do Timer
@@ -136,29 +146,37 @@ void MainWindow::updatePomodoroDuration(int newTime)
     }
 }
 
+void MainWindow::updateShortBreakDuration(int newTime)
+{
+    defaultShortBreakDuration = newTime;
+}
+
+void MainWindow::updateLongBreakDuration(int newTime)
+{
+    defaultLongBreakDuration = newTime;
+}
+
 //Intervalo de sessões de pomodoro até chegar ao descanso longo
 void MainWindow::updatePomodoroRounds(int newRounds)
 {
-    defaultSessionsLongBreak = newRounds;
+    defaultRoundsSessions = newRounds;
 }
 
-// void MainWindow::startPomodoroSession() {
-//     timer->stop(); // Para o temporizador antes de iniciar uma nova sessão
-//     currentStatusTimer = RUNNING;
-//     timeRemaining =
-//         defaultPomodoroDuration * 60; // Configura o tempo padrão para o Pomodoro
+void MainWindow::startPomodoroSession() {
+    timer->stop(); // Para o temporizador antes de iniciar uma nova sessão
+    currentStatusTimer = RUNNING;
+    timeRemaining = defaultPomodoroDuration * 60; // Configura o tempo padrão para o Pomodoro
 
-//     // Atualiza o rótulo do temporizador
-//     ui->labelTimer->setText(QString("%1:%2")
-//                                 .arg(timeRemaining / 60, 2, 10, QChar('0'))
-//                                 .arg(0, 2, 10, QChar('0')));
+    // Atualiza o rótulo do temporizador
+    ui->labelTimer->setText(QString("%1:%2")
+                                .arg(timeRemaining / 60, 2, 10, QChar('0'))
+                                .arg(0, 2, 10, QChar('0')));
 
-//     // Ajusta os botões
-//     ui->button_resumePause->setText("Pause");
-
-//     timer->start(1000); // Inicia o temporizador
-//     qDebug() << "Pomodoro Session Started!";
-// }
+    // Ajusta os botões
+    ui->button_resumePause->setText("Pause");
+    timer->start(1000); // Inicia o temporizador
+    qDebug() << "Pomodoro Session Started!";
+}
 
 void MainWindow::startShortBreak()
 {
@@ -172,9 +190,9 @@ void MainWindow::startShortBreak()
                                 .arg(0, 2, 10, QChar('0')));
 
     ui->button_resumePause->setText("Start");
-
     timer->start(1000); // Inicia o temporizador
-    qDebug() << "Short Break Started!";
+    qDebug() << "Short break Started!";
+
 }
 
 void MainWindow::startLongBreak()
@@ -191,41 +209,41 @@ void MainWindow::startLongBreak()
     ui->button_resumePause->setText("Start");
 
     timer->start(1000); // Inicia o temporizador
-    qDebug() << "Long Break Started!";
+    currentPomodorSessions = 0;  // Reseta o contador de sessões
+    qDebug() << "Short break Started!";
+
 }
 
 
-void MainWindow::setTimerDefaults(int pomodoroDuration, int shortBreak, int longBreak, int sessionsBeforeLong)
-{
-    defaultPomodoroDuration = pomodoroDuration;
-    defaultShortBreakDuration = shortBreak;
-    defaultLongBreakDuration = longBreak;
-    defaultSessionsLongBreak = sessionsBeforeLong;
-}
+// void MainWindow::setTimerDefaults(int pomodoroDuration, int shortBreak, int longBreak, int sessionsBeforeLong)
+// {
+//     defaultPomodoroDuration = pomodoroDuration;
+//     defaultShortBreakDuration = shortBreak;
+//     defaultLongBreakDuration = longBreak;
+//     defaultRoundsSessions = sessionsBeforeLong;
+// }
 
 void MainWindow::handleSessionCompletion()
 {
     qDebug() << "Handling session completion. Current state: " << currentStatusTimer;
-
     // Só deve entrar aqui se a sessão foi finalizada e o estado for FINISHED
     if (currentStatusTimer == FINISHED) {
-        defaultPomodorSessions++;  // Conta uma sessão de Pomodoro concluída
-
+        currentPomodorSessions++;
         // Decida se é um descanso curto ou longo baseado no número de sessões
-        if (defaultPomodorSessions < defaultSessionsLongBreak) {
+        if (currentPomodorSessions < defaultRoundsSessions) {
             // Inicia um descanso curto
-            qDebug() << "Pomodoro Complete. Starting Short Break. Sessions: " << defaultPomodorSessions;
+            qDebug() << "Starting Short Break";
             startShortBreak();  // Inicia o descanso curto
         } else {
             // Após 4 sessões, começa um descanso longo
-            qDebug() << "4 Pomodoro Sessions Complete. Starting Long Break.";
-            defaultPomodorSessions = 0;  // Reseta o contador de sessões
+            qDebug() << "Starting Long Break";
+            currentPomodorSessions = 0;
             startLongBreak();  // Inicia o descanso longo
         }
     }
-    // // Caso o descanso tenha sido completado, reinicia o Pomodoro
-    // else if (currentStatusTimer == SHORT_BREAK || currentStatusTimer == LONG_BREAK) {
-    //     qDebug() << "Break Complete. Starting New Pomodoro Session.";
-    //     startPomodoroSession();  // Inicia uma nova sessão de Pomodoro
-    // }
+    // Caso o descanso tenha sido completado, reinicia o Pomodoro
+    else if (currentStatusTimer == SHORT_BREAK || currentStatusTimer == LONG_BREAK) {
+        qDebug() << "Break Complete. Starting New Pomodoro Session.";
+        startPomodoroSession();  // Inicia uma nova sessão de Pomodoro
+    }
 }

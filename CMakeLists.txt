@@ -15,10 +15,8 @@ qt_add_executable(pomodoro_timer
     src/main.cpp
     src/timer.cpp
     src/settingsdialog.cpp
-    src/db/database.cpp
     includes/timer.h
     includes/settingsdialog.h
-    includes/db/database.h
     ui/mainwindow.ui
     ui/settingsdialog.ui
     assets/btton_setting.png
@@ -29,7 +27,6 @@ qt_add_executable(pomodoro_timer
 target_include_directories(pomodoro_timer
     PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/includes  # Inclui a pasta includes/
-        ${CMAKE_CURRENT_SOURCE_DIR}/includes/db
         ${Qt6Core_INCLUDE_DIRS}  # Diretórios do Qt Core
         ${Qt6Sql_INCLUDE_DIRS}   #
 )
