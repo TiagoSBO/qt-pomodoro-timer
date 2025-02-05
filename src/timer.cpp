@@ -20,9 +20,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
 
     //Configurações iniciais
-    ui->labelTimer->setText(QString("%1:%2")
-        .arg(defaultPomodoroDuration, 2, 10, QChar('0'))
-        .arg(0, 2, 10, QChar('0')));
+    ui->labelTimer->setText(formatTime(defaultPomodoroDuration));
 
     ui->button_skip->hide();
 
@@ -106,10 +104,7 @@ void MainWindow::btton_reset_clicked()
     currentStatusTimer = IDLE;
     ui->button_skip->hide();
 
-    ui->labelTimer->setText(QString("%1:%2")
-                                .arg(defaultPomodoroDuration, 2, 10, QChar('0'))
-                                .arg(0, 2, 10, QChar('0')));
-
+    ui->labelTimer->setText(formatTime(defaultPomodoroDuration));
     ui->button_resumePause->setText("Start");
 }
 
@@ -140,9 +135,7 @@ void MainWindow::updatePomodoroDuration(int newTime)
         timeRemaining = defaultPomodoroDuration * 60;
 
         // Atualiza o rótulo do temporizador com o novo valor
-        ui->labelTimer->setText(QString("%1:%2")
-                                    .arg(defaultPomodoroDuration, 2, 10, QChar('0'))
-                                    .arg(0, 2, 10, QChar('0')));
+        ui->labelTimer->setText(formatTime(defaultPomodoroDuration));
     }
 }
 
@@ -168,9 +161,7 @@ void MainWindow::startPomodoroSession() {
     timeRemaining = defaultPomodoroDuration * 60; // Configura o tempo padrão para o Pomodoro
 
     // Atualiza o rótulo do temporizador
-    ui->labelTimer->setText(QString("%1:%2")
-                                .arg(timeRemaining / 60, 2, 10, QChar('0'))
-                                .arg(0, 2, 10, QChar('0')));
+    ui->labelTimer->setText(QString(formatTime(timeRemaining)));
 
     // Ajusta os botões
     ui->button_resumePause->setText("Pause");
@@ -185,9 +176,7 @@ void MainWindow::startShortBreak()
     timeRemaining = defaultShortBreakDuration * 60; // Tempo de descanso curto
 
     // Atualiza o rótulo do temporizador
-    ui->labelTimer->setText(QString("%1:%2")
-                                .arg(timeRemaining / 60, 2, 10, QChar('0'))
-                                .arg(0, 2, 10, QChar('0')));
+    ui->labelTimer->setText(QString(formatTime(timeRemaining)));
 
     ui->button_resumePause->setText("Start");
     timer->start(1000); // Inicia o temporizador
@@ -202,9 +191,7 @@ void MainWindow::startLongBreak()
     timeRemaining = defaultLongBreakDuration * 60; // Tempo de descanso longo
 
     // Atualiza o rótulo do temporizador
-    ui->labelTimer->setText(QString("%1:%2")
-                                .arg(timeRemaining / 60, 2, 10, QChar('0'))
-                                .arg(0, 2, 10, QChar('0')));
+    ui->labelTimer->setText(QString(formatTime(timeRemaining)));
 
     ui->button_resumePause->setText("Start");
 
@@ -246,4 +233,11 @@ void MainWindow::handleSessionCompletion()
         qDebug() << "Break Complete. Starting New Pomodoro Session.";
         startPomodoroSession();  // Inicia uma nova sessão de Pomodoro
     }
+}
+
+QString MainWindow::formatTime(int seconds)
+{
+    int minutes = seconds / 60;
+    int remaingSeconds = seconds % 60;
+    return QString("%1:%2").arg(timeRemaining / 60, 2, 10, QChar('0')).arg(0, 2, 10, QChar('0'));
 }

@@ -17,6 +17,7 @@ enum TimerState {
     LONG_BREAK   // Descanso longo
 };
 
+
 QT_BEGIN_NAMESPACE
 namespace Ui {
 class MainWindow;
@@ -60,6 +61,7 @@ private:
     void startShortBreak();
     void startLongBreak();
     void handleSessionCompletion();
+    QString formatTime(int seconds);
 
     int currentPomodorSessions;
 
