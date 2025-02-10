@@ -8,15 +8,8 @@
 
 // Estados do Timer
 enum TimerState {
-    IDLE,        // Antes do Start
-    RUNNING,     // Cronômetro rodando == "Start"
-    PAUSED,     // Cronômetro pausado == "Pause"
-    SKIPED,    // Cronômetro pulado
-    FINISHED,    // Sessão finalizada == Cronometro chegou ao tempo limite ou foi skipado
-    SHORT_BREAK, // Descanso curto
-    LONG_BREAK   // Descanso longo
+    IDLE, RUNNING, PAUSED, SKIPED, FINISHED, SHORT_BREAK, LONG_BREAK
 };
-
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
