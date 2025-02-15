@@ -61,17 +61,21 @@ void MainWindow::defaultTimerFocus()
 
 void MainWindow::btton_startResume_clicked()
 {
-    if (currentStatusTimer == IDLE || currentStatusTimer == PAUSED ||
-        currentStatusTimer == SHORT_BREAK || currentStatusTimer == LONG_BREAK) {
+    if (currentStatusTimer == IDLE || currentStatusTimer == PAUSED) {
         timer->start(1000);
         currentStatusTimer = RUNNING;
-        ui->button_resumePause->setText("Pause");
         ui->button_skip->show();
+        ui->button_resumePause->setText("Pause");
+    }else if (currentStatusTimer == SHORT_BREAK || currentStatusTimer == LONG_BREAK){
+        timer->start(1000);
+        currentStatusTimer = RUNNING;
+        ui->button_skip->show();
+        ui->button_resumePause->setText("Pause");
     } else if (currentStatusTimer == RUNNING) {
         timer->stop();
         currentStatusTimer = PAUSED;
-        ui->button_resumePause->setText("Resume");
         ui->button_skip->hide();
+        ui->button_resumePause->setText("Resume");
     }
 }
 
@@ -80,8 +84,9 @@ void MainWindow::btton_reset_clicked() {
     timer->stop(); // Para o temporizador antes de redefinir
 
     // Define o tempo correto com base no estado atual
-    if (currentStatusTimer == RUNNING || currentStatusTimer == PAUSED || currentStatusTimer == SKIPED) {
+    if (currentStatusTimer == RUNNING || currentStatusTimer == PAUSED) {
         timeRemaining = defaultPomodoroDuration * 60;
+        qDebug() << "currentStatusTimer do Reset: " << currentStatusTimer;
         qDebug() << "Button reset cliclado no FOCUS";
         if (currentStatusTimer == SHORT_BREAK) {
             timeRemaining = defaultShortBreakDuration * 60;
@@ -113,18 +118,15 @@ void MainWindow::btton_settings_clicked()
 }
 
 void MainWindow::btton_skip_clicked(){
-
-    qDebug() << "Skip clicked";
     timer->stop();
 
     // 🔴 Corrigindo a lógica do estado antes de chamar handleSessionCompletion()
-    if (currentStatusTimer == RUNNING) {
+    if (currentStatusTimer == RUNNING ) {
         currentStatusTimer = FINISHED;  // Se estiver no Pomodoro, termina a sessão
-    }
-    else if (currentStatusTimer == SHORT_BREAK && currentStatusTimer == RUNNING) {
-        currentStatusTimer = SHORT_BREAK;  // Se estiver no descanso, pula para o próximo Pomodoro
-    }else if (currentStatusTimer == LONG_BREAK && currentStatusTimer == RUNNING){
-        currentStatusTimer = LONG_BREAK;
+    } else if (currentStatusTimer == SHORT_BREAK && currentStatusTimer == RUNNING) {
+        currentStatusTimer = FINISHED;  // Se estiver no descanso, pula para o próximo Pomodoro
+    } else if (currentStatusTimer == LONG_BREAK  &&  currentStatusTimer == RUNNING){
+        currentStatusTimer = FINISHED;
     }
     handleSessionCompletion();
 }
@@ -149,11 +151,11 @@ void MainWindow::updatePomodoroRounds(int newRounds) { defaultRoundsSessions = n
 
 void MainWindow::startPomodoroSession() {
     timer->stop();
-    currentStatusTimer = RUNNING;
+    currentStatusTimer = IDLE;
     timeRemaining = defaultPomodoroDuration * 60;
     ui->labelTimer->setText(formatTime(timeRemaining));
-    ui->button_resumePause->setText("Pause");
-    timer->start(1000);
+    ui->button_resumePause->setText("Start");
+    // currentStatusTimer = RUNNING;
 
     qDebug() << "Pomodoro Session Started!";
 }
@@ -199,11 +201,13 @@ void MainWindow::startLongBreak()
 // defaultRoundsSessions = sessionsBeforeLong;
 // }
 
+
 void MainWindow::handleSessionCompletion()
 {
     qDebug() << "Handling session completion. Current state: " << currentStatusTimer;
+    qDebug() << "Sessions Pomodoro Completed: " <<  currentPomodorSessions;
 
-    if (currentStatusTimer == FINISHED || currentStatusTimer == SHORT_BREAK) {
+    if (currentStatusTimer == FINISHED || currentStatusTimer == SHORT_BREAK || currentStatusTimer == LONG_BREAK || currentStatusTimer == IDLE) {
         // 🔴 Se está no Short Break ou Long Break e apertou Skip, precisa iniciar Pomodoro
         if (currentStatusTimer == SHORT_BREAK || currentStatusTimer == LONG_BREAK) {
             qDebug() << "Break Skipped. Starting a new Pomodoro session.";
@@ -211,7 +215,6 @@ void MainWindow::handleSessionCompletion()
             startPomodoroSession();
             return; // Sai da função para evitar execuções duplas
         }
-
         // 🔴 Se está no Pomodoro e terminou ou pulou, iniciar um descanso
         currentPomodorSessions++;
 
