@@ -8,7 +8,7 @@
 
 // Estados do Timer
 enum TimerState {
-    IDLE, FOCUS, BREAO, SHORT_BREAK, LONG_BREAK, RUNNING, PAUSED, SKIPED, FINISHED
+    IDLE, FOCUS, SHORT_BREAK, LONG_BREAK, PAUSED
 };
 
 QT_BEGIN_NAMESPACE
@@ -29,7 +29,7 @@ public:
 
 private slots:
     //Spinboxes
-    void defaultTimerFocus();
+    void onTimerOut();
     void btton_startResume_clicked();
     void btton_reset_clicked();
     void btton_settings_clicked();
@@ -47,10 +47,10 @@ private:
     QTimer *timer;
 
     TimerState currentStatusTimer;
+    TimerState previousStatusTimer;
     Settings *settingsScreen;
 
     // Funções específicas para cada tipo de sessão
-    void startPomodoroSession();
     void startShortBreak();
     void startLongBreak();
     void handleSessionCompletion();
