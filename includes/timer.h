@@ -1,16 +1,13 @@
 #ifndef TIMER_H
 #define TIMER_H
-
 #include <QMainWindow>
 #include <QTimer>
 #include "settingsdialog.h"
-
 
 // Estados do Timer
 enum TimerState {
     IDLE, FOCUS, SHORT_BREAK, LONG_BREAK, PAUSED
 };
-
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -25,14 +22,6 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
-
-    void setTimerDefaults(int pomodoroDuration, int shortBreak, int longBreak, int sessionsBeforeLong);
-
-    void start();
-    void pause();
-
-signals:
-    void sessionChanged(TimerState newSession);
 
 private slots:
     //Buttons
@@ -55,10 +44,9 @@ private:
     Settings *settingsScreen;
 
     QTimer *timer;
-
     TimerState currentStatusTimer;
-    TimerState previousStatusTimer;
     void setSession(TimerState session);
+
     QString formatTime(int seconds);
 
     // Funções específicas para cada tipo de sessão
