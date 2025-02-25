@@ -2,6 +2,7 @@
 #define TIMER_H
 #include <QMainWindow>
 #include <QTimer>
+#include "sessionlogs.h"
 #include "settingsdialog.h"
 
 // Estados do Timer
@@ -23,6 +24,8 @@ public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+    void addSessionToTable(int sessionNumber, const QString &sessionDuration, const QString &endTimeOfSession);
+
 private slots:
     //Buttons
     void btton_startResume_clicked();
@@ -42,6 +45,8 @@ private slots:
 private:
     Ui::MainWindow *ui;
     Settings *settingsScreen;
+    Sessionlogs *sessionLogs;
+
 
     QTimer *timer;
     TimerState currentStatusTimer;

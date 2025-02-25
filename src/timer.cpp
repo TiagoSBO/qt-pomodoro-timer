@@ -18,6 +18,7 @@ MainWindow::MainWindow(QWidget *parent)
 , timeRemaining(defaultPomodoroDuration * 60)
 {
     ui->setupUi(this);
+    sessionLogs = new Sessionlogs(this); // Passa o ponteiro da MainWindow
     ui->labelTimer->setText(formatTime(timeRemaining));
 
     settingsScreen = new Settings(this);
@@ -42,6 +43,24 @@ MainWindow::~MainWindow()
 {
     delete ui;
     delete settingsScreen;
+}
+
+void MainWindow::addSessionToTable(int sessionNumber, const QString &sessionDuration, const QString &endTimeOfSession)
+{
+    if (!ui->sessionLogs) {  // Verifica se a tabela existe
+        qDebug() << "Erro: QTableWidget sessionLogs não encontrado!";
+        return;
+    }
+
+    int row = ui->sessionLogs->rowCount(); // Pega o número de linhas
+    ui->sessionLogs->insertRow(row); // Insere uma nova linha
+
+    // Adiciona os dados nas colunas da tabela
+    ui->sessionLogs->setItem(row, 0, new QTableWidgetItem(QString::number(sessionNumber)));
+    ui->sessionLogs->setItem(row, 1, new QTableWidgetItem(sessionDuration));
+    ui->sessionLogs->setItem(row, 2, new QTableWidgetItem(endTimeOfSession));
+
+    qDebug() << "Sessão adicionada com sucesso na tabela!";
 }
 
 void MainWindow::onTimerOut()
@@ -165,6 +184,7 @@ void MainWindow::updateLongBreakDuration(int newTime){
 }
 void MainWindow::updatePomodoroRounds(int newRounds) { defaultRoundsSessions = newRounds; }
 
+//Sessions pomodoro and rest
 void MainWindow::pomodoroSession()
 {
     qDebug() << "New Pomodoro session started! / CurrentState -> " << currentStatusTimer;

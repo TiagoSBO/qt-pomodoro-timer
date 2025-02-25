@@ -15,13 +15,14 @@ qt_add_executable(pomodoro_timer
     src/main.cpp
     src/timer.cpp
     src/settingsdialog.cpp
+    src/sessionlogs.cpp
     includes/timer.h
     includes/settingsdialog.h
+    includes/sessionlogs.h
     ui/mainwindow.ui
     ui/settingsdialog.ui
-    assets/btton_setting.png
+    # sessionlogs.h sessionlogs.cpp
 )
-
 
 # Diretórios de inclusão
 target_include_directories(pomodoro_timer
