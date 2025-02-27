@@ -7,6 +7,8 @@ namespace Ui {
 class Settings;
 }
 
+class MainWindow;
+
 class Settings : public QDialog
 {
     Q_OBJECT
@@ -35,9 +37,11 @@ signals:
 
 private slots:
     void emitTimeValueChanged();
+    // void resetTimerToDefaults();
 
 private:
     Ui::Settings *ui;
+    MainWindow *mainwwindow;
 
 };
 

@@ -1,20 +1,20 @@
 #ifndef SESSIONLOGS_H
 #define SESSIONLOGS_H
 
+#include <QObject>
 #include <QTableWidget>
-
-class MainWindow; // Declaração antecipada para evitar dependência circular
 
 class Sessionlogs
 {
 public:
-    explicit Sessionlogs(MainWindow *mainWin);  // Construtor recebe um ponteiro para MainWindow
+    explicit Sessionlogs(QTableWidget *table);  // Agora passa o ponteiro para QTableWidget diretamente
     ~Sessionlogs();
 
     void addSession(int sessionNumber, const QString &sessionDuration, const QString &endTimeOfSession);
 
+
 private:
-    MainWindow *m_mainWin; // Guarda o ponteiro da MainWindow
+    QTableWidget *m_table;  // Ponteiro para a tabela
 };
 
 #endif // SESSIONLOGS_H

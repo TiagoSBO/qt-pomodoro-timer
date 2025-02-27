@@ -24,8 +24,6 @@ public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
-    void addSessionToTable(int sessionNumber, const QString &sessionDuration, const QString &endTimeOfSession);
-
 private slots:
     //Buttons
     void btton_startResume_clicked();
@@ -47,7 +45,6 @@ private:
     Settings *settingsScreen;
     Sessionlogs *sessionLogs;
 
-
     QTimer *timer;
     TimerState currentStatusTimer;
     void setSession(TimerState session);
@@ -67,6 +64,8 @@ private:
     int defaultRoundsSessions;
     int timeRemaining;
     int running;
+
+    int sessionCount;  // Contador de sessões finalizadas
 };
 
 #endif // TIMER_H
