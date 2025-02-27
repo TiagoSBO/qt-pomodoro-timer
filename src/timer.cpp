@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 #include "settingsdialog.h"
 #include <QDebug>
+#include <QDateTime>
 #include <QString>
 #include <QChar>
 
@@ -18,49 +19,38 @@ MainWindow::MainWindow(QWidget *parent)
 , timeRemaining(defaultPomodoroDuration * 60)
 {
     ui->setupUi(this);
-    sessionLogs = new Sessionlogs(this); // Passa o ponteiro da MainWindow
     ui->labelTimer->setText(formatTime(timeRemaining));
 
-    settingsScreen = new Settings(this);
+    //Table View
+    sessionLogs = new Sessionlogs(ui->tableSessionLogs); // Passa o ponteiro da MainWindow
+    ui->tableSessionLogs->verticalHeader()->setVisible(false);  // Isso vai esconder os números de linha
+    ui->tableSessionLogs->setColumnCount(3);  // Definindo o número de colunas
+    ui->tableSessionLogs->setHorizontalHeaderLabels({"Pomodoro done", "Focus time", "End time"});  // Definindo os rótulos das colunas
+
     //Conexão dos botões do Settings
+    settingsScreen = new Settings(this);
     connect(settingsScreen, &Settings::pomodoroDurationChanged, this, &MainWindow::updatePomodoroDuration);
     connect(settingsScreen, &Settings::shortBreakDurationChanged, this, &MainWindow::updateShortBreakDuration);
     connect(settingsScreen, &Settings::longBreakDurationChanged, this, &MainWindow::updateLongBreakDuration);
     connect(settingsScreen, &Settings::pomodoroRoundsChanged, this, &MainWindow::updatePomodoroRounds);
 
-    //Criação do Timer
+    //Create Timer
     timer = new QTimer(this);
     connect(timer, &QTimer::timeout, this, &MainWindow::onTimerOut);
 
-    //Botões da Janela Principal
+    //Connect MainWindow buttons
     connect(ui->button_settings, &QPushButton::clicked, this, &MainWindow::btton_settings_clicked);
     connect(ui->button_resumePause, &QPushButton::clicked, this, &MainWindow::btton_startResume_clicked);
     connect(ui->button_reset, &QPushButton::clicked, this, &MainWindow::btton_reset_clicked);
     connect(ui->button_skip, &QPushButton::clicked, this, &MainWindow::btton_skip_clicked);
+
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
     delete settingsScreen;
-}
-
-void MainWindow::addSessionToTable(int sessionNumber, const QString &sessionDuration, const QString &endTimeOfSession)
-{
-    if (!ui->sessionLogs) {  // Verifica se a tabela existe
-        qDebug() << "Erro: QTableWidget sessionLogs não encontrado!";
-        return;
-    }
-
-    int row = ui->sessionLogs->rowCount(); // Pega o número de linhas
-    ui->sessionLogs->insertRow(row); // Insere uma nova linha
-
-    // Adiciona os dados nas colunas da tabela
-    ui->sessionLogs->setItem(row, 0, new QTableWidgetItem(QString::number(sessionNumber)));
-    ui->sessionLogs->setItem(row, 1, new QTableWidgetItem(sessionDuration));
-    ui->sessionLogs->setItem(row, 2, new QTableWidgetItem(endTimeOfSession));
-
-    qDebug() << "Sessão adicionada com sucesso na tabela!";
+    delete sessionLogs;
 }
 
 void MainWindow::onTimerOut()
@@ -203,6 +193,13 @@ void MainWindow::pomodoroSession()
 void MainWindow::startShortBreak()
 {
     qDebug() << "Short_Break Started / CurrenState -> " << currentStatusTimer;
+
+    //Table Variables
+    QString endTime = QDateTime::currentDateTime().toString("HH:mm:ss");
+    int sessionDurationInMinutes = defaultPomodoroDuration;
+
+    sessionLogs->addSession(currentPomodorSessions + 1, QString::number(sessionDurationInMinutes) + "min", endTime);
+
 
     currentPomodorSessions++;
 
