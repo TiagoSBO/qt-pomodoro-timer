@@ -4,6 +4,10 @@
 #include <QTimer>
 #include "sessionlogs.h"
 #include "settingsdialog.h"
+#include "QMessageBox"
+#include <QDateTime>
+#include <QString>
+#include <QChar>
 
 // Estados do Timer
 enum TimerState {
@@ -40,6 +44,7 @@ private slots:
     //Slot Timer
     void onTimerOut();
 
+
 private:
     Ui::MainWindow *ui;
     Settings *settingsScreen;
@@ -50,6 +55,8 @@ private:
     void setSession(TimerState session);
 
     QString formatTime(int seconds);
+
+    int timerStarted;
 
     // Funções específicas para cada tipo de sessão
     void pomodoroSession();
@@ -64,8 +71,7 @@ private:
     int defaultRoundsSessions;
     int timeRemaining;
     int running;
-
-    int sessionCount;  // Contador de sessões finalizadas
+    int sessionsDoneCount;  // Contador de sessões finalizadas
 };
 
 #endif // TIMER_H

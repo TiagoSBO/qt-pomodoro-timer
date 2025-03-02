@@ -2,21 +2,20 @@
 #include "ui_mainwindow.h"
 #include "settingsdialog.h"
 #include <QDebug>
-#include <QDateTime>
-#include <QString>
-#include <QChar>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 , ui(new Ui::MainWindow)
 
 , currentStatusTimer(FOCUS)
+, sessionsDoneCount(0)
 , currentPomodorSessions(0)
 , defaultPomodoroDuration(25)
 , defaultShortBreakDuration(5)
 , defaultLongBreakDuration(15)
 , defaultRoundsSessions(4) //Long break interval
 , timeRemaining(defaultPomodoroDuration * 60)
+, timerStarted(false)
 {
     ui->setupUi(this);
     ui->labelTimer->setText(formatTime(timeRemaining));
@@ -27,14 +26,14 @@ MainWindow::MainWindow(QWidget *parent)
     ui->tableSessionLogs->setColumnCount(3);  // Definindo o número de colunas
     ui->tableSessionLogs->setHorizontalHeaderLabels({"Pomodoro done", "Focus time", "End time"});  // Definindo os rótulos das colunas
 
-    //Conexão dos botões do Settings
+    //Connect Settings buttons
     settingsScreen = new Settings(this);
     connect(settingsScreen, &Settings::pomodoroDurationChanged, this, &MainWindow::updatePomodoroDuration);
     connect(settingsScreen, &Settings::shortBreakDurationChanged, this, &MainWindow::updateShortBreakDuration);
     connect(settingsScreen, &Settings::longBreakDurationChanged, this, &MainWindow::updateLongBreakDuration);
     connect(settingsScreen, &Settings::pomodoroRoundsChanged, this, &MainWindow::updatePomodoroRounds);
 
-    //Create Timer
+    //Timer creation
     timer = new QTimer(this);
     connect(timer, &QTimer::timeout, this, &MainWindow::onTimerOut);
 
@@ -43,7 +42,6 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->button_resumePause, &QPushButton::clicked, this, &MainWindow::btton_startResume_clicked);
     connect(ui->button_reset, &QPushButton::clicked, this, &MainWindow::btton_reset_clicked);
     connect(ui->button_skip, &QPushButton::clicked, this, &MainWindow::btton_skip_clicked);
-
 }
 
 MainWindow::~MainWindow()
@@ -61,22 +59,8 @@ void MainWindow::onTimerOut()
             ui->labelTimer->setText(formatTime(timeRemaining));
         }else {
             timer->stop();
-            handleSessionCompletion();
             //notification
-    }
-}
-
-void MainWindow::setSession(TimerState session)
-{
-    currentStatusTimer = session;
-
-    if (session == FOCUS){
-        pomodoroSession();
-    }
-    else if (session == SHORT_BREAK){
-        startShortBreak();
-    }else if (session == LONG_BREAK){
-        startLongBreak();
+            handleSessionCompletion();
     }
 }
 
@@ -89,6 +73,7 @@ void MainWindow::btton_startResume_clicked()
         qDebug() << "Pause Clicked / CurrentState -> " << currentStatusTimer;
     }else{
         timer->start(1000);
+        timerStarted = true;
         ui->button_resumePause->setText("Pause");
         qDebug() << "Start/Resume clicked / CurrentState -> " << currentStatusTimer;
     }
@@ -122,9 +107,14 @@ void MainWindow::btton_reset_clicked()
     ui->button_resumePause->setText("Start");
 }
 
-
 void MainWindow::btton_settings_clicked()
 {
+    if (timer->isActive()) {
+        settingsScreen->setSpinboxesEnabled(false);
+    } else {
+        settingsScreen->setSpinboxesEnabled(true);
+    }
+
     settingsScreen->setPomodorDuration(defaultPomodoroDuration);
     settingsScreen->setShortBreakDuration(defaultShortBreakDuration);
     settingsScreen->setLongBreakDuration(defaultLongBreakDuration);
@@ -134,15 +124,41 @@ void MainWindow::btton_settings_clicked()
     settingsScreen->exec();
 }
 
-void MainWindow::btton_skip_clicked(){
-    // if (currentStatusTimer == IDLE) return;
+void MainWindow::setSession(TimerState session)
+{
+    currentStatusTimer = session;
 
+    if (session == FOCUS){
+        pomodoroSession();
+    }
+    else if (session == SHORT_BREAK){
+        startShortBreak();
+    }else if (session == LONG_BREAK){
+        startLongBreak();
+    }
+}
+
+void MainWindow::btton_skip_clicked()
+{
     if (currentStatusTimer == FOCUS) {
+        if (timerStarted || running == false) {
+            int focusTimeSpent = (defaultPomodoroDuration * 60 - timeRemaining);
+            QString formattedFocusTime = formatTime(focusTimeSpent);
+            QString endTime = QDateTime::currentDateTime().toString("HH:mm:ss");
+
+            // Adiciona a sessão na tabela
+            sessionsDoneCount++;
+            sessionLogs->addSession(sessionsDoneCount, formattedFocusTime, endTime);
+            timerStarted = false;
+            qDebug() << "Focus session skipped! Time spent: " << formattedFocusTime;
+        }
+
         if (currentPomodorSessions >= defaultRoundsSessions) {
             qDebug() << "-->Focus Skipped. Starting LONG BREAK. Status ->" << currentStatusTimer;
-            setSession(LONG_BREAK); //
+            setSession(LONG_BREAK);
         } else{
             setSession(SHORT_BREAK);
+            qDebug() << "Focus session skipped! Time spent: " << timeRemaining << " minutes";
             qDebug() << "-->Focus Skipped. Starting SHORT. Status ->>" << currentStatusTimer;;
         }
     }else if (currentStatusTimer == SHORT_BREAK || currentStatusTimer == LONG_BREAK){
@@ -177,72 +193,67 @@ void MainWindow::updatePomodoroRounds(int newRounds) { defaultRoundsSessions = n
 //Sessions pomodoro and rest
 void MainWindow::pomodoroSession()
 {
-    qDebug() << "New Pomodoro session started! / CurrentState -> " << currentStatusTimer;
+    //notification
     currentStatusTimer = FOCUS;
-    timeRemaining = defaultPomodoroDuration * 60; // Reinicia o tempo do Pomodoro
-    ui->labelTimer->setText(formatTime(timeRemaining));
     timer->stop();
+    qDebug() << "New Pomodoro session started! / CurrentState -> " << currentStatusTimer;
 
-    if (running == false){
-        ui->button_resumePause->setText("Pause");
-    }else{
-        ui->button_resumePause->setText("Start");
-    }
+    running = false;
+    ui->button_resumePause->setText("Start");
+    timeRemaining = defaultPomodoroDuration * 60; //defaultPomodoroDuration
+
+    qDebug() << "Session Count --> " << currentPomodorSessions;
+    ui->labelTimer->setText(formatTime(timeRemaining));
 }
 
 void MainWindow::startShortBreak()
 {
+    timer->stop();
+    currentStatusTimer = SHORT_BREAK;
+    timerStarted = false;
+
+    running = false;
+    ui->button_resumePause->setText("Start");
+
+    //notification
     qDebug() << "Short_Break Started / CurrenState -> " << currentStatusTimer;
 
-    //Table Variables
-    QString endTime = QDateTime::currentDateTime().toString("HH:mm:ss");
-    int sessionDurationInMinutes = defaultPomodoroDuration;
-
-    sessionLogs->addSession(currentPomodorSessions + 1, QString::number(sessionDurationInMinutes) + "min", endTime);
-
-
-    currentPomodorSessions++;
-
-    qDebug() << "Session Count --> " << currentPomodorSessions;
-
-    currentStatusTimer = SHORT_BREAK;
-    timeRemaining = defaultShortBreakDuration * 60; // Tempo de descanso curto
+    timeRemaining = defaultShortBreakDuration * 60;
     ui->labelTimer->setText(QString(formatTime(timeRemaining)));
-    timer->stop();
-
-    if (running == false){
-        ui->button_resumePause->setText("Pause");
-    }else{
-        ui->button_resumePause->setText("Start");
-    }
 }
 
 void MainWindow::startLongBreak()
 {
+    currentStatusTimer = LONG_BREAK;
+    timer->stop();
+    timerStarted = false;
+
+    //notification
     qDebug() << "Long_Break Started! / CurrentState -> " << currentStatusTimer;
+
+    running = false;
+    ui->button_resumePause->setText("Start");
 
     currentPomodorSessions = 0;
 
-    currentStatusTimer = LONG_BREAK;
-    timeRemaining = defaultLongBreakDuration * 60; // Tempo de descanso longo
+    timeRemaining = defaultLongBreakDuration * 60;
     ui->labelTimer->setText(QString(formatTime(timeRemaining)));
-    timer->stop();
-
-    if (running == false){
-        ui->button_resumePause->setText("Pause");
-    }else{
-        ui->button_resumePause->setText("Start");
-    }
 }
 
 void MainWindow::handleSessionCompletion()
 {
-    qDebug() << "Sessions Pomodoro Completed: " << currentPomodorSessions;
     qDebug() << "currentStatusTimer: " << currentStatusTimer;
+    currentPomodorSessions++;
 
-    if (currentStatusTimer == FOCUS){ //se a sessão encerrada foi focus
+    qDebug() << "Sessions Pomodoro Completed: " << currentPomodorSessions;
+
+    if (currentStatusTimer == FOCUS){
+        //TableView
+        sessionsDoneCount++;
+        QString endTime = QDateTime::currentDateTime().toString("HH:mm:ss");
+        sessionLogs->addSession(sessionsDoneCount, QString::number(defaultPomodoroDuration) + " min", endTime);
+
         if (currentPomodorSessions >= defaultRoundsSessions){
-            //currentPomodorSessions > 2 && (currentPomodorSessions -1) % defaultRoundsSessions == 0
             currentPomodorSessions = 0;
             qDebug() << "Starting LONG BREAK.";
             startLongBreak();
@@ -255,7 +266,6 @@ void MainWindow::handleSessionCompletion()
         qDebug() <<  "Starting a new Pomodoro session.";
         pomodoroSession();
     }
-    ui->button_resumePause->setText("Start");
 }
 
 QString MainWindow::formatTime(int seconds)

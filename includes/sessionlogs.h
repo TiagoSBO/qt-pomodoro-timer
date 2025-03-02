@@ -12,7 +12,6 @@ public:
 
     void addSession(int sessionNumber, const QString &sessionDuration, const QString &endTimeOfSession);
 
-
 private:
     QTableWidget *m_table;  // Ponteiro para a tabela
 };
