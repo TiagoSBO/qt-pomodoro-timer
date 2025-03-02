@@ -1,5 +1,6 @@
 #include "settingsdialog.h"
 #include "ui_settingsdialog.h"
+#include <QMessageBox>
 
 Settings::Settings(QWidget *parent)
     : QDialog(parent)
@@ -59,6 +60,28 @@ int Settings::getLongBreakDuration() const
 int Settings::getPomodoroRounds() const
 {
     return ui->boxSetIntervalDuration->value();
+}
+
+//SpinBoxes configs (alerts)
+void Settings::setSpinboxesEnabled(bool enabled)
+{
+    ui->boxSetTimerDuration->setEnabled(enabled);
+    ui->boxSetShortDuration->setEnabled(enabled);
+    ui->boxSetLongDuration->setEnabled(enabled);
+    ui->boxSetIntervalDuration->setEnabled(enabled);
+    if (!enabled) {
+        // Aplica uma dica de "não disponível" com um QToolTip
+        ui->boxSetTimerDuration->setToolTip("You can only change the Timer values ​​when the timer is paused or reset");
+        ui->boxSetShortDuration->setToolTip("You can only change the Timer values ​​when the timer is paused or reset");
+        ui->boxSetLongDuration->setToolTip("You can only change the Timer values ​​when the timer is paused or reset");
+        ui->boxSetIntervalDuration->setToolTip("You can only change the Timer values ​​when the timer is paused or reset");
+    } else {
+        // Remove as dicas de aviso
+        ui->boxSetTimerDuration->setToolTip("");
+        ui->boxSetShortDuration->setToolTip("");
+        ui->boxSetLongDuration->setToolTip("");
+        ui->boxSetIntervalDuration->setToolTip("");
+    }
 }
 
 void Settings::emitTimeValueChanged()

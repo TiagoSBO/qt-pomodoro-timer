@@ -23,6 +23,8 @@ public:
     void setLongBreakDuration(int duration);
     void setPomodoroRounds(int interval);
 
+    void setSpinboxesEnabled(bool enabled);
+
     //GETS
     int getPomodoroDuration() const;
     int getShortBreakDuration() const;
