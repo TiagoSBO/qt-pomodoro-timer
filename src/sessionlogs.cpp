@@ -4,8 +4,7 @@
 
 Sessionlogs::Sessionlogs(QTableWidget *table)
     : m_table(table)  // Inicializa com o ponteiro da tabela
-{
-}
+{}
 
 Sessionlogs::~Sessionlogs() {}
 

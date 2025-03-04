@@ -6,7 +6,6 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 , ui(new Ui::MainWindow)
-
 , currentStatusTimer(FOCUS)
 , sessionsDoneCount(0)
 , currentPomodorSessions(0)
@@ -18,13 +17,52 @@ MainWindow::MainWindow(QWidget *parent)
 , timerStarted(false)
 {
     ui->setupUi(this);
+    ui->statusbar->showMessage("Version 1.0.0");
     ui->labelTimer->setText(formatTime(timeRemaining));
 
     //Table View
-    sessionLogs = new Sessionlogs(ui->tableSessionLogs); // Passa o ponteiro da MainWindow
-    ui->tableSessionLogs->verticalHeader()->setVisible(false);  // Isso vai esconder os números de linha
-    ui->tableSessionLogs->setColumnCount(3);  // Definindo o número de colunas
-    ui->tableSessionLogs->setHorizontalHeaderLabels({"Pomodoro done", "Focus time", "End time"});  // Definindo os rótulos das colunas
+    sessionLogs = new Sessionlogs(ui->tableSessionLogs);
+    ui->tableSessionLogs->verticalHeader()->setVisible(false);
+    ui->tableSessionLogs->setColumnCount(3);
+    QTableWidgetItem *headerItem0 = new QTableWidgetItem(QIcon(":/icons/assets/icons/Pomodoro Icon.png"), "Pomodoros Done");
+    QTableWidgetItem *headerItem1 = new QTableWidgetItem(QIcon(":/icons/assets/icons/timer3.png"), "Focus Time");
+    QTableWidgetItem *headerItem2 = new QTableWidgetItem(QIcon(":/icons/assets/icons/endtime.png"), "End Time");
+
+    headerItem0->setTextAlignment(Qt::AlignCenter);
+    headerItem0->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
+    headerItem1->setTextAlignment(Qt::AlignCenter);
+    headerItem1->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
+    headerItem2->setTextAlignment(Qt::AlignCenter);
+    headerItem2->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
+
+    ui->tableSessionLogs->setHorizontalHeaderItem(0, headerItem0);
+    ui->tableSessionLogs->setHorizontalHeaderItem(1, headerItem1);
+    ui->tableSessionLogs->setHorizontalHeaderItem(2, headerItem2);
+
+    //style
+    QFont font;
+    font.setBold(true);
+    ui->tableSessionLogs->horizontalHeader()->setFont(font);
+
+    QHeaderView *header = ui->tableSessionLogs->horizontalHeader();
+
+    // Define as colunas para se ajustarem automaticamente ao espaço disponível
+    header->setSectionResizeMode(QHeaderView::Stretch);
+
+    header->setSectionResizeMode(0, QHeaderView::ResizeToContents);
+    header->setSectionResizeMode(1, QHeaderView::Stretch);
+    header->setSectionResizeMode(2, QHeaderView::Stretch);
+    ui->tableSessionLogs->setColumnWidth(0, 150);
+    ui->tableSessionLogs->setColumnWidth(1, 150);
+    ui->tableSessionLogs->setColumnWidth(2, 150);
+
+    ui->tableSessionLogs->horizontalHeader()->setStyleSheet(
+        "QHeaderView::section { "
+        "padding: 8px 10px; "  // Adiciona espaçamento interno nos headers
+        "font-size: 12px; "
+        "qproperty-alignment: AlignCenter; "
+        "} "
+        );
 
     //Connect Settings buttons
     settingsScreen = new Settings(this);

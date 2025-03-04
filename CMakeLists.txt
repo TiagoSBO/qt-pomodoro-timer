@@ -21,7 +21,7 @@ qt_add_executable(pomodoro_timer
     includes/sessionlogs.h
     ui/mainwindow.ui
     ui/settingsdialog.ui
-    # sessionlogs.h sessionlogs.cpp
+    resources.qrc
 )
 
 # Diretórios de inclusão
