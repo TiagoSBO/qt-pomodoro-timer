@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 #include "settingsdialog.h"
 #include <QDebug>
+#include <QFile>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -20,10 +21,11 @@ MainWindow::MainWindow(QWidget *parent)
     ui->statusbar->showMessage("Version 1.0.0");
     ui->labelTimer->setText(formatTime(timeRemaining));
 
-    //Table View
+    //Table View configs
     sessionLogs = new Sessionlogs(ui->tableSessionLogs);
     ui->tableSessionLogs->verticalHeader()->setVisible(false);
     ui->tableSessionLogs->setColumnCount(3);
+    ui->tableSessionLogs->setColumnWidth(0, 150);  // Ajuste conforme necessário
     QTableWidgetItem *headerItem0 = new QTableWidgetItem(QIcon(":/icons/assets/icons/Pomodoro Icon.png"), "Pomodoros Done");
     QTableWidgetItem *headerItem1 = new QTableWidgetItem(QIcon(":/icons/assets/icons/timer3.png"), "Focus Time");
     QTableWidgetItem *headerItem2 = new QTableWidgetItem(QIcon(":/icons/assets/icons/endtime.png"), "End Time");
@@ -39,30 +41,10 @@ MainWindow::MainWindow(QWidget *parent)
     ui->tableSessionLogs->setHorizontalHeaderItem(1, headerItem1);
     ui->tableSessionLogs->setHorizontalHeaderItem(2, headerItem2);
 
-    //style
-    QFont font;
-    font.setBold(true);
-    ui->tableSessionLogs->horizontalHeader()->setFont(font);
-
     QHeaderView *header = ui->tableSessionLogs->horizontalHeader();
-
-    // Define as colunas para se ajustarem automaticamente ao espaço disponível
-    header->setSectionResizeMode(QHeaderView::Stretch);
-
-    header->setSectionResizeMode(0, QHeaderView::ResizeToContents);
+    ui->tableSessionLogs->setColumnWidth(0, 140);
     header->setSectionResizeMode(1, QHeaderView::Stretch);
     header->setSectionResizeMode(2, QHeaderView::Stretch);
-    ui->tableSessionLogs->setColumnWidth(0, 150);
-    ui->tableSessionLogs->setColumnWidth(1, 150);
-    ui->tableSessionLogs->setColumnWidth(2, 150);
-
-    ui->tableSessionLogs->horizontalHeader()->setStyleSheet(
-        "QHeaderView::section { "
-        "padding: 8px 10px; "  // Adiciona espaçamento interno nos headers
-        "font-size: 12px; "
-        "qproperty-alignment: AlignCenter; "
-        "} "
-        );
 
     //Connect Settings buttons
     settingsScreen = new Settings(this);
@@ -110,7 +92,7 @@ void MainWindow::btton_startResume_clicked()
         ui->button_resumePause->setText("Resume");
         qDebug() << "Pause Clicked / CurrentState -> " << currentStatusTimer;
     }else{
-        timer->start(1000);
+        timer->start(2);
         timerStarted = true;
         ui->button_resumePause->setText("Pause");
         qDebug() << "Start/Resume clicked / CurrentState -> " << currentStatusTimer;
@@ -179,12 +161,13 @@ void MainWindow::setSession(TimerState session)
 void MainWindow::btton_skip_clicked()
 {
     if (currentStatusTimer == FOCUS) {
-        if (timerStarted || running == false) {
+        if (timerStarted || running == false || running != false) {
+            currentPomodorSessions++;
             int focusTimeSpent = (defaultPomodoroDuration * 60 - timeRemaining);
             QString formattedFocusTime = formatTime(focusTimeSpent);
             QString endTime = QDateTime::currentDateTime().toString("HH:mm:ss");
 
-            // Adiciona a sessão na tabela
+            // Add session to the table
             sessionsDoneCount++;
             sessionLogs->addSession(sessionsDoneCount, formattedFocusTime, endTime);
             timerStarted = false;
@@ -192,12 +175,12 @@ void MainWindow::btton_skip_clicked()
         }
 
         if (currentPomodorSessions >= defaultRoundsSessions) {
-            qDebug() << "-->Focus Skipped. Starting LONG BREAK. Status ->" << currentStatusTimer;
+            qDebug() << "-->Focus Skipped. Starting LONG BREAK";
             setSession(LONG_BREAK);
         } else{
-            setSession(SHORT_BREAK);
             qDebug() << "Focus session skipped! Time spent: " << timeRemaining << " minutes";
-            qDebug() << "-->Focus Skipped. Starting SHORT. Status ->>" << currentStatusTimer;;
+            qDebug() << "Sessions SKIPED Pomodoro Completed --->>> " << currentPomodorSessions;
+            setSession(SHORT_BREAK);
         }
     }else if (currentStatusTimer == SHORT_BREAK || currentStatusTimer == LONG_BREAK){
         setSession(FOCUS);
@@ -240,7 +223,7 @@ void MainWindow::pomodoroSession()
     ui->button_resumePause->setText("Start");
     timeRemaining = defaultPomodoroDuration * 60; //defaultPomodoroDuration
 
-    qDebug() << "Session Count --> " << currentPomodorSessions;
+    // qDebug() << "Session Count --> " << currentPomodorSessions;
     ui->labelTimer->setText(formatTime(timeRemaining));
 }
 
@@ -280,12 +263,10 @@ void MainWindow::startLongBreak()
 
 void MainWindow::handleSessionCompletion()
 {
-    qDebug() << "currentStatusTimer: " << currentStatusTimer;
-    currentPomodorSessions++;
-
-    qDebug() << "Sessions Pomodoro Completed: " << currentPomodorSessions;
-
     if (currentStatusTimer == FOCUS){
+        currentPomodorSessions++;
+        qDebug() << "Sessions Pomodoro Completed --->>> " << currentPomodorSessions;
+
         //TableView
         sessionsDoneCount++;
         QString endTime = QDateTime::currentDateTime().toString("HH:mm:ss");

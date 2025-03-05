@@ -17,12 +17,35 @@ void Sessionlogs::addSession(int sessionNumber, const QString &sessionDuration, 
 
     int row = m_table->rowCount();  // Obtém o número de linhas
     m_table->insertRow(row);  // Insere uma nova linha
+    if (row % 4 == 0 && row != 0) {
+        m_table->insertRow(row);
 
-    // Adiciona as informações nas colunas da tabela
-    m_table->setItem(row, 0, new QTableWidgetItem(QString::number(sessionNumber)));
-    m_table->setItem(row, 1, new QTableWidgetItem(sessionDuration));
-    m_table->setItem(row, 2, new QTableWidgetItem(endTimeOfSession));
+        QTableWidgetItem *groupHeader = new QTableWidgetItem("🕒 Ciclo " + QString::number(row / 4 + 1));
+        groupHeader->setTextAlignment(Qt::AlignCenter);
+        groupHeader->setFlags(Qt::NoItemFlags);
+        groupHeader->setFont(QFont("Arial", 10, QFont::Bold));
+
+        m_table->setSpan(row, 0, 1, 3);  // Mescla as colunas para o cabeçalho
+        m_table->setItem(row, 0, groupHeader);
+
+        row++;
+    }
+
+    // Criando itens e alinhando ao centro
+    QTableWidgetItem *itemSession = new QTableWidgetItem(QString::number(sessionNumber));
+    itemSession->setTextAlignment(Qt::AlignCenter);
+
+    QTableWidgetItem *itemDuration = new QTableWidgetItem(sessionDuration);
+    itemDuration->setTextAlignment(Qt::AlignCenter);
+
+    QTableWidgetItem *itemEndTime = new QTableWidgetItem(endTimeOfSession);
+    itemEndTime->setTextAlignment(Qt::AlignCenter);
+
+    // Adiciona os itens na tabela
+    m_table->setItem(row, 0, itemSession);
+    m_table->setItem(row, 1, itemDuration);
+    m_table->setItem(row, 2, itemEndTime);
+
 
     qDebug() << "Sessão adicionada com sucesso na tabela!";
 }
-
