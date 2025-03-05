@@ -22,6 +22,7 @@ qt_add_executable(pomodoro_timer
     ui/mainwindow.ui
     ui/settingsdialog.ui
     resources.qrc
+    styles/styles.qss
 )
 
 # Diretórios de inclusão
