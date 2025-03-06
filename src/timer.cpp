@@ -5,7 +5,7 @@
 #include <QFile>
 
 MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent)
+: QMainWindow(parent)
 , ui(new Ui::MainWindow)
 , currentStatusTimer(FOCUS)
 , sessionsDoneCount(0)
@@ -21,11 +21,11 @@ MainWindow::MainWindow(QWidget *parent)
     ui->statusbar->showMessage("Version 1.0.0");
     ui->labelTimer->setText(formatTime(timeRemaining));
 
-    //Table View configs
+    //Config - Table View
     sessionLogs = new Sessionlogs(ui->tableSessionLogs);
     ui->tableSessionLogs->verticalHeader()->setVisible(false);
     ui->tableSessionLogs->setColumnCount(3);
-    ui->tableSessionLogs->setColumnWidth(0, 150);  // Ajuste conforme necessário
+    ui->tableSessionLogs->setColumnWidth(0, 150);
     QTableWidgetItem *headerItem0 = new QTableWidgetItem(QIcon(":/icons/assets/icons/Pomodoro Icon.png"), "Pomodoros Done");
     QTableWidgetItem *headerItem1 = new QTableWidgetItem(QIcon(":/icons/assets/icons/timer3.png"), "Focus Time");
     QTableWidgetItem *headerItem2 = new QTableWidgetItem(QIcon(":/icons/assets/icons/endtime.png"), "End Time");
@@ -41,10 +41,26 @@ MainWindow::MainWindow(QWidget *parent)
     ui->tableSessionLogs->setHorizontalHeaderItem(1, headerItem1);
     ui->tableSessionLogs->setHorizontalHeaderItem(2, headerItem2);
 
+    ui->tableSessionLogs->setSelectionMode(QAbstractItemView::NoSelection);
+    ui->tableSessionLogs->setSelectionBehavior(QAbstractItemView::SelectRows);
+
     QHeaderView *header = ui->tableSessionLogs->horizontalHeader();
     ui->tableSessionLogs->setColumnWidth(0, 140);
     header->setSectionResizeMode(1, QHeaderView::Stretch);
     header->setSectionResizeMode(2, QHeaderView::Stretch);
+
+    //Config Table
+    QMenu *menu = new QMenu(this);
+    menu->setFocusPolicy(Qt::NoFocus);
+
+    QAction *deleteTableData = new QAction("Delete table data 🗑️", this);
+    deleteTableData->setStatusTip(""); // Impede que a ação limpe a status bar
+    menu->addAction(deleteTableData);
+
+    menu->setStatusTip(""); // Impede que o menu altere a status bar
+    ui->button_configTable->setMenu(menu);
+
+    connect(deleteTableData, &QAction::triggered, this, &MainWindow::button_configTable_clicked);
 
     //Connect Settings buttons
     settingsScreen = new Settings(this);
@@ -292,5 +308,20 @@ QString MainWindow::formatTime(int seconds)
     int minutes = seconds / 60;
     int remainingSeconds = seconds % 60;
     return QString("%1:%2").arg(minutes, 2, 10, QChar('0')).arg(remainingSeconds, 2, 10, QChar('0'));
+}
+
+
+void MainWindow::button_configTable_clicked()
+{
+    QMessageBox::StandardButton answer;
+    answer = QMessageBox::question(this, "Confirmation",
+        "Are you sure you want to delete the data from the table?",
+        QMessageBox::Yes | QMessageBox::No);
+
+    if (answer == QMessageBox::Yes) {
+        qDebug() << "Dados excluídos!";  // Aqui você coloca a lógica para excluir os dados
+    } else {
+        qDebug() << "Ação cancelada!";
+    }
 }
 

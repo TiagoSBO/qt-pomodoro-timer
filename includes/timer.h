@@ -8,6 +8,8 @@
 #include <QDateTime>
 #include <QString>
 #include <QChar>
+#include <QAction>
+#include <QMenu>
 
 // Estados do Timer
 enum TimerState {
@@ -44,6 +46,7 @@ private slots:
     //Slot Timer
     void onTimerOut();
 
+    void button_configTable_clicked();
 
 private:
     Ui::MainWindow *ui;
