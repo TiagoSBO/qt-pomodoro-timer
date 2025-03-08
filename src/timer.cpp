@@ -30,12 +30,12 @@ MainWindow::MainWindow(QWidget *parent)
     QTableWidgetItem *headerItem1 = new QTableWidgetItem(QIcon(":/icons/assets/icons/timer3.png"), "Focus Time");
     QTableWidgetItem *headerItem2 = new QTableWidgetItem(QIcon(":/icons/assets/icons/endtime.png"), "End Time");
 
-    headerItem0->setTextAlignment(Qt::AlignCenter);
-    headerItem0->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
-    headerItem1->setTextAlignment(Qt::AlignCenter);
-    headerItem1->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
-    headerItem2->setTextAlignment(Qt::AlignCenter);
-    headerItem2->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
+    // headerItem0->setTextAlignment(Qt::AlignCenter);
+    // headerItem0->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
+    // headerItem1->setTextAlignment(Qt::AlignCenter);
+    // headerItem1->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
+    // headerItem2->setTextAlignment(Qt::AlignCenter);
+    // headerItem2->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
 
     ui->tableSessionLogs->setHorizontalHeaderItem(0, headerItem0);
     ui->tableSessionLogs->setHorizontalHeaderItem(1, headerItem1);
@@ -49,15 +49,11 @@ MainWindow::MainWindow(QWidget *parent)
     header->setSectionResizeMode(1, QHeaderView::Stretch);
     header->setSectionResizeMode(2, QHeaderView::Stretch);
 
-    //Config Table
+    //Config button table
     QMenu *menu = new QMenu(this);
     menu->setFocusPolicy(Qt::NoFocus);
-
     QAction *deleteTableData = new QAction("Delete table data 🗑️", this);
-    deleteTableData->setStatusTip(""); // Impede que a ação limpe a status bar
     menu->addAction(deleteTableData);
-
-    menu->setStatusTip(""); // Impede que o menu altere a status bar
     ui->button_configTable->setMenu(menu);
 
     connect(deleteTableData, &QAction::triggered, this, &MainWindow::button_configTable_clicked);

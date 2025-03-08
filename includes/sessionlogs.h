@@ -7,7 +7,7 @@
 class Sessionlogs
 {
 public:
-    explicit Sessionlogs(QTableWidget *table);  // Agora passa o ponteiro para QTableWidget diretamente
+    explicit Sessionlogs(QTableWidget *table);
     ~Sessionlogs();
 
     void addSession(int sessionNumber, const QString &sessionDuration, const QString &endTimeOfSession);
