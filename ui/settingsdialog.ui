@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>292</width>
-    <height>276</height>
+    <width>357</width>
+    <height>364</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -71,7 +71,7 @@
       <enum>QTabWidget::TabShape::Rounded</enum>
      </property>
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <property name="elideMode">
       <enum>Qt::TextElideMode::ElideNone</enum>
@@ -103,7 +103,7 @@
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_2">
        <property name="spacing">
-        <number>0</number>
+        <number>5</number>
        </property>
        <property name="leftMargin">
         <number>0</number>
@@ -118,9 +118,9 @@
         <number>0</number>
        </property>
        <item>
-        <widget class="QGroupBox" name="groupBox">
+        <widget class="QWidget" name="layout_timer" native="true">
          <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
@@ -131,30 +131,24 @@
            <height>500</height>
           </size>
          </property>
-         <property name="title">
-          <string/>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
-         </property>
-         <layout class="QGridLayout" name="gridLayout" rowstretch="0,0" columnstretch="0,0" rowminimumheight="0,0" columnminimumwidth="0,101">
+         <layout class="QGridLayout" name="gridLayout" rowstretch="0,0,0" columnstretch="2,1" rowminimumheight="0,0,0" columnminimumwidth="1,999">
           <property name="leftMargin">
-           <number>10</number>
+           <number>5</number>
           </property>
           <property name="topMargin">
-           <number>0</number>
+           <number>5</number>
           </property>
           <property name="rightMargin">
-           <number>40</number>
+           <number>5</number>
           </property>
           <property name="bottomMargin">
-           <number>0</number>
+           <number>5</number>
           </property>
           <property name="horizontalSpacing">
-           <number>10</number>
+           <number>2</number>
           </property>
           <property name="verticalSpacing">
-           <number>2</number>
+           <number>5</number>
           </property>
           <item row="0" column="0">
            <layout class="QVBoxLayout" name="verticalLayout_3" stretch="1,1,1,1">
@@ -162,16 +156,16 @@
              <number>5</number>
             </property>
             <property name="leftMargin">
-             <number>0</number>
+             <number>10</number>
             </property>
             <property name="topMargin">
-             <number>0</number>
+             <number>5</number>
             </property>
             <property name="rightMargin">
-             <number>0</number>
+             <number>5</number>
             </property>
             <property name="bottomMargin">
-             <number>0</number>
+             <number>5</number>
             </property>
             <item>
              <widget class="QLabel" name="label_TimerDuration">
@@ -270,6 +264,9 @@
               <property name="text">
                <string>Long break:</string>
               </property>
+              <property name="alignment">
+               <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
+              </property>
              </widget>
             </item>
             <item>
@@ -292,37 +289,12 @@
               <property name="text">
                <string>Long break Interval:</string>
               </property>
+              <property name="alignment">
+               <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
+              </property>
              </widget>
             </item>
            </layout>
-          </item>
-          <item row="1" column="0">
-           <widget class="QPushButton" name="bttnResetTimerDefaults">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>210</width>
-              <height>50</height>
-             </size>
-            </property>
-            <property name="font">
-             <font>
-              <pointsize>9</pointsize>
-              <bold>true</bold>
-             </font>
-            </property>
-            <property name="layoutDirection">
-             <enum>Qt::LayoutDirection::LeftToRight</enum>
-            </property>
-            <property name="text">
-             <string>Reset timer values</string>
-            </property>
-           </widget>
           </item>
           <item row="0" column="1">
            <layout class="QVBoxLayout" name="verticalLayout" stretch="1,1,1,1">
@@ -330,16 +302,16 @@
              <number>5</number>
             </property>
             <property name="leftMargin">
-             <number>0</number>
+             <number>5</number>
             </property>
             <property name="topMargin">
-             <number>0</number>
+             <number>5</number>
             </property>
             <property name="rightMargin">
-             <number>0</number>
+             <number>5</number>
             </property>
             <property name="bottomMargin">
-             <number>0</number>
+             <number>5</number>
             </property>
             <item>
              <widget class="QSpinBox" name="boxSetTimerDuration">
@@ -366,6 +338,15 @@
               </property>
               <property name="alignment">
                <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
+              </property>
+              <property name="suffix">
+               <string> min</string>
+              </property>
+              <property name="prefix">
+               <string/>
+              </property>
+              <property name="minimum">
+               <number>0</number>
               </property>
               <property name="maximum">
                <number>99999</number>
@@ -395,6 +376,9 @@
                 <height>0</height>
                </size>
               </property>
+              <property name="suffix">
+               <string> min</string>
+              </property>
               <property name="maximum">
                <number>99999</number>
               </property>
@@ -416,6 +400,9 @@
               </property>
               <property name="alignment">
                <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
+              </property>
+              <property name="suffix">
+               <string> min</string>
               </property>
               <property name="maximum">
                <number>99999</number>
@@ -441,6 +428,41 @@
                 <width>100</width>
                 <height>30</height>
                </size>
+              </property>
+              <property name="suffix">
+               <string> interval</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item row="2" column="0">
+           <layout class="QVBoxLayout" name="verticalLayout_8">
+            <item>
+             <widget class="QPushButton" name="bttnResetTimerDefaults">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>210</width>
+                <height>50</height>
+               </size>
+              </property>
+              <property name="font">
+               <font>
+                <pointsize>9</pointsize>
+                <bold>true</bold>
+               </font>
+              </property>
+              <property name="layoutDirection">
+               <enum>Qt::LayoutDirection::LeftToRight</enum>
+              </property>
+              <property name="text">
+               <string>Reset timer values</string>
               </property>
              </widget>
             </item>
@@ -490,7 +512,7 @@
         <number>0</number>
        </property>
        <item>
-        <layout class="QGridLayout" name="gridLayout_3" rowstretch="1,1,1" columnstretch="0,0">
+        <layout class="QGridLayout" name="layout_notifications" rowstretch="1,1,1" columnstretch="0,0">
          <property name="leftMargin">
           <number>0</number>
          </property>

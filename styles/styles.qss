@@ -4,7 +4,8 @@ QTableWidget {
     border: 1px solid #ccc;
     selection-background-color: #f5f5f5;
     selection-color: #333;
-    border: 1px solid red;
+    border-radius: 6px;
+    border: 2px solid red;
 }
 QHeaderView::section {  /* Headers */
 
@@ -73,3 +74,14 @@ QMessageBox QPushButton:hover {
 QMessageBox QPushButton:pressed {
     background-color: #388e3c;  /* Cor ao pressionar o botão */
 }
+
+#setTotalFocus {
+    color: blue; /* Cor do texto */
+    font-size: 14px; /* Tamanho da fonte */
+    font-weight: bold; /* Peso da fonte */
+    padding: 4px; /* Espaçamento interno */
+    border-radius: 5px; /* Bordas arredondadas */
+    border: 1px  solid #333; /* Borda */
+    border:none;
+}
+
