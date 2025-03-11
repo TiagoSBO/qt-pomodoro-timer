@@ -18,8 +18,11 @@ MainWindow::MainWindow(QWidget *parent)
 , timerStarted(false)
 {
     ui->setupUi(this);
+
+    //Initial Sets Updates
     ui->statusbar->showMessage("Version 1.0.0");
     ui->labelTimer->setText(formatTime(timeRemaining));
+    ui->label_setTotalFocus->setObjectName("setTotalFocus");
 
     //Config - Table View
     sessionLogs = new Sessionlogs(ui->tableSessionLogs);
@@ -29,13 +32,6 @@ MainWindow::MainWindow(QWidget *parent)
     QTableWidgetItem *headerItem0 = new QTableWidgetItem(QIcon(":/icons/assets/icons/Pomodoro Icon.png"), "Pomodoros Done");
     QTableWidgetItem *headerItem1 = new QTableWidgetItem(QIcon(":/icons/assets/icons/timer3.png"), "Focus Time");
     QTableWidgetItem *headerItem2 = new QTableWidgetItem(QIcon(":/icons/assets/icons/endtime.png"), "End Time");
-
-    // headerItem0->setTextAlignment(Qt::AlignCenter);
-    // headerItem0->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
-    // headerItem1->setTextAlignment(Qt::AlignCenter);
-    // headerItem1->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
-    // headerItem2->setTextAlignment(Qt::AlignCenter);
-    // headerItem2->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
 
     ui->tableSessionLogs->setHorizontalHeaderItem(0, headerItem0);
     ui->tableSessionLogs->setHorizontalHeaderItem(1, headerItem1);
@@ -177,11 +173,12 @@ void MainWindow::btton_skip_clicked()
             currentPomodorSessions++;
             int focusTimeSpent = (defaultPomodoroDuration * 60 - timeRemaining);
             QString formattedFocusTime = formatTime(focusTimeSpent);
-            QString endTime = QDateTime::currentDateTime().toString("HH:mm:ss");
+            QString endTime = QDateTime::currentDateTime().toString("HH:mm");
 
             // Add session to the table
             sessionsDoneCount++;
             sessionLogs->addSession(sessionsDoneCount, formattedFocusTime, endTime);
+            updateTotalFocusTime();
             timerStarted = false;
             qDebug() << "Focus session skipped! Time spent: " << formattedFocusTime;
         }
@@ -280,9 +277,18 @@ void MainWindow::handleSessionCompletion()
         qDebug() << "Sessions Pomodoro Completed --->>> " << currentPomodorSessions;
 
         //TableView
+        // sessionsDoneCount++;
+        // QString endTime = QDateTime::currentDateTime().toString("HH:mm:ss");
+        // sessionsDoneCount++;
+        // sessionLogs->addSession(sessionsDoneCount, QString::number(defaultPomodoroDuration) + " min", endTime);
+        int focusTimeSpent = defaultPomodoroDuration * 60;  // Duração total da sessão
+        QString formattedFocusTime = formatTime(focusTimeSpent);
+        QString endTime = QDateTime::currentDateTime().toString("HH:mm");
+
         sessionsDoneCount++;
-        QString endTime = QDateTime::currentDateTime().toString("HH:mm:ss");
-        sessionLogs->addSession(sessionsDoneCount, QString::number(defaultPomodoroDuration) + " min", endTime);
+        sessionLogs->addSession(sessionsDoneCount, formattedFocusTime, endTime);
+
+        updateTotalFocusTime();
 
         if (currentPomodorSessions >= defaultRoundsSessions){
             currentPomodorSessions = 0;
@@ -299,14 +305,26 @@ void MainWindow::handleSessionCompletion()
     }
 }
 
-QString MainWindow::formatTime(int seconds)
+//Table Label - Total focus time
+void MainWindow::updateTotalFocusTime()
 {
-    int minutes = seconds / 60;
-    int remainingSeconds = seconds % 60;
-    return QString("%1:%2").arg(minutes, 2, 10, QChar('0')).arg(remainingSeconds, 2, 10, QChar('0'));
+    int totalSeconds = sessionLogs->getTotalTimeFocus(); // Obtém o tempo total de foco em segundos
+
+    // Calcular as horas e minutos a partir dos segundos totais
+    int hours = totalSeconds / 3600;  // Calcula o número de horas
+    int minutes = (totalSeconds % 3600) / 60;  // Calcula os minutos restantes
+
+    // Verifica se o tempo total de foco é menor que 1 hora
+    if (hours > 0) {
+        // Exibe o tempo no formato "Xh:YYmin" se tiver 1 ou mais horas
+        ui->label_setTotalFocus->setText(QString("%1h %2min").arg(hours).arg(minutes, 2, 10, QChar('0')));
+    } else {
+        // Exibe apenas os minutos se o tempo for menor que 1 hora
+        ui->label_setTotalFocus->setText(QString("%1 min").arg(minutes));
+    }
 }
 
-
+//Table Button - Reset table data
 void MainWindow::button_configTable_clicked()
 {
     QMessageBox::StandardButton answer;
@@ -315,9 +333,23 @@ void MainWindow::button_configTable_clicked()
         QMessageBox::Yes | QMessageBox::No);
 
     if (answer == QMessageBox::Yes) {
+        ui->tableSessionLogs->clearContents();
+        // sessionsDoneCount = 0;
+        // currentPomodorSessions = 0;
+        // ui->tableSessionLogs->rowCount();
+        ui->tableSessionLogs->setRowCount(0);
+
         qDebug() << "Dados excluídos!";  // Aqui você coloca a lógica para excluir os dados
     } else {
         qDebug() << "Ação cancelada!";
     }
 }
+
+QString MainWindow::formatTime(int seconds)
+{
+    int minutes = seconds / 60;
+    int remainingSeconds = seconds % 60;
+    return QString("%1:%2").arg(minutes, 2, 10, QChar('0')).arg(remainingSeconds, 2, 10, QChar('0'));
+}
+
 

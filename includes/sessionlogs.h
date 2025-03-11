@@ -11,6 +11,7 @@ public:
     ~Sessionlogs();
 
     void addSession(int sessionNumber, const QString &sessionDuration, const QString &endTimeOfSession);
+    int getTotalTimeFocus();
 
 private:
     QTableWidget *m_table;  // Ponteiro para a tabela

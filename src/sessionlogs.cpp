@@ -54,3 +54,28 @@ void Sessionlogs::addSession(int sessionNumber, const QString &sessionDuration, 
 
     qDebug() << "Sessão adicionada com sucesso na tabela!";
 }
+
+int Sessionlogs::getTotalTimeFocus()
+{
+    if (!m_table) return 0;
+
+    int totalSeconds = 0;
+
+    for (int row = 0; row < m_table->rowCount(); ++row) {
+        QTableWidgetItem *item = m_table->item(row, 1); // Coluna "Focus Time"
+        if (item) {
+            QString timeStr = item->text(); // Formato "MM:SS"
+            qDebug() << "Linha " << row << " - Tempo extraído: " << timeStr;
+            QStringList timeParts = timeStr.split(":");
+
+            if (timeParts.size() == 2) {
+                int minutes = timeParts[0].toInt();
+                int seconds = timeParts[1].toInt();
+                totalSeconds += (minutes * 60) + seconds;
+            }
+        }
+    }
+    qDebug() << "Total de tempo de foco acumulado: " << totalSeconds << " segundos";
+
+    return totalSeconds; // Retorna o tempo total em segundos
+}

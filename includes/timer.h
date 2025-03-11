@@ -46,6 +46,7 @@ private slots:
     //Slot Timer
     void onTimerOut();
 
+    //Table button
     void button_configTable_clicked();
 
 private:
@@ -67,6 +68,7 @@ private:
     void startLongBreak();
     void handleSessionCompletion();
 
+    //
     int currentPomodorSessions;
     int defaultPomodoroDuration;
     int defaultShortBreakDuration;
@@ -74,7 +76,9 @@ private:
     int defaultRoundsSessions;
     int timeRemaining;
     int running;
-    int sessionsDoneCount;  // Contador de sessões finalizadas
+    int sessionsDoneCount; // Contador de sessões finalizadas
+
+    void updateTotalFocusTime();
 };
 
 #endif // TIMER_H
