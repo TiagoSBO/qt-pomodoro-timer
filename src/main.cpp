@@ -13,7 +13,6 @@ int main(int argc, char *argv[])
     } else {
         QString styleSheet = QLatin1String(file.readAll());
         a.setStyleSheet(styleSheet); // Aplica o estilo globalmente
-        qDebug() << "Styles.qss carregado com sucesso!";
     }
     file.close();
 

@@ -79,6 +79,7 @@ private:
     int sessionsDoneCount; // Contador de sessões finalizadas
 
     void updateTotalFocusTime();
+
 };
 
 #endif // TIMER_H

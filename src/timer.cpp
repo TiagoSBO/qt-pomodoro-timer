@@ -22,7 +22,6 @@ MainWindow::MainWindow(QWidget *parent)
     //Initial Sets Updates
     ui->statusbar->showMessage("Version 1.0.0");
     ui->labelTimer->setText(formatTime(timeRemaining));
-    ui->label_setTotalFocus->setObjectName("setTotalFocus");
 
     //Config - Table View
     sessionLogs = new Sessionlogs(ui->tableSessionLogs);
@@ -48,10 +47,9 @@ MainWindow::MainWindow(QWidget *parent)
     //Config button table
     QMenu *menu = new QMenu(this);
     menu->setFocusPolicy(Qt::NoFocus);
-    QAction *deleteTableData = new QAction("Delete table data 🗑️", this);
+    QAction *deleteTableData = new QAction("Clear table data 🗑️", this);
     menu->addAction(deleteTableData);
     ui->button_configTable->setMenu(menu);
-
     connect(deleteTableData, &QAction::triggered, this, &MainWindow::button_configTable_clicked);
 
     //Connect Settings buttons
@@ -81,7 +79,6 @@ MainWindow::~MainWindow()
 
 void MainWindow::onTimerOut()
 {
-    // if (currentStatusTimer == PAUSED) return;
     if (timeRemaining > 0) {
             timeRemaining--;
             ui->labelTimer->setText(formatTime(timeRemaining));
@@ -142,7 +139,6 @@ void MainWindow::btton_settings_clicked()
     } else {
         settingsScreen->setSpinboxesEnabled(true);
     }
-
     settingsScreen->setPomodorDuration(defaultPomodoroDuration);
     settingsScreen->setShortBreakDuration(defaultShortBreakDuration);
     settingsScreen->setLongBreakDuration(defaultLongBreakDuration);
@@ -151,6 +147,7 @@ void MainWindow::btton_settings_clicked()
     //notification
     settingsScreen->exec();
 }
+
 
 void MainWindow::setSession(TimerState session)
 {
@@ -276,11 +273,6 @@ void MainWindow::handleSessionCompletion()
         currentPomodorSessions++;
         qDebug() << "Sessions Pomodoro Completed --->>> " << currentPomodorSessions;
 
-        //TableView
-        // sessionsDoneCount++;
-        // QString endTime = QDateTime::currentDateTime().toString("HH:mm:ss");
-        // sessionsDoneCount++;
-        // sessionLogs->addSession(sessionsDoneCount, QString::number(defaultPomodoroDuration) + " min", endTime);
         int focusTimeSpent = defaultPomodoroDuration * 60;  // Duração total da sessão
         QString formattedFocusTime = formatTime(focusTimeSpent);
         QString endTime = QDateTime::currentDateTime().toString("HH:mm");
@@ -329,14 +321,11 @@ void MainWindow::button_configTable_clicked()
 {
     QMessageBox::StandardButton answer;
     answer = QMessageBox::question(this, "Confirmation",
-        "Are you sure you want to delete the data from the table?",
+        "Are you sure you want to clear the table data?",
         QMessageBox::Yes | QMessageBox::No);
 
     if (answer == QMessageBox::Yes) {
         ui->tableSessionLogs->clearContents();
-        // sessionsDoneCount = 0;
-        // currentPomodorSessions = 0;
-        // ui->tableSessionLogs->rowCount();
         ui->tableSessionLogs->setRowCount(0);
 
         qDebug() << "Dados excluídos!";  // Aqui você coloca a lógica para excluir os dados

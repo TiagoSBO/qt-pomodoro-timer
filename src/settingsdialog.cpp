@@ -12,7 +12,8 @@ Settings::Settings(QWidget *parent)
     connect(ui->boxSetShortDuration, QOverload<int>::of(&QSpinBox::valueChanged), this, &Settings::emitTimeValueChanged);
     connect(ui->boxSetLongDuration, QOverload<int>::of(&QSpinBox::valueChanged), this, &Settings::emitTimeValueChanged);
     connect(ui->boxSetIntervalDuration, QOverload<int>::of(&QSpinBox::valueChanged), this, &Settings::emitTimeValueChanged);
-    // connect(ui->bttnResetTimerDefaults, &QPushButton::clicked, this, &Settings::resetTimerToDefaults);
+    // connect(ui->bttnResetTimerDefaults, &QPushButton::clicked, this, &Settings::resetTimerDefaults);
+
 }
 
 Settings::~Settings()
@@ -99,18 +100,6 @@ void Settings::emitTimeValueChanged()
         emit pomodoroRoundsChanged(ui->boxSetIntervalDuration->value());
     }
 }
-
-
-// void Settings::resetTimerToDefaults()
-// {
-//     QList<QSpinBox*> spinBoxes = findChildren<QSpinBox*>();
-
-//     ui->boxSetTimerDuration->setValue(25);
-//     ui->boxSetShortDuration->setValue(5);
-//     ui->boxSetLongDuration->setValue(0);
-//     ui->boxSetIntervalDuration->setValue(4);
-
-// }
 
 
 
