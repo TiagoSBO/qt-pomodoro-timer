@@ -75,13 +75,38 @@ QMessageBox QPushButton:pressed {
     background-color: #388e3c;  /* Cor ao pressionar o botão */
 }
 
-#setTotalFocus {
-    color: blue; /* Cor do texto */
-    font-size: 14px; /* Tamanho da fonte */
+/*background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1,
+                            stop:0 rgba(50,50,50,1), stop:1 rgba(70,70,70,1));*/
+
+/* Layout pomodoro timer*/
+#centralwidget{
+    background-color:;
+}
+
+#layout_timer{
+    border-radius: 5px; /* Bordas arredondadas */
+    border: 1px; /* Borda */
+    background-color: #841617;  /* Cor de fundo dos botões */
+}
+
+#labelTimer{
+    border: 1px;
+    background-color: #841617;  /* Cor de fundo dos botões */
+}
+
+#layout_buttonsTimer{
+    border-radius: 6px;
+    border: 1px; /* Borda */
+}
+
+#label_totalFocus {
+    font-size: 12px; /* Tamanho da fonte */
     font-weight: bold; /* Peso da fonte */
     padding: 4px; /* Espaçamento interno */
-    border-radius: 5px; /* Bordas arredondadas */
-    border: 1px  solid #333; /* Borda */
-    border:none;
+}
+#label_setTotalFocus{
+    font-size: 14px; /* Tamanho da fonte */
+    font-weight: bold; /* Peso da fonte */
+    color: red;
 }
 
