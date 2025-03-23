@@ -1,4 +1,4 @@
-/* Table general */
+/* TABLE GENERAL */
 QTableWidget {
 /*    background-color: rgb(240, 240, 240);*/
     border: 1px solid #ccc;
@@ -8,7 +8,6 @@ QTableWidget {
     border: 2px solid red;
 }
 QHeaderView::section {  /* Headers */
-
     background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1,
                         stop: 0.28 rgba(157,20,29,1),
                         stop: 0.80 rgba(255,0,18,1),
@@ -41,11 +40,11 @@ QMenu::item:selected {
 
 QAction[name="deleteTableData"] {
     color: red;  /* Texto da ação */
-    background-color: #ffcccc;  /* Cor de fundo */
+    background-color: blue;  /* Cor ao passar o mouse */
 }
 
 QAction[name="deleteTableData"]:hover {
-    background-color: #ff9999;  /* Cor ao passar o mouse */
+    background-color: blue;  /* Cor ao passar o mouse */
 }
 
 /*Message box */
@@ -75,28 +74,13 @@ QMessageBox QPushButton:pressed {
     background-color: #388e3c;  /* Cor ao pressionar o botão */
 }
 
-/*background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1,
-                            stop:0 rgba(50,50,50,1), stop:1 rgba(70,70,70,1));*/
-
-/* Layout pomodoro timer*/
-#centralwidget{
-    background-color:;
-}
+/* MAINWINDOW - TIMER STYLE */
+#centralwidget{}
 
 #layout_timer{
+    border: 5px; /* Borda */
     border-radius: 5px; /* Bordas arredondadas */
-    border: 1px; /* Borda */
-    background-color: #841617;  /* Cor de fundo dos botões */
-}
-
-#labelTimer{
-    border: 1px;
-    background-color: #841617;  /* Cor de fundo dos botões */
-}
-
-#layout_buttonsTimer{
-    border-radius: 6px;
-    border: 1px; /* Borda */
+    background-color: #841617;
 }
 
 #label_totalFocus {
@@ -110,3 +94,74 @@ QMessageBox QPushButton:pressed {
     color: red;
 }
 
+/* Button Settings*/
+#button_settings {
+    margin-left: -10px; /* Move um pouco mais para a esquerda */
+    padding: 2px;
+    background-color: transparent; /* Sem fundo por padrão */
+    border: none; /* Remove borda */
+    padding: 5px;
+}
+
+#button_settings:hover {
+    background-color: rgba(255, 255, 255, 0.2); /* Leve destaque */
+    border-radius: 6px;
+}
+
+#button_settings:pressed {
+    background-color: rgba(255, 255, 255, 0.4); /* Mais claro ao clicar */
+}
+
+/* Timer Buttons and layouts*/
+#layout_timer[focusState="FOCUS"] {
+    background-color: #841617;
+}
+
+#layout_timer[focusState="SHORT_BREAK"] {
+    background-color: green;
+}
+
+#layout_timer[focusState="LONG_BREAK"] {
+    background-color: green;
+}
+
+#layout_buttonsTimer QPushButton {
+    background-color: #181a1b;
+}
+
+#layout_buttonsTimer QPushButton:hover {
+    background-color: #181a1b;
+    color: green;
+}
+
+#labelShowState{
+}
+
+/* QDIALOG STYLE */
+QTabBar:tab{
+    width: 150px;
+    height: 40px;
+    font-weight: bold; /* Peso da fonte */
+}
+
+QTabBar:tab:selected{
+    background-color: rgb(120,120,120);
+}
+
+QTabBar:tab:hover{
+    background-color: rgb(120, 120, 120); 
+}
+
+QComboBox {
+    margin-right: 20px;
+}
+QComboBox::drop-down {
+    subcontrol-origin: margin;
+    width: 20px;
+}
+QComboBox::down-arrow:pressed {
+    position: relative;
+    top: 1px; left: 1px;
+}
+
+QCheckBox:hover:checked { color: blue; }
