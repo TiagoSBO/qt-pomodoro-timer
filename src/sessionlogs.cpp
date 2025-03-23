@@ -22,7 +22,7 @@ void Sessionlogs::addSession(int sessionNumber, const QString &sessionDuration, 
         int rowHeader = m_table->rowCount();
         m_table->insertRow(rowHeader);
 
-        QTableWidgetItem *groupHeader = new QTableWidgetItem("🕒 Ciclo " + QString::number(sessionCount / 4 + 1));
+        QTableWidgetItem *groupHeader = new QTableWidgetItem("🕒 Cycle: " + QString::number(sessionCount / 4 + 1));
         groupHeader->setTextAlignment(Qt::AlignCenter);
         groupHeader->setFlags(Qt::NoItemFlags);
         groupHeader->setFont(QFont("Arial", 10, QFont::Bold));

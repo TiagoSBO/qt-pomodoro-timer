@@ -13,7 +13,6 @@ Settings::Settings(QWidget *parent)
     connect(ui->boxSetLongDuration, QOverload<int>::of(&QSpinBox::valueChanged), this, &Settings::emitTimeValueChanged);
     connect(ui->boxSetIntervalDuration, QOverload<int>::of(&QSpinBox::valueChanged), this, &Settings::emitTimeValueChanged);
     // connect(ui->bttnResetTimerDefaults, &QPushButton::clicked, this, &Settings::resetTimerDefaults);
-
 }
 
 Settings::~Settings()
