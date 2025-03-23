@@ -68,6 +68,8 @@ private:
     void startLongBreak();
     void handleSessionCompletion();
 
+    void updateStyleBasedOnState();
+
     //
     int currentPomodorSessions;
     int defaultPomodoroDuration;

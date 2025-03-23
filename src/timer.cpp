@@ -227,6 +227,8 @@ void MainWindow::pomodoroSession()
 
     running = false;
     ui->button_resumePause->setText("Start");
+    ui->labelShowState->setText("Time to Focus");
+    updateStyleBasedOnState();
     timeRemaining = defaultPomodoroDuration * 60; //defaultPomodoroDuration
 
     // qDebug() << "Session Count --> " << currentPomodorSessions;
@@ -238,11 +240,14 @@ void MainWindow::startShortBreak()
     timer->stop();
     currentStatusTimer = SHORT_BREAK;
     timerStarted = false;
-
     running = false;
-    ui->button_resumePause->setText("Start");
 
     //notification
+
+    ui->button_resumePause->setText("Start");
+    ui->labelShowState->setText("Time to Short Rest");
+    updateStyleBasedOnState();
+
     qDebug() << "Short_Break Started / CurrenState -> " << currentStatusTimer;
 
     timeRemaining = defaultShortBreakDuration * 60;
@@ -260,6 +265,8 @@ void MainWindow::startLongBreak()
 
     running = false;
     ui->button_resumePause->setText("Start");
+    ui->labelShowState->setText("Time to Long Rest");
+    updateStyleBasedOnState();
 
     currentPomodorSessions = 0;
 
@@ -295,6 +302,20 @@ void MainWindow::handleSessionCompletion()
         qDebug() <<  "Starting a new Pomodoro session.";
         pomodoroSession();
     }
+}
+
+void MainWindow::updateStyleBasedOnState()
+{
+    if (currentStatusTimer == FOCUS){
+        ui->layout_timer->setProperty("focusState", "FOCUS");
+    } else if (currentStatusTimer == SHORT_BREAK){
+        ui->layout_timer->setProperty("focusState", "SHORT_BREAK");
+    } else {
+        ui->layout_timer->setProperty("focusStatse", "LONG_BREAK");
+    }
+
+    ui->layout_timer->style()->unpolish(ui->layout_timer);
+    ui->layout_timer->style()->polish(ui->layout_timer);
 }
 
 //Table Label - Total focus time
