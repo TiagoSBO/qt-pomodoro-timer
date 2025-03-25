@@ -592,7 +592,7 @@
              <number>0</number>
             </property>
             <item>
-             <layout class="QHBoxLayout" name="layout_sound_alrms" stretch="0,0">
+             <layout class="QHBoxLayout" name="layout_sound_alrms" stretch="0,0,0">
               <property name="spacing">
                <number>0</number>
               </property>
@@ -630,6 +630,32 @@
                 </property>
                 <property name="text">
                  <string>Alarms sounds</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="btton_playAlarm">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>30</width>
+                  <height>20</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+                <property name="icon">
+                 <iconset resource="../resources.qrc">
+                  <normaloff>:/icons/assets/icons/play.png</normaloff>:/icons/assets/icons/play.png</iconset>
+                </property>
+                <property name="flat">
+                 <bool>true</bool>
                 </property>
                </widget>
               </item>
@@ -881,6 +907,8 @@
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="../resources.qrc"/>
+ </resources>
  <connections/>
 </ui>

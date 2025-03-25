@@ -35,7 +35,6 @@ MainWindow::MainWindow(QWidget *parent)
     ui->tableSessionLogs->setHorizontalHeaderItem(0, headerItem0);
     ui->tableSessionLogs->setHorizontalHeaderItem(1, headerItem1);
     ui->tableSessionLogs->setHorizontalHeaderItem(2, headerItem2);
-
     ui->tableSessionLogs->setSelectionMode(QAbstractItemView::NoSelection);
     ui->tableSessionLogs->setSelectionBehavior(QAbstractItemView::SelectRows);
 

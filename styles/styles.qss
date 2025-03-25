@@ -152,16 +152,23 @@ QTabBar:tab:hover{
     background-color: rgb(120, 120, 120); 
 }
 
-QComboBox {
-    margin-right: 20px;
+QComboBox{}
+
+QComboBox:editable{
+/*    background-color: grey;*/
 }
+
 QComboBox::drop-down {
-    subcontrol-origin: margin;
-    width: 20px;
+    image: url(:/icons/assets/icons/down-arrow.png);
+    border: none;
 }
+
 QComboBox::down-arrow:pressed {
     position: relative;
     top: 1px; left: 1px;
 }
 
+#btton_playAlarm{
+    margin-right: 5px;
+}
 QCheckBox:hover:checked { color: blue; }

@@ -10,6 +10,7 @@
 #include <QChar>
 #include <QAction>
 #include <QMenu>
+#include <QMap>
 
 // Estados do Timer
 enum TimerState {
