@@ -1,8 +1,11 @@
 #ifndef SETTINGSDIALOG_H
 #define SETTINGSDIALOG_H
 
+#include "soundmanager.h"
 #include <QDialog>
 #include <QLineEdit>
+#include <QDebug>
+#include <QSoundEffect>
 
 namespace Ui {
 class Settings;
@@ -36,6 +39,7 @@ public slots:
 
 private slots:
     void emitTimeValueChanged();
+    void setAlarm_sound();
 
 signals:
     void pomodoroDurationChanged(int newValue);
@@ -46,6 +50,8 @@ signals:
 private:
     Ui::Settings *ui;
     MainWindow *mainwwindow;
+
+    SoundManager *soundManager;
 
 };
 

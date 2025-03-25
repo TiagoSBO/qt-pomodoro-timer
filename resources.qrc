@@ -1,10 +1,10 @@
 <RCC>
     <qresource prefix="/sounds">
-        <file>assets/sounds/alarm cuckoo 1.mp3</file>
-        <file>assets/sounds/alarm cuckoo 2.mp3</file>
-        <file>assets/sounds/digital alarm clock 1.mp3</file>
-        <file>assets/sounds/digital alarm clock 2.mp3</file>
-        <file>assets/sounds/digital alarm clock 3.mp3</file>
+        <file>assets/sounds/alarm_cuckoo1.wav</file>
+        <file>assets/sounds/alarm_cuckoo2.wav</file>
+        <file>assets/sounds/digitalalarm_clock1.wav</file>
+        <file>assets/sounds/digitalalarm_clock2.wav</file>
+        <file>assets/sounds/digitalalarm_clock3.wav</file>
     </qresource>
     <qresource prefix="/icons">
         <file>assets/icons/sound2.png</file>
@@ -19,5 +19,6 @@
         <file>assets/icons/pause.png</file>
         <file>assets/icons/Pomodoro Icon.png</file>
         <file>assets/icons/skip.png</file>
+        <file>assets/icons/down-arrow.png</file>
     </qresource>
 </RCC>

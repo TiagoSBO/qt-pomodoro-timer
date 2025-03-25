@@ -5,6 +5,7 @@
 Settings::Settings(QWidget *parent)
     : QDialog(parent)
     , ui(new Ui::Settings)
+    , soundManager(new SoundManager(this))
 {
     ui->setupUi(this);
 
@@ -12,6 +13,7 @@ Settings::Settings(QWidget *parent)
     connect(ui->boxSetShortDuration, QOverload<int>::of(&QSpinBox::valueChanged), this, &Settings::emitTimeValueChanged);
     connect(ui->boxSetLongDuration, QOverload<int>::of(&QSpinBox::valueChanged), this, &Settings::emitTimeValueChanged);
     connect(ui->boxSetIntervalDuration, QOverload<int>::of(&QSpinBox::valueChanged), this, &Settings::emitTimeValueChanged);
+    connect(ui->btton_playAlarm, &QPushButton::clicked, this, &Settings::setAlarm_sound);
     // connect(ui->bttnResetTimerDefaults, &QPushButton::clicked, this, &Settings::resetTimerDefaults);
 }
 
@@ -100,5 +102,16 @@ void Settings::emitTimeValueChanged()
     }
 }
 
+
+void Settings::setAlarm_sound()
+{
+
+    int index = ui->combBox_Alarm_sound->currentIndex();
+    QString namesound = ui->combBox_Alarm_sound->currentText();
+    qDebug() << "Name sound:" << namesound << "Index: " << index;
+
+    soundManager->playSound(index);
+
+}
 
 
