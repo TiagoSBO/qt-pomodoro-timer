@@ -14,7 +14,7 @@
 
 // Estados do Timer
 enum TimerState {
-    IDLE, FOCUS, SHORT_BREAK, LONG_BREAK, PAUSED
+    FOCUS, SHORT_BREAK, LONG_BREAK
 };
 
 QT_BEGIN_NAMESPACE
@@ -30,6 +30,9 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+
+public slots:
+    void setAlarmSound(int index);
 
 private slots:
     //Buttons
@@ -57,8 +60,9 @@ private:
 
     QTimer *timer;
     TimerState currentStatusTimer;
-    void setSession(TimerState session);
+    SoundManager soundManager;
 
+    void setSession(TimerState session);
     QString formatTime(int seconds);
 
     int timerStarted;
@@ -69,9 +73,10 @@ private:
     void startLongBreak();
     void handleSessionCompletion();
 
+    //Style
     void updateStyleBasedOnState();
 
-    //
+    //Others
     int currentPomodorSessions;
     int defaultPomodoroDuration;
     int defaultShortBreakDuration;
@@ -81,8 +86,8 @@ private:
     int running;
     int sessionsDoneCount; // Contador de sessões finalizadas
 
+    int selectedISoundIndex = 0;
     void updateTotalFocusTime();
-
 };
 
 #endif // TIMER_H

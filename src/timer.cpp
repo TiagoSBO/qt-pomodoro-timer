@@ -57,6 +57,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(settingsScreen, &Settings::shortBreakDurationChanged, this, &MainWindow::updateShortBreakDuration);
     connect(settingsScreen, &Settings::longBreakDurationChanged, this, &MainWindow::updateLongBreakDuration);
     connect(settingsScreen, &Settings::pomodoroRoundsChanged, this, &MainWindow::updatePomodoroRounds);
+    connect(settingsScreen, &Settings::notificationSoundChanged, this, &MainWindow::setAlarmSound);
 
     //Timer creation
     timer = new QTimer(this);
@@ -74,6 +75,12 @@ MainWindow::~MainWindow()
     delete ui;
     delete settingsScreen;
     delete sessionLogs;
+}
+
+void MainWindow::setAlarmSound(int index)
+{
+    selectedISoundIndex = index;
+    qDebug() << "Selected sound -> " << selectedISoundIndex;
 }
 
 void MainWindow::onTimerOut()
@@ -142,8 +149,6 @@ void MainWindow::btton_settings_clicked()
     settingsScreen->setShortBreakDuration(defaultShortBreakDuration);
     settingsScreen->setLongBreakDuration(defaultLongBreakDuration);
     settingsScreen->setPomodoroRounds(defaultRoundsSessions);
-
-    //notification
     settingsScreen->exec();
 }
 
@@ -223,6 +228,8 @@ void MainWindow::pomodoroSession()
     currentStatusTimer = FOCUS;
     timer->stop();
     qDebug() << "New Pomodoro session started! / CurrentState -> " << currentStatusTimer;
+    // Sound Notifcation
+    soundManager.playSound(selectedISoundIndex);
 
     running = false;
     ui->button_resumePause->setText("Start");
@@ -241,13 +248,14 @@ void MainWindow::startShortBreak()
     timerStarted = false;
     running = false;
 
-    //notification
+    // Sound Notifcation
+    soundManager.playSound(selectedISoundIndex);
+
+    qDebug() << "Short_Break Started / CurrenState -> " << currentStatusTimer;
 
     ui->button_resumePause->setText("Start");
     ui->labelShowState->setText("Time to Short Rest");
     updateStyleBasedOnState();
-
-    qDebug() << "Short_Break Started / CurrenState -> " << currentStatusTimer;
 
     timeRemaining = defaultShortBreakDuration * 60;
     ui->labelTimer->setText(QString(formatTime(timeRemaining)));
@@ -259,7 +267,8 @@ void MainWindow::startLongBreak()
     timer->stop();
     timerStarted = false;
 
-    //notification
+    // Sound Notifcation
+    soundManager.playSound(selectedISoundIndex);
     qDebug() << "Long_Break Started! / CurrentState -> " << currentStatusTimer;
 
     running = false;
@@ -278,6 +287,8 @@ void MainWindow::handleSessionCompletion()
     if (currentStatusTimer == FOCUS){
         currentPomodorSessions++;
         qDebug() << "Sessions Pomodoro Completed --->>> " << currentPomodorSessions;
+        // Sound Notifcation
+        soundManager.playSound(selectedISoundIndex);
 
         int focusTimeSpent = defaultPomodoroDuration * 60;  // Duração total da sessão
         QString formattedFocusTime = formatTime(focusTimeSpent);
@@ -310,7 +321,7 @@ void MainWindow::updateStyleBasedOnState()
     } else if (currentStatusTimer == SHORT_BREAK){
         ui->layout_timer->setProperty("focusState", "SHORT_BREAK");
     } else {
-        ui->layout_timer->setProperty("focusStatse", "LONG_BREAK");
+        ui->layout_timer->setProperty("focusState", "LONG_BREAK");
     }
 
     ui->layout_timer->style()->unpolish(ui->layout_timer);
@@ -360,5 +371,3 @@ QString MainWindow::formatTime(int seconds)
     int remainingSeconds = seconds % 60;
     return QString("%1:%2").arg(minutes, 2, 10, QChar('0')).arg(remainingSeconds, 2, 10, QChar('0'));
 }
-
-

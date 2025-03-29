@@ -7,7 +7,7 @@ SoundManager::SoundManager(QObject *parent) : QObject(parent)
     audioOutput = new QAudioOutput(this);
     player->setAudioOutput(audioOutput);
 
-    loadSounds(); // Carrega os sons ao iniciar
+    loadSounds();
 }
 
 void SoundManager::loadSounds()
@@ -23,7 +23,6 @@ void SoundManager::playSound(int index)
 {
     if (soundMap.contains(index)) {
         qDebug() << "Tocando som do índice:" << index << "URL:" << soundMap[index];
-
         player->stop();                // Para qualquer som que esteja tocando
         player->setSource(soundMap[index]); // Define o novo som
         player->play();                 // Toca o som

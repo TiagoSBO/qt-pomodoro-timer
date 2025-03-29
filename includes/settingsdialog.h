@@ -33,25 +33,25 @@ public:
     int getLongBreakDuration() const;
     int getPomodoroRounds() const;
 
-
 public slots:
     // void resetTimerDefaults();
 
 private slots:
     void emitTimeValueChanged();
     void setAlarm_sound();
+    void on_volume_slider_valueChanged(int value);
 
 signals:
     void pomodoroDurationChanged(int newValue);
     void shortBreakDurationChanged(int newValue);
     void longBreakDurationChanged(int newValue);
     void pomodoroRoundsChanged(int newValue);
-
+    void notificationSoundChanged(int index);
 private:
     Ui::Settings *ui;
     MainWindow *mainwwindow;
-
     SoundManager *soundManager;
+    QAudioOutput *audioOutput;
 
 };
 
