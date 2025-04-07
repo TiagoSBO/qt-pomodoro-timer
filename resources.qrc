@@ -19,6 +19,10 @@
         <file>assets/icons/pause.png</file>
         <file>assets/icons/Pomodoro Icon.png</file>
         <file>assets/icons/skip.png</file>
+        <file>assets/icons/toggle_off.png</file>
+        <file>assets/icons/toggle_on.png</file>
         <file>assets/icons/down-arrow.png</file>
+        <file>assets/icons/down-chevron.png</file>
+        <file>assets/icons/down-chevron-up.png</file>
     </qresource>
 </RCC>

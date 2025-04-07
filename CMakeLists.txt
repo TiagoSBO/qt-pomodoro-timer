@@ -25,6 +25,7 @@ qt_add_executable(pomodoro_timer
     ui/settingsdialog.ui
     resources.qrc
     styles/styles.qss
+
 )
 
 # Diretórios de inclusão
@@ -38,7 +39,6 @@ target_include_directories(pomodoro_timer
 target_link_libraries(pomodoro_timer
     PRIVATE Qt::Core Qt::Widgets Qt6::Multimedia
 )
-
 
 include(GNUInstallDirs)
 

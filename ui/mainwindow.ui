@@ -579,6 +579,9 @@
    <property name="contextMenuPolicy">
     <enum>Qt::ContextMenuPolicy::DefaultContextMenu</enum>
    </property>
+   <property name="sizeGripEnabled">
+    <bool>true</bool>
+   </property>
   </widget>
   <action name="action">
    <property name="text">
