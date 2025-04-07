@@ -14,6 +14,7 @@ class SoundManager : public QObject
 public:
     explicit SoundManager(QObject *parent = nullptr);
     void playSound(int index);
+    void setVolume(int volume);
 
 private:
     QMediaPlayer *player;      // Gerenciador de áudio

@@ -30,3 +30,12 @@ void SoundManager::playSound(int index)
         qDebug() << "Erro: índice inválido para som.";
     }
 }
+
+void SoundManager::setVolume(int volume)
+{
+    if (audioOutput) {
+        float normalizedVolume = static_cast<float>(volume) / 100.0;
+        audioOutput->setVolume(normalizedVolume);
+        qDebug() << "Volume atualizado para:" << normalizedVolume;
+    }
+}

@@ -58,6 +58,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(settingsScreen, &Settings::longBreakDurationChanged, this, &MainWindow::updateLongBreakDuration);
     connect(settingsScreen, &Settings::pomodoroRoundsChanged, this, &MainWindow::updatePomodoroRounds);
     connect(settingsScreen, &Settings::notificationSoundChanged, this, &MainWindow::setAlarmSound);
+    connect(settingsScreen, &Settings::volumeChanged, &soundManager, &SoundManager::setVolume);
 
     //Timer creation
     timer = new QTimer(this);

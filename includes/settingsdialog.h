@@ -47,6 +47,8 @@ signals:
     void longBreakDurationChanged(int newValue);
     void pomodoroRoundsChanged(int newValue);
     void notificationSoundChanged(int index);
+    void volumeChanged(int volume);
+
 private:
     Ui::Settings *ui;
     MainWindow *mainwwindow;

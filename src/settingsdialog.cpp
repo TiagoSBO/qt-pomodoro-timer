@@ -17,6 +17,8 @@ Settings::Settings(QWidget *parent)
     connect(ui->btton_playAlarm, &QPushButton::clicked, this, &Settings::setAlarm_sound);
     connect(ui->combBox_Alarm_sound, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &Settings::setAlarm_sound);
     connect(ui->volume_slider, &QSlider::valueChanged, this, &Settings::on_volume_slider_valueChanged);
+
+    ui->label_setVolumeValue->setText(QString::number(ui->volume_slider->value()));
     // connect(ui->bttnResetTimerDefaults, &QPushButton::clicked, this, &Settings::resetTimerDefaults);
 }
 
@@ -107,7 +109,6 @@ void Settings::emitTimeValueChanged()
     }
 }
 
-
 void Settings::setAlarm_sound()
 {
     int index = ui->combBox_Alarm_sound->currentIndex();
@@ -120,6 +121,12 @@ void Settings::setAlarm_sound()
 
 void Settings::on_volume_slider_valueChanged(int value)
 {
-    audioOutput->setVolume(ui->volume_slider->value());
+    ui->volume_slider->setRange(0, 100);
+    value = ui->volume_slider->value();
+    ui->label_setVolumeValue->setText(QString::number(value));
+    soundManager->setVolume(value);
+
+    emit volumeChanged(value);
+
 }
 
