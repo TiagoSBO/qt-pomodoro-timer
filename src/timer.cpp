@@ -3,6 +3,7 @@
 #include "settingsdialog.h"
 #include <QDebug>
 #include <QFile>
+#define APP_VERSION "1.0.0"
 
 MainWindow::MainWindow(QWidget *parent)
 : QMainWindow(parent)
@@ -19,10 +20,14 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
-    //Initial Sets Updates
-    ui->statusbar->showMessage("Version 1.0.0");
-    ui->labelTimer->setText(formatTime(timeRemaining));
+    //Version
+    QLabel *versionLabel = new QLabel(this);
+    versionLabel->setObjectName("versionLabel");
+    versionLabel->setText(QStringLiteral("Versão %1").arg(APP_VERSION));
+    statusBar()->addWidget(versionLabel);
 
+    //Initial Sets Updates
+    ui->labelTimer->setText(formatTime(timeRemaining));
     //Config - Table View
     sessionLogs = new Sessionlogs(ui->tableSessionLogs);
     ui->tableSessionLogs->verticalHeader()->setVisible(false);

@@ -12,7 +12,7 @@ int main(int argc, char *argv[])
         qDebug() << "Erro ao abrir styles.qss: " << file.errorString();
     } else {
         QString styleSheet = QLatin1String(file.readAll());
-        a.setStyleSheet(styleSheet); // Aplica o estilo globalmente
+        a.setStyleSheet(styleSheet);
     }
     file.close();
 

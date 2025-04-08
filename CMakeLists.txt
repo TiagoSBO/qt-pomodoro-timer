@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.19)
-project(pomodoro_timer LANGUAGES CXX)
+project(pomodoro_timer VERSION 1.0.0 LANGUAGES CXX)
 
 # Configuração básica do CMake
 set(CMAKE_AUTOUIC ON)
@@ -26,6 +26,11 @@ qt_add_executable(pomodoro_timer
     resources.qrc
     styles/styles.qss
 
+)
+
+target_compile_definitions(pomodoro_timer
+    PRIVATE
+        APP_VERSION=\"1.0.0\"
 )
 
 # Diretórios de inclusão

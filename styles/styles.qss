@@ -104,12 +104,12 @@ QMessageBox QPushButton:pressed {
 }
 
 #button_settings:hover {
-    background-color: rgba(255, 255, 255, 0.2); /* Leve destaque */
+/*    background-color: rgba(255, 255, 255, 0.2); /* Leve destaque */
     border-radius: 6px;
 }
 
 #button_settings:pressed {
-    background-color: rgba(255, 255, 255, 0.4); /* Mais claro ao clicar */
+/*    background-color: rgba(255, 255, 255, 0.4); /* Mais claro ao clicar */
 }
 
 /* Timer Buttons and layouts*/
@@ -134,7 +134,10 @@ QMessageBox QPushButton:pressed {
     color: green;
 }
 
-#labelShowState{
+#versionLabel{
+    color: #555;
+    font-size: 12px;
+    padding-left: 5px;
 }
 
 /* QDIALOG STYLE */
