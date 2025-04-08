@@ -1,6 +1,5 @@
 #ifndef SOUNDMANAGER_H
 #define SOUNDMANAGER_H
-
 #include <QObject>
 #include <QMediaPlayer>
 #include <QAudioOutput>
