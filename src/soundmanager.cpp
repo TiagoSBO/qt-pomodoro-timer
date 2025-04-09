@@ -21,13 +21,16 @@ void SoundManager::loadSounds()
 
 void SoundManager::playSound(int index)
 {
+    if (!soundEnabled) {
+        qDebug() << "Som está desativado. Nenhum som será reproduzido.";
+        return;
+    }
+
     if (soundMap.contains(index)) {
         qDebug() << "Tocando som do índice:" << index << "URL:" << soundMap[index];
         player->stop();                // Para qualquer som que esteja tocando
         player->setSource(soundMap[index]); // Define o novo som
         player->play();                 // Toca o som
-    } else {
-        qDebug() << "Erro: índice inválido para som.";
     }
 }
 
@@ -39,3 +42,11 @@ void SoundManager::setVolume(int volume)
         qDebug() << "Volume atualizado para:" << normalizedVolume;
     }
 }
+
+void SoundManager::setSoundEnabled(bool enabled)
+{
+    soundEnabled = enabled;
+    qDebug() << "Som habilitado:" << soundEnabled;
+}
+
+

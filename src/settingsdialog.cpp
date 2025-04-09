@@ -17,7 +17,10 @@ Settings::Settings(QWidget *parent)
     connect(ui->btton_playAlarm, &QPushButton::clicked, this, &Settings::setAlarm_sound);
     connect(ui->combBox_Alarm_sound, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &Settings::setAlarm_sound);
     connect(ui->volume_slider, &QSlider::valueChanged, this, &Settings::on_volume_slider_valueChanged);
+    connect(ui->checkBox_sound_alert, &QCheckBox::toggled, this, &Settings::onSoundAlertToggled);
+
     ui->label_setVolumeValue->setText(QString::number(ui->volume_slider->value()));
+    soundManager->setSoundEnabled(ui->checkBox_sound_alert->isChecked());
 }
 
 Settings::~Settings()
@@ -112,8 +115,8 @@ void Settings::setAlarm_sound()
     int index = ui->combBox_Alarm_sound->currentIndex();
     QString namesound = ui->combBox_Alarm_sound->currentText();
     qDebug() << "Name sound:" << namesound << "Index: " << index;
-
     soundManager->playSound(index);
+
     emit notificationSoundChanged(index);
 }
 
@@ -125,5 +128,12 @@ void Settings::on_volume_slider_valueChanged(int value)
     soundManager->setVolume(value);
 
     emit volumeChanged(value);
+}
+
+void Settings::onSoundAlertToggled(bool checked)
+{
+    soundManager->setSoundEnabled(checked);
+    emit soundEnabledChanged(checked);  // <--- notifica para o MainWindow
+
 }
 
