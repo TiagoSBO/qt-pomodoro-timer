@@ -17,15 +17,17 @@ qt_add_executable(pomodoro_timer
     src/settingsdialog.cpp
     src/sessionlogs.cpp
     src/soundmanager.cpp
+    src/helpwindow.cpp
     includes/timer.h
     includes/settingsdialog.h
     includes/sessionlogs.h
     includes/soundmanager.h
+    includes/helpwindow.h
     ui/mainwindow.ui
     ui/settingsdialog.ui
+    ui/helpwindow.ui
     resources.qrc
     styles/styles.qss
-
 )
 
 target_compile_definitions(pomodoro_timer

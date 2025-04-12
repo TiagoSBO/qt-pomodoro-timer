@@ -1,6 +1,5 @@
 #include "timer.h"
 #include "ui_mainwindow.h"
-#include "settingsdialog.h"
 #include <QDebug>
 #include <QFile>
 #define APP_VERSION "1.0.0"
@@ -20,14 +19,18 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
+    //Initial Sets Updates
+    ui->labelTimer->setText(formatTime(timeRemaining));
+    //Exit App
+    connect(ui->actionExit, &QAction::triggered, this, &QCoreApplication::quit, Qt::QueuedConnection);
+
+
     //Version
     QLabel *versionLabel = new QLabel(this);
     versionLabel->setObjectName("versionLabel");
     versionLabel->setText(QStringLiteral("Versão %1").arg(APP_VERSION));
     statusBar()->addWidget(versionLabel);
 
-    //Initial Sets Updates
-    ui->labelTimer->setText(formatTime(timeRemaining));
     //Config - Table View
     sessionLogs = new Sessionlogs(ui->tableSessionLogs);
     ui->tableSessionLogs->verticalHeader()->setVisible(false);
@@ -48,7 +51,7 @@ MainWindow::MainWindow(QWidget *parent)
     header->setSectionResizeMode(1, QHeaderView::Stretch);
     header->setSectionResizeMode(2, QHeaderView::Stretch);
 
-    //Config button table
+    //Config table buttons
     QMenu *menu = new QMenu(this);
     menu->setFocusPolicy(Qt::NoFocus);
     QAction *deleteTableData = new QAction("Clear table data 🗑️", this);
@@ -66,7 +69,6 @@ MainWindow::MainWindow(QWidget *parent)
     connect(settingsScreen, &Settings::volumeChanged, &soundManager, &SoundManager::setVolume);
     connect(settingsScreen, &Settings::soundEnabledChanged, &soundManager, &SoundManager::setSoundEnabled);
 
-
     //Timer creation
     timer = new QTimer(this);
     connect(timer, &QTimer::timeout, this, &MainWindow::onTimerOut);
@@ -76,6 +78,11 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->button_resumePause, &QPushButton::clicked, this, &MainWindow::btton_startResume_clicked);
     connect(ui->button_reset, &QPushButton::clicked, this, &MainWindow::btton_reset_clicked);
     connect(ui->button_skip, &QPushButton::clicked, this, &MainWindow::btton_skip_clicked);
+
+    //Help window
+    helpWindow = new HelpWindow(this);
+    connect(ui->actionHelp, &QAction::triggered, this, &MainWindow::openHelpDialog);
+
 }
 
 MainWindow::~MainWindow()
@@ -379,3 +386,9 @@ QString MainWindow::formatTime(int seconds)
     int remainingSeconds = seconds % 60;
     return QString("%1:%2").arg(minutes, 2, 10, QChar('0')).arg(remainingSeconds, 2, 10, QChar('0'));
 }
+
+void MainWindow::openHelpDialog()
+{
+    helpWindow->exec();
+}
+

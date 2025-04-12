@@ -2,6 +2,7 @@
 #define TIMER_H
 #include <QMainWindow>
 #include <QTimer>
+#include "helpwindow.h"
 #include "sessionlogs.h"
 #include "settingsdialog.h"
 #include "QMessageBox"
@@ -52,11 +53,14 @@ private slots:
 
     //Table button
     void button_configTable_clicked();
+    //Help dialog window
+    void openHelpDialog();
 
 private:
     Ui::MainWindow *ui;
     Settings *settingsScreen;
     Sessionlogs *sessionLogs;
+    HelpWindow *helpWindow;
 
     QTimer *timer;
     TimerState currentStatusTimer;
