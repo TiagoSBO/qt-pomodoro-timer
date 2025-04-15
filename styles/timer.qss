@@ -1,118 +1,96 @@
-/* TABLE GENERAL */
-QTableWidget {
-/*    background-color: rgb(240, 240, 240);*/
-    border: 1px solid #ccc;
-    selection-background-color: #f5f5f5;
-    selection-color: #333;
-    border-radius: 6px;
-    border: 2px solid red;
+/* --- MAINWINDOW - TIMER --- */
+QMenuBar
+{
+    background-color: qlineargradient(spread:repeat, x1:1, y1:0, x2:1, y2:1, stop:0 rgba(57, 57, 57, 255),stop:1 rgba(50, 50, 50, 255));
+    border: 1px solid #000;
+    color: #fff;
 }
-QHeaderView::section {  /* Headers */
-    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1,
-                        stop: 0.28 rgba(157,20,29,1),
-                        stop: 0.80 rgba(255,0,18,1),
-                        stop: 1 rgba(245,1,14,1));
-    color: white;
-    padding: 4px 8px;
+
+QMenuBar::item
+{
+    background-color: transparent;
+}
+
+QMenuBar::item:selected
+{
+    background-color: rgba(245, 40, 20, 0.71);
+    border: 1px solid rgba(245, 40, 20, 0.71);
+    color: #fff;
+}
+
+QMenuBar::item:pressed
+{
+    background-color: rgb(183, 134, 32);
+    border: 1px solid #b78620;
+    color: #fff;
+}
+
+QMenu
+{
+    background-color: qlineargradient(spread:repeat, x1:1, y1:0, x2:1, y2:1, stop:0 rgba(57, 57, 57, 255),stop:1 rgba(50, 50, 50, 255));
+    border: 1px solid #222;
+    padding: 2px;
+    color: #fff;
+}
+
+QMenu::item
+{
+    background-color: transparent;
+    padding: 2px;
+}
+
+QMenu::separator
+{
+    background-color: rgb(183, 134, 32);
+    height: 1px;
+}
+
+QMenu::item:disabled
+{
+    color: #555;
+    background-color: transparent;
+    padding: 2px 20px 2px 20px;
+}
+
+QMenu::item:selected
+{
+    background-color: rgba(183, 134, 32, 20%);
+/*    color: #fff;*/
+}
+
+/* --- Labels --- */
+#label_totalFocus {
     font-size: 12px;
     font-weight: bold;
-    text-align: center;
-    border: 1px solid red;
+    padding: 4px;
 }
 
-QTableWidget::item { /* Rows */
-    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1,
-                                stop:0 rgba(50,50,50,1), stop:1 rgba(70,70,70,1));
-    color: white;
-    padding: 5px;
-    border: 1px solid #333;
-    text-align: center;
-}
-
-/* Button Table config */
-QMenu::item {
-    padding: 5px 10px;
-}
-
-QMenu::item:selected {
-    background-color: red;
-}
-
-QAction[name="deleteTableData"] {
-    color: red;  /* Texto da ação */
-    background-color: blue;  /* Cor ao passar o mouse */
-}
-
-QAction[name="deleteTableData"]:hover {
-    background-color: blue;  /* Cor ao passar o mouse */
-}
-
-/*Message box */
-QMessageBox {
-    background-color: #f0f0f0;  /* Cor de fundo */
-    border: 2px solid #888;     /* Borda da caixa */
-    border-radius: 8px;         /* Bordas arredondadas */
-}
-
-QMessageBox QLabel {
-    font: bold 12px;            /* Fonte do texto */
-    color: #333;                /* Cor do texto */
-}
-
-QMessageBox QPushButton {
-    background-color: #69323A;  /* Cor de fundo dos botões */
-    color: white;               /* Cor do texto dos botões */
-    border-radius: 5px ;         /* Bordas arredondadas nos botões */
-    padding: 5px 15px;          /* Espaçamento interno nos botões */
-}
-
-QMessageBox QPushButton:hover {
-    background-color: red;  /* Cor de fundo dos botões ao passar o mouse */
-}
-
-QMessageBox QPushButton:pressed {
-    background-color: #388e3c;  /* Cor ao pressionar o botão */
-}
-
-/* MAINWINDOW - TIMER STYLE */
-#centralwidget{}
-
-#layout_timer{
-    border: 5px; /* Borda */
-    border-radius: 5px; /* Bordas arredondadas */
-    background-color: #841617;
-}
-
-#label_totalFocus {
-    font-size: 12px; /* Tamanho da fonte */
-    font-weight: bold; /* Peso da fonte */
-    padding: 4px; /* Espaçamento interno */
-}
-#label_setTotalFocus{
-    font-size: 14px; /* Tamanho da fonte */
-    font-weight: bold; /* Peso da fonte */
+#label_setTotalFocus {
+    font-size: 14px;
+    font-weight: bold;
     color: red;
 }
 
-/* Button Settings*/
+/* --- Button Settings --- */
 #button_settings {
-    margin-left: -10px; /* Move um pouco mais para a esquerda */
+    margin-left: -10px;
     padding: 2px;
-    background-color: transparent; /* Sem fundo por padrão */
-    border: none; /* Remove borda */
+    background-color: transparent;
+    border: none;
     padding: 5px;
 }
 
 #button_settings:hover {
-/*    background-color: rgba(255, 255, 255, 0.2); /* Leve destaque */
     border-radius: 6px;
 }
 
-#button_settings:pressed {
-/*    background-color: rgba(255, 255, 255, 0.4); /* Mais claro ao clicar */
+/* --- Layouts --- */
+#layout_timer {
+    border: 5px;
+    border-radius: 5px;
+    background-color: #841617;
 }
 
-/* Timer Buttons and layouts*/
 #layout_timer[focusState="FOCUS"] {
     background-color: #841617;
 }
@@ -134,64 +112,37 @@ QMessageBox QPushButton:pressed {
     color: green;
 }
 
-#versionLabel{
+/* --- StatusBar --- */
+
+#versionLabel {
     color: #555;
     font-size: 12px;
     padding-left: 5px;
 }
 
-/* QDIALOG STYLE */
-QTabBar:tab{
-    width: 150px;
-    height: 40px;
-    font-weight: bold; /* Peso da fonte */
+/* --- QMessageBox --- */
+QMessageBox {
+    background-color: #f0f0f0;
+    border: 2px solid #888;
+    border-radius: 8px;
 }
 
-QTabBar:tab:selected{
-    background-color: rgb(120,120,120);
+QMessageBox QLabel {
+    font: bold 12px;
+    color: #333;
 }
 
-QTabBar:tab:hover{
-    background-color: rgb(120, 120, 120); 
+QMessageBox QPushButton {
+    background-color: #69323A;
+    color: white;
+    border-radius: 5px;
+    padding: 5px 15px;
 }
 
-QComboBox:editable{
-/*    background-color: grey;*/
-}
-
-#combBox_Alarm_sound::drop-down {
-    image: url(":/icons/assets/icons/down-chevron.png");
-    margin-right: 5px;
-}
-
-#combBox_Alarm_sound::drop-down:on {
-    image: url(":/icons/assets/icons/down-chevron-up.png");
-    margin-right: 5px;
-}
-
-#combBox_Alarm_sound QListView:item{
-    border: none;
-    padding: 3px;
-
-}
-
-#combBox_Alarm_sound QListView:item:hover{
-    border: none;
+QMessageBox QPushButton:hover {
     background-color: red;
 }
 
-#btton_playAlarm{
-    margin-right: 5px;
-}
-#checkBox_sound_alert::indicator{
-    width: 50px;
-    height: 50px;
-}
-
-#checkBox_sound_alert::indicator:checked {
-    image:url(":/icons/assets/icons/toggle_on.png");
-}
-
-#checkBox_sound_alert::indicator:unchecked {
-    image:url(":/icons/assets/icons/toggle_off.png");
+QMessageBox QPushButton:pressed {
+    background-color: #388e3c;
 }
