@@ -1,0 +1,48 @@
+/* --- MAINWINDOW TABLE --- */
+/* --- TABLE GENERAL --- */
+QTableWidget {
+    border-radius: 6px;
+    border: 2px solid red;
+    selection-background-color: #f5f5f5;
+    selection-color: #333;
+}
+
+QHeaderView::section {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1,
+        stop: 0.28 rgba(157,20,29,1),
+        stop: 0.80 rgba(255,0,18,1),
+        stop: 1 rgba(245,1,14,1));
+    color: white;
+    padding: 4px 8px;
+    font-size: 12px;
+    font-weight: bold;
+    text-align: center;
+    border: 1px solid red;
+}
+
+QTableWidget::item {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1,
+        stop:0 rgba(50,50,50,1), stop:1 rgba(70,70,70,1));
+    color: white;
+    padding: 5px;
+    border: 1px solid #333;
+    text-align: center;
+}
+
+/* --- QMenu Action --- */
+QMenu::item {
+    padding: 5px 10px;
+}
+
+QMenu::item:selected {
+    background-color: red;
+}
+
+QAction[name="deleteTableData"] {
+    color: red;
+    background-color: blue;
+}
+
+QAction[name="deleteTableData"]:hover {
+    background-color: blue;
+}

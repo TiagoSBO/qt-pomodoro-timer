@@ -25,4 +25,9 @@
         <file>assets/icons/down-chevron.png</file>
         <file>assets/icons/down-chevron-up.png</file>
     </qresource>
+    <qresource prefix="/styles">
+        <file>styles/timer.qss</file>
+        <file>styles/sessionlogs.qss</file>
+        <file>styles/settingsdialog.qss</file>
+    </qresource>
 </RCC>

@@ -27,12 +27,6 @@ qt_add_executable(pomodoro_timer
     ui/settingsdialog.ui
     ui/helpwindow.ui
     resources.qrc
-    styles/styles.qss
-)
-
-target_compile_definitions(pomodoro_timer
-    PRIVATE
-        APP_VERSION=\"1.0.0\"
 )
 
 # Diretórios de inclusão
