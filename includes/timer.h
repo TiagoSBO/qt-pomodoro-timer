@@ -7,10 +7,12 @@
 #include "settingsdialog.h"
 #include "QMessageBox"
 #include <QDateTime>
+#include <QDir>
 #include <QString>
 #include <QChar>
 #include <QAction>
 #include <QMenu>
+#include <QStringList>
 #include <QMap>
 
 // Estados do Timer
@@ -58,6 +60,7 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
+
     Settings *settingsScreen;
     Sessionlogs *sessionLogs;
     HelpWindow *helpWindow;

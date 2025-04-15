@@ -24,11 +24,10 @@ MainWindow::MainWindow(QWidget *parent)
     //Exit App
     connect(ui->actionExit, &QAction::triggered, this, &QCoreApplication::quit, Qt::QueuedConnection);
 
-
     //Version
     QLabel *versionLabel = new QLabel(this);
     versionLabel->setObjectName("versionLabel");
-    versionLabel->setText(QStringLiteral("Versão %1").arg(APP_VERSION));
+    versionLabel->setText(QStringLiteral("Version %1").arg(APP_VERSION));
     statusBar()->addWidget(versionLabel);
 
     //Config - Table View
