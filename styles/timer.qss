@@ -1,61 +1,50 @@
 /* --- MAINWINDOW - TIMER --- */
-QMenuBar
-{
-    background-color: qlineargradient(spread:repeat, x1:1, y1:0, x2:1, y2:1, stop:0 rgba(57, 57, 57, 255),stop:1 rgba(50, 50, 50, 255));
-    border: 1px solid #000;
-    color: #fff;
+#menubar{
+    background-color: #2c2c2c;
+    border: none;
+    color: #e0e0e0;
 }
 
-QMenuBar::item
-{
+#menubar::item{
     background-color: transparent;
 }
 
-QMenuBar::item:selected
-{
-    background-color: rgba(245, 40, 20, 0.71);
-    border: 1px solid rgba(245, 40, 20, 0.71);
-    color: #fff;
+#menubar::item:selected{
+    background-color: darkred;
+    border: none;
+    color: #ffffff;
 }
 
-QMenuBar::item:pressed
-{
-    background-color: rgb(183, 134, 32);
-    border: 1px solid #b78620;
-    color: #fff;
+#menubar::item:pressed{
+    background-color: darkred;
+    border: none;
 }
 
-QMenu
-{
+QMenu{
     background-color: qlineargradient(spread:repeat, x1:1, y1:0, x2:1, y2:1, stop:0 rgba(57, 57, 57, 255),stop:1 rgba(50, 50, 50, 255));
     border: 1px solid #222;
     padding: 2px;
     color: #fff;
 }
 
-QMenu::item
-{
+QMenu::item{
     background-color: transparent;
     padding: 2px;
 }
 
-QMenu::separator
-{
+QMenu::separator{
     background-color: rgb(183, 134, 32);
     height: 1px;
 }
 
-QMenu::item:disabled
-{
+QMenu::item:disabled{
     color: #555;
     background-color: transparent;
     padding: 2px 20px 2px 20px;
 }
 
-QMenu::item:selected
-{
+QMenu::item:selected{
     background-color: rgba(183, 134, 32, 20%);
-/*    color: #fff;*/
 }
 
 /* --- Labels --- */
@@ -68,7 +57,7 @@ QMenu::item:selected
 #label_setTotalFocus {
     font-size: 14px;
     font-weight: bold;
-    color: red;
+    color: white;
 }
 
 /* --- Button Settings --- */
@@ -100,7 +89,7 @@ QMenu::item:selected
 }
 
 #layout_timer[focusState="LONG_BREAK"] {
-    background-color: green;
+    background-color: #1f2f4a;
 }
 
 #layout_buttonsTimer QPushButton {
@@ -113,11 +102,14 @@ QMenu::item:selected
 }
 
 /* --- StatusBar --- */
-
 #versionLabel {
     color: #555;
     font-size: 12px;
     padding-left: 5px;
+}
+
+QStatusBar::item {
+    border: none;
 }
 
 /* --- QMessageBox --- */

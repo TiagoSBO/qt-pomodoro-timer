@@ -20,6 +20,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
 
     //Initial Sets Updates
+    updateStyleBasedOnState();
     ui->labelTimer->setText(formatTime(timeRemaining));
     //Exit App
     connect(ui->actionExit, &QAction::triggered, this, &QCoreApplication::quit, Qt::QueuedConnection);
@@ -28,6 +29,7 @@ MainWindow::MainWindow(QWidget *parent)
     QLabel *versionLabel = new QLabel(this);
     versionLabel->setObjectName("versionLabel");
     versionLabel->setText(QStringLiteral("Version %1").arg(APP_VERSION));
+
     statusBar()->addWidget(versionLabel);
 
     //Config - Table View
@@ -330,17 +332,29 @@ void MainWindow::handleSessionCompletion()
 
 void MainWindow::updateStyleBasedOnState()
 {
-    if (currentStatusTimer == FOCUS){
-        ui->layout_timer->setProperty("focusState", "FOCUS");
-    } else if (currentStatusTimer == SHORT_BREAK){
-        ui->layout_timer->setProperty("focusState", "SHORT_BREAK");
+    QString state;
+
+    if (currentStatusTimer == FOCUS) {
+        state = "FOCUS";
+    } else if (currentStatusTimer == SHORT_BREAK) {
+        state = "SHORT_BREAK";
     } else {
-        ui->layout_timer->setProperty("focusState", "LONG_BREAK");
+        state = "LONG_BREAK";
     }
 
+    // Aplica ao layout do timer
+    ui->layout_timer->setProperty("focusState", state);
     ui->layout_timer->style()->unpolish(ui->layout_timer);
     ui->layout_timer->style()->polish(ui->layout_timer);
+
+    // Aplica à tabela
+    ui->tableSessionLogs->horizontalHeader()->setProperty("focusState", state);
+    ui->tableSessionLogs->horizontalHeader()->style()->unpolish(ui->tableSessionLogs->horizontalHeader());
+    ui->tableSessionLogs->horizontalHeader()->style()->polish(ui->tableSessionLogs->horizontalHeader());
+
+    ui->tableSessionLogs->repaint();
 }
+
 
 //Table Label - Total focus time
 void MainWindow::updateTotalFocusTime()

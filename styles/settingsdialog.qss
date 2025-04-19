@@ -1,9 +1,8 @@
 /* --- QDIALOG VIEW --- */
 
 /* --- QTabBarTimer--- */
-
 QTabBar:tab {
-    width: 150px;
+    width: 160px;
     height: 40px;
     font-weight: bold;
 }
@@ -60,22 +59,19 @@ QSpinBox::up-button:pressed
     border-width: 1px;
 }
 
-QSpinBox::down-button:pressed
-{
+QSpinBox::down-button:pressed{
     background-color: #252525;
     width: 16px;
     border-width: 1px;
 }
 
-QSpinBox::up-arrow
-{
+QSpinBox::up-arrow{
     image: url(":/icons/assets/icons/down-chevron-up.png");
     width: 7px;
     height: 7px;
 }
 
-QSpinBox::down-arrow
-{
+QSpinBox::down-arrow{
     image: url(":/icons/assets/icons/down-chevron.png");
     width: 7px;
     height: 7px;

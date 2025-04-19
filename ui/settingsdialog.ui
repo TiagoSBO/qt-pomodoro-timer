@@ -6,12 +6,12 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>300</width>
-    <height>320</height>
+    <width>320</width>
+    <height>330</height>
    </rect>
   </property>
   <property name="sizePolicy">
-   <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
     <horstretch>0</horstretch>
     <verstretch>0</verstretch>
    </sizepolicy>
@@ -19,17 +19,20 @@
   <property name="minimumSize">
    <size>
     <width>300</width>
-    <height>320</height>
+    <height>330</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
-    <width>300</width>
-    <height>337</height>
+    <width>320</width>
+    <height>330</height>
    </size>
   </property>
   <property name="windowTitle">
    <string>Settings</string>
+  </property>
+  <property name="modal">
+   <bool>false</bool>
   </property>
   <layout class="QHBoxLayout" name="horizontalLayout">
    <property name="spacing">
@@ -63,15 +66,18 @@
      </property>
      <property name="minimumSize">
       <size>
-       <width>300</width>
-       <height>320</height>
+       <width>320</width>
+       <height>340</height>
       </size>
      </property>
      <property name="maximumSize">
       <size>
-       <width>300</width>
-       <height>500</height>
+       <width>320</width>
+       <height>340</height>
       </size>
+     </property>
+     <property name="layoutDirection">
+      <enum>Qt::LayoutDirection::LeftToRight</enum>
      </property>
      <property name="tabPosition">
       <enum>QTabWidget::TabPosition::North</enum>
@@ -80,7 +86,7 @@
       <enum>QTabWidget::TabShape::Rounded</enum>
      </property>
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <property name="elideMode">
       <enum>Qt::TextElideMode::ElideNone</enum>
@@ -97,13 +103,13 @@
       </property>
       <property name="minimumSize">
        <size>
-        <width>250</width>
+        <width>200</width>
         <height>250</height>
        </size>
       </property>
       <property name="maximumSize">
        <size>
-        <width>296</width>
+        <width>350</width>
         <height>300</height>
        </size>
       </property>
@@ -139,31 +145,22 @@
          </property>
          <property name="minimumSize">
           <size>
-           <width>300</width>
+           <width>270</width>
            <height>283</height>
           </size>
          </property>
          <property name="maximumSize">
           <size>
-           <width>400</width>
-           <height>400</height>
+           <width>300</width>
+           <height>300</height>
           </size>
          </property>
-         <layout class="QFormLayout" name="formLayout_3">
-          <property name="sizeConstraint">
-           <enum>QLayout::SizeConstraint::SetMinimumSize</enum>
-          </property>
-          <property name="fieldGrowthPolicy">
-           <enum>QFormLayout::FieldGrowthPolicy::FieldsStayAtSizeHint</enum>
-          </property>
-          <property name="rowWrapPolicy">
-           <enum>QFormLayout::RowWrapPolicy::WrapLongRows</enum>
-          </property>
-          <property name="horizontalSpacing">
+         <layout class="QHBoxLayout" name="horizontalLayout_9" stretch="1,2">
+          <property name="spacing">
            <number>10</number>
           </property>
-          <property name="verticalSpacing">
-           <number>0</number>
+          <property name="sizeConstraint">
+           <enum>QLayout::SizeConstraint::SetMinimumSize</enum>
           </property>
           <property name="leftMargin">
            <number>3</number>
@@ -177,22 +174,10 @@
           <property name="bottomMargin">
            <number>3</number>
           </property>
-          <item row="0" column="0">
-           <layout class="QFormLayout" name="formLayout">
+          <item>
+           <layout class="QVBoxLayout" name="verticalLayout">
             <property name="sizeConstraint">
              <enum>QLayout::SizeConstraint::SetNoConstraint</enum>
-            </property>
-            <property name="fieldGrowthPolicy">
-             <enum>QFormLayout::FieldGrowthPolicy::ExpandingFieldsGrow</enum>
-            </property>
-            <property name="rowWrapPolicy">
-             <enum>QFormLayout::RowWrapPolicy::WrapLongRows</enum>
-            </property>
-            <property name="horizontalSpacing">
-             <number>0</number>
-            </property>
-            <property name="verticalSpacing">
-             <number>0</number>
             </property>
             <property name="leftMargin">
              <number>10</number>
@@ -206,7 +191,7 @@
             <property name="bottomMargin">
              <number>0</number>
             </property>
-            <item row="0" column="0">
+            <item>
              <widget class="QLabel" name="label_TimerDuration">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
@@ -264,7 +249,7 @@
               </property>
              </widget>
             </item>
-            <item row="1" column="0">
+            <item>
              <widget class="QLabel" name="label_shortBreakDuration">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
@@ -292,7 +277,7 @@
               </property>
              </widget>
             </item>
-            <item row="2" column="0">
+            <item>
              <widget class="QLabel" name="label_longBreakDuration">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
@@ -320,7 +305,7 @@
               </property>
              </widget>
             </item>
-            <item row="3" column="0">
+            <item>
              <widget class="QLabel" name="label_longBreakDelay">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
@@ -353,28 +338,10 @@
             </item>
            </layout>
           </item>
-          <item row="0" column="1">
-           <layout class="QFormLayout" name="formLayout_2">
+          <item>
+           <layout class="QGridLayout" name="gridLayout" rowstretch="0,0,0,0,0">
             <property name="sizeConstraint">
              <enum>QLayout::SizeConstraint::SetNoConstraint</enum>
-            </property>
-            <property name="fieldGrowthPolicy">
-             <enum>QFormLayout::FieldGrowthPolicy::ExpandingFieldsGrow</enum>
-            </property>
-            <property name="rowWrapPolicy">
-             <enum>QFormLayout::RowWrapPolicy::WrapLongRows</enum>
-            </property>
-            <property name="labelAlignment">
-             <set>Qt::AlignmentFlag::AlignCenter</set>
-            </property>
-            <property name="formAlignment">
-             <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignTop</set>
-            </property>
-            <property name="horizontalSpacing">
-             <number>0</number>
-            </property>
-            <property name="verticalSpacing">
-             <number>0</number>
             </property>
             <property name="leftMargin">
              <number>5</number>
@@ -388,6 +355,84 @@
             <property name="bottomMargin">
              <number>0</number>
             </property>
+            <property name="spacing">
+             <number>5</number>
+            </property>
+            <item row="4" column="0">
+             <widget class="QSpinBox" name="boxSetIntervalDuration">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>80</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>70</width>
+                <height>30</height>
+               </size>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
+              </property>
+              <property name="suffix">
+               <string/>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="0">
+             <widget class="QSpinBox" name="boxSetShortDuration">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>80</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>80</width>
+                <height>30</height>
+               </size>
+              </property>
+              <property name="baseSize">
+               <size>
+                <width>0</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="suffix">
+               <string/>
+              </property>
+              <property name="maximum">
+               <number>99999</number>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="1">
+             <widget class="QLabel" name="label_2">
+              <property name="maximumSize">
+               <size>
+                <width>130</width>
+                <height>30</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>In minutes</string>
+              </property>
+             </widget>
+            </item>
             <item row="0" column="0">
              <widget class="QSpinBox" name="boxSetTimerDuration">
               <property name="sizePolicy">
@@ -398,21 +443,30 @@
               </property>
               <property name="minimumSize">
                <size>
-                <width>90</width>
+                <width>80</width>
                 <height>0</height>
                </size>
               </property>
               <property name="maximumSize">
                <size>
-                <width>70</width>
+                <width>50</width>
                 <height>30</height>
                </size>
+              </property>
+              <property name="toolTip">
+               <string>in minutes</string>
               </property>
               <property name="layoutDirection">
                <enum>Qt::LayoutDirection::LeftToRight</enum>
               </property>
               <property name="alignment">
                <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
+              </property>
+              <property name="buttonSymbols">
+               <enum>QAbstractSpinBox::ButtonSymbols::UpDownArrows</enum>
+              </property>
+              <property name="specialValueText">
+               <string/>
               </property>
               <property name="suffix">
                <string/>
@@ -431,41 +485,7 @@
               </property>
              </widget>
             </item>
-            <item row="1" column="0">
-             <widget class="QSpinBox" name="boxSetShortDuration">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="minimumSize">
-               <size>
-                <width>90</width>
-                <height>0</height>
-               </size>
-              </property>
-              <property name="maximumSize">
-               <size>
-                <width>70</width>
-                <height>30</height>
-               </size>
-              </property>
-              <property name="baseSize">
-               <size>
-                <width>0</width>
-                <height>0</height>
-               </size>
-              </property>
-              <property name="suffix">
-               <string/>
-              </property>
-              <property name="maximum">
-               <number>99999</number>
-              </property>
-             </widget>
-            </item>
-            <item row="2" column="0">
+            <item row="3" column="0">
              <widget class="QSpinBox" name="boxSetLongDuration">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
@@ -475,7 +495,7 @@
               </property>
               <property name="minimumSize">
                <size>
-                <width>90</width>
+                <width>80</width>
                 <height>0</height>
                </size>
               </property>
@@ -496,31 +516,53 @@
               </property>
              </widget>
             </item>
-            <item row="3" column="0">
-             <widget class="QSpinBox" name="boxSetIntervalDuration">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
+            <item row="3" column="1">
+             <widget class="QLabel" name="label_3">
+              <property name="maximumSize">
+               <size>
+                <width>130</width>
+                <height>30</height>
+               </size>
               </property>
+              <property name="text">
+               <string>in minutes</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <widget class="QLabel" name="label_1">
+              <property name="maximumSize">
+               <size>
+                <width>130</width>
+                <height>30</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>in minutes</string>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="1">
+             <widget class="QLabel" name="label_4">
               <property name="minimumSize">
                <size>
-                <width>90</width>
+                <width>100</width>
                 <height>0</height>
                </size>
               </property>
               <property name="maximumSize">
                <size>
-                <width>70</width>
+                <width>130</width>
                 <height>30</height>
                </size>
               </property>
-              <property name="alignment">
-               <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
+              <property name="font">
+               <font>
+                <pointsize>9</pointsize>
+               </font>
               </property>
-              <property name="suffix">
-               <string/>
+              <property name="text">
+               <string>in pomodoros</string>
               </property>
              </widget>
             </item>
@@ -533,7 +575,7 @@
      </widget>
      <widget class="QWidget" name="configNotifications">
       <property name="sizePolicy">
-       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
         <horstretch>0</horstretch>
         <verstretch>0</verstretch>
        </sizepolicy>
@@ -546,9 +588,12 @@
       </property>
       <property name="maximumSize">
        <size>
-        <width>300</width>
+        <width>270</width>
         <height>300</height>
        </size>
+      </property>
+      <property name="layoutDirection">
+       <enum>Qt::LayoutDirection::LeftToRight</enum>
       </property>
       <attribute name="title">
        <string>Notifications</string>
@@ -575,15 +620,21 @@
        <item>
         <widget class="QWidget" name="layout_notifications" native="true">
          <property name="sizePolicy">
-          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
+         <property name="minimumSize">
+          <size>
+           <width>300</width>
+           <height>270</height>
+          </size>
+         </property>
          <property name="maximumSize">
           <size>
-           <width>400</width>
-           <height>400</height>
+           <width>300</width>
+           <height>270</height>
           </size>
          </property>
          <layout class="QFormLayout" name="formLayout_5">
@@ -595,6 +646,12 @@
           </property>
           <property name="rowWrapPolicy">
            <enum>QFormLayout::RowWrapPolicy::WrapLongRows</enum>
+          </property>
+          <property name="labelAlignment">
+           <set>Qt::AlignmentFlag::AlignCenter</set>
+          </property>
+          <property name="formAlignment">
+           <set>Qt::AlignmentFlag::AlignCenter</set>
           </property>
           <property name="horizontalSpacing">
            <number>5</number>
@@ -624,25 +681,28 @@
             </property>
             <property name="minimumSize">
              <size>
-              <width>240</width>
+              <width>250</width>
               <height>30</height>
              </size>
             </property>
             <property name="maximumSize">
              <size>
-              <width>300</width>
-              <height>50</height>
+              <width>250</width>
+              <height>80</height>
              </size>
             </property>
             <layout class="QHBoxLayout" name="horizontalLayout_7">
+             <property name="spacing">
+              <number>7</number>
+             </property>
              <property name="sizeConstraint">
               <enum>QLayout::SizeConstraint::SetNoConstraint</enum>
              </property>
              <property name="leftMargin">
-              <number>0</number>
+              <number>5</number>
              </property>
              <property name="topMargin">
-              <number>0</number>
+              <number>5</number>
              </property>
              <property name="rightMargin">
               <number>0</number>
@@ -656,10 +716,10 @@
                 <number>0</number>
                </property>
                <property name="sizeConstraint">
-                <enum>QLayout::SizeConstraint::SetNoConstraint</enum>
+                <enum>QLayout::SizeConstraint::SetDefaultConstraint</enum>
                </property>
                <property name="leftMargin">
-                <number>5</number>
+                <number>2</number>
                </property>
                <property name="topMargin">
                 <number>5</number>
@@ -680,7 +740,7 @@
                  </property>
                  <property name="maximumSize">
                   <size>
-                   <width>100</width>
+                   <width>120</width>
                    <height>40</height>
                   </size>
                  </property>
@@ -706,7 +766,7 @@
                  <property name="maximumSize">
                   <size>
                    <width>120</width>
-                   <height>50</height>
+                   <height>40</height>
                   </size>
                  </property>
                  <property name="maximum">
@@ -730,9 +790,15 @@
                 <widget class="QLabel" name="label_setVolumeValue">
                  <property name="maximumSize">
                   <size>
-                   <width>30</width>
-                   <height>30</height>
+                   <width>50</width>
+                   <height>70</height>
                   </size>
+                 </property>
+                 <property name="font">
+                  <font>
+                   <pointsize>9</pointsize>
+                   <bold>true</bold>
+                  </font>
                  </property>
                  <property name="text">
                   <string/>
@@ -763,8 +829,8 @@
             </property>
             <property name="maximumSize">
              <size>
-              <width>300</width>
-              <height>50</height>
+              <width>250</width>
+              <height>80</height>
              </size>
             </property>
             <layout class="QHBoxLayout" name="horizontalLayout_6">
@@ -787,7 +853,7 @@
               <number>0</number>
              </property>
              <item>
-              <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="0,1">
+              <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="1,0">
                <property name="spacing">
                 <number>0</number>
                </property>
@@ -810,7 +876,7 @@
                 <widget class="QLabel" name="label_sound_alert">
                  <property name="maximumSize">
                   <size>
-                   <width>130</width>
+                   <width>120</width>
                    <height>40</height>
                   </size>
                  </property>
@@ -867,8 +933,8 @@
             </property>
             <property name="maximumSize">
              <size>
-              <width>300</width>
-              <height>50</height>
+              <width>250</width>
+              <height>80</height>
              </size>
             </property>
             <layout class="QHBoxLayout" name="horizontalLayout_5">
@@ -896,7 +962,7 @@
                 <enum>QLayout::SizeConstraint::SetNoConstraint</enum>
                </property>
                <property name="leftMargin">
-                <number>0</number>
+                <number>5</number>
                </property>
                <property name="topMargin">
                 <number>5</number>
@@ -918,7 +984,7 @@
                  <property name="maximumSize">
                   <size>
                    <width>120</width>
-                   <height>30</height>
+                   <height>40</height>
                   </size>
                  </property>
                  <property name="font">

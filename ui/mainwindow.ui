@@ -565,6 +565,9 @@
     <addaction name="actionExit"/>
    </widget>
    <widget class="QMenu" name="menuStats">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="title">
      <string>Stats</string>
     </property>
