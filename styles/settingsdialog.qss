@@ -1,28 +1,45 @@
 /* --- QDIALOG VIEW --- */
 
 /* --- QTabBarTimer--- */
-QTabBar:tab {
+
+#tabWidget {
+    background-color: #1e1e1e;
+    color: #f0f0f0;
+    border: 1px solid #333;
+    border-radius: 10px;
+}
+
+#tabWidget::pane {
+    border: 1px solid #444;
+    border-radius: 8px;
+    background-color: #2b2b2b;
+}
+
+QTabBar::tab {
     width: 160px;
     height: 40px;
     font-weight: bold;
+    background-color: #3a3a3a;
+    color: #dcdcdc;
 }
 
 QTabBar:tab:selected {
-    background-color: rgb(120,120,120);
+    background-color: #cc4444;  /* tom vermelho queimado */
+    color: #ffffff;
 }
 
 QTabBar:tab:hover {
-    background-color: rgb(120,120,120);
+    background-color: #6a2e2e;
+    color: #ffffff;
 }
 
 /* --- SpinBoxes Timer --- */
 QSpinBox{
-    background-color: #242424;
-    color : #fff;
-    border: 1px solid #1d1d1d;
-    border-radius: 4px;
-    padding: 3px;
-    padding-left: 5px;
+    background-color: #2e2e2e;
+    color: #ffffff;
+    border: 1px solid #555;
+    padding: 5px;
+    border-radius: 5px;
 }
 
 QSpinBox::up-button{
@@ -77,9 +94,61 @@ QSpinBox::down-arrow{
     height: 7px;
 }
 
+/* --- QSlider Notifications --- */
+#volume_slider::groove:horizontal {
+    border: 1px solid #444;
+    height: 6px;
+    background: #2c2c2c;
+    border-radius: 3px;
+}
+
+#volume_slider::handle:horizontal {
+    background: #a33232;
+    border: 1px solid #cc4444;
+    width: 5px;         /* mais fino */
+    height: 5px;       /* mais alto = "barra" vertical */
+    margin: -10px 0;    /* centraliza verticalmente na trilha */
+    border-radius: 2px; /* quase quadrado */
+}
+
+/* === Handle Hover === */
+#volume_slider::handle:horizontal:hover {
+    background: #cc4444;
+    border: 1px solid #e06666;
+}
+
+/* === Handle Pressed === */
+#volume_slider::handle:horizontal:pressed {
+    background: #e06666;
+}
+
+/* === Sub-page (parte "preenchida" da esquerda) === */
+#volume_slider::sub-page:horizontal {
+    background: #a33232;  /* vermelho escuro */
+    border-radius: 3px;
+}
+
+/* === Add-page (parte da direita ainda não preenchida) === */
+#volume_slider::add-page:horizontal {
+    background: #2c2c2c;
+    border-radius: 3px;
+}
+
 /* --- ComboBoxes Notifications --- */
+#combBox_Alarm_sound {
+    background-color: #2b2b2b;
+    color: #ffffff;
+    border: 1px solid #444;
+    border-radius: 5px;
+    padding: 5px;
+}
+
 #combBox_Alarm_sound::drop-down {
+    background: transparent;
     image: url(":/icons/assets/icons/down-chevron.png");
+    width: 15px;
+    subcontrol-origin: padding;
+    subcontrol-position: center right;
     margin-right: 5px;
 }
 
@@ -88,16 +157,30 @@ QSpinBox::down-arrow{
     margin-right: 5px;
 }
 
+#combBox_Alarm_sound QAbstractItemView {
+    background-color: #2e2e2e;
+    color: #ffffff;
+    selection-background-color: #a33232;
+    border: 1px solid #444;
+    outline: 0;
+}
+
 #combBox_Alarm_sound QListView:item {
+    padding: 6px 10px;
     border: none;
-    padding: 3px;
 }
 
 #combBox_Alarm_sound QListView:item:hover {
-    background-color: red;
+    background-color: #6a2e2e;
+    color: #ffffff;
 }
 
-/* --- Others Notifications --- */
+#combBox_Alarm_sound QListView::item:selected {
+    background-color: #a33232;
+    color: #ffffff;
+}
+
+/* --- Others  --- */
 #btton_playAlarm {
     margin-right: 5px;
 }

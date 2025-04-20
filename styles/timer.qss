@@ -92,13 +92,20 @@ QMenu::item:selected{
     background-color: #1f2f4a;
 }
 
+/* --- Main buttons --- */
 #layout_buttonsTimer QPushButton {
-    background-color: #181a1b;
+    background-color: #2b2b2b;
+    color: #ffffff;
+    border: 1px solid #444;
+    padding: 8px 16px;
+    border-radius: 5px;
+    font-weight: bold;
 }
 
 #layout_buttonsTimer QPushButton:hover {
-    background-color: #181a1b;
-    color: green;
+    background-color: #a33232;
+    border: 1px solid #cc4444;
+    color: #ffffff;
 }
 
 /* --- StatusBar --- */
