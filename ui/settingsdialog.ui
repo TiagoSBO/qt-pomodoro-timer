@@ -86,7 +86,7 @@
       <enum>QTabWidget::TabShape::Rounded</enum>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <property name="elideMode">
       <enum>Qt::TextElideMode::ElideNone</enum>
@@ -855,7 +855,7 @@
              <item>
               <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="1,0">
                <property name="spacing">
-                <number>0</number>
+                <number>5</number>
                </property>
                <property name="sizeConstraint">
                 <enum>QLayout::SizeConstraint::SetNoConstraint</enum>
@@ -1022,6 +1022,12 @@
                   <iconset resource="../resources.qrc">
                    <normaloff>:/icons/assets/icons/play.png</normaloff>:/icons/assets/icons/play.png</iconset>
                  </property>
+                 <property name="iconSize">
+                  <size>
+                   <width>25</width>
+                   <height>20</height>
+                  </size>
+                 </property>
                  <property name="flat">
                   <bool>true</bool>
                  </property>
@@ -1043,8 +1049,8 @@
                  </property>
                  <property name="maximumSize">
                   <size>
-                   <width>100</width>
-                   <height>30</height>
+                   <width>110</width>
+                   <height>33</height>
                   </size>
                  </property>
                  <property name="currentText">

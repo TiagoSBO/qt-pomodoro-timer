@@ -36,8 +36,8 @@ public:
 private slots:
     void emitTimeValueChanged();
     void setAlarm_sound();
-    void on_volume_slider_valueChanged(int value);
-    void onSoundAlertToggled(bool checked);
+    void volume_slider_valueChanged(int value);
+    void soundAlertToggled(bool checked);
 
 signals:
     void pomodoroDurationChanged(int newValue);

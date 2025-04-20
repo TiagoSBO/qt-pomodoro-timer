@@ -29,7 +29,6 @@ MainWindow::MainWindow(QWidget *parent)
     QLabel *versionLabel = new QLabel(this);
     versionLabel->setObjectName("versionLabel");
     versionLabel->setText(QStringLiteral("Version %1").arg(APP_VERSION));
-
     statusBar()->addWidget(versionLabel);
 
     //Config - Table View
@@ -55,9 +54,13 @@ MainWindow::MainWindow(QWidget *parent)
     //Config table buttons
     QMenu *menu = new QMenu(this);
     menu->setFocusPolicy(Qt::NoFocus);
-    QAction *deleteTableData = new QAction("Clear table data 🗑️", this);
+
+    QAction *deleteTableData = new QAction("Clear table data 🗑", this);
+    deleteTableData->setData(ClearTableContent);
+
     menu->addAction(deleteTableData);
     ui->button_configTable->setMenu(menu);
+
     connect(deleteTableData, &QAction::triggered, this, &MainWindow::button_configTable_clicked);
 
     //Connect Settings buttons
@@ -74,7 +77,7 @@ MainWindow::MainWindow(QWidget *parent)
     timer = new QTimer(this);
     connect(timer, &QTimer::timeout, this, &MainWindow::onTimerOut);
 
-    //Connect MainWindow buttons
+    //Connect Timer - MainWindow buttons
     connect(ui->button_settings, &QPushButton::clicked, this, &MainWindow::btton_settings_clicked);
     connect(ui->button_resumePause, &QPushButton::clicked, this, &MainWindow::btton_startResume_clicked);
     connect(ui->button_reset, &QPushButton::clicked, this, &MainWindow::btton_reset_clicked);
@@ -359,7 +362,7 @@ void MainWindow::updateStyleBasedOnState()
 //Table Label - Total focus time
 void MainWindow::updateTotalFocusTime()
 {
-    int totalSeconds = sessionLogs->getTotalTimeFocus(); // Obtém o tempo total de foco em segundos
+    int totalSeconds = sessionLogs->getAccumulatedFocusSeconds(); // Obtém o tempo total de foco em segundos
 
     // Calcular as horas e minutos a partir dos segundos totais
     int hours = totalSeconds / 3600;  // Calcula o número de horas
@@ -375,21 +378,31 @@ void MainWindow::updateTotalFocusTime()
     }
 }
 
-//Table Button - Reset table data
-void MainWindow::button_configTable_clicked()
-{
-    QMessageBox::StandardButton answer;
-    answer = QMessageBox::question(this, "Confirmation",
-        "Are you sure you want to clear the table data?",
-        QMessageBox::Yes | QMessageBox::No);
+//Table Button - Clear table data
+void MainWindow::button_configTable_clicked(){
 
-    if (answer == QMessageBox::Yes) {
-        ui->tableSessionLogs->clearContents();
-        ui->tableSessionLogs->setRowCount(0);
+    QAction *action = qobject_cast<QAction*>(sender());
+    if (!action) return;
 
-        qDebug() << "Dados excluídos!";  // Aqui você coloca a lógica para excluir os dados
-    } else {
-        qDebug() << "Ação cancelada!";
+    QVariant data = action->data();
+    if (!data.isValid()) return;
+
+    int value = data.toInt();
+
+    switch (value) {
+    case ClearTableContent: {
+        QMessageBox::StandardButton clearTableAnswer = QMessageBox::question(this, "Confirmation",
+            "Are you sure you want to clear the table data?",
+            QMessageBox::Yes | QMessageBox::No);
+
+        if (clearTableAnswer == QMessageBox::Yes) {
+            sessionLogs->clearTableOnly();
+            updateTotalFocusTime();
+        }
+        break;
+    }
+    default:
+        qDebug() << "Ação desconhecida.";
     }
 }
 

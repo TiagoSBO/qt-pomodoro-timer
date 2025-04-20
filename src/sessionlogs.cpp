@@ -12,10 +12,7 @@ static int sessionCount = 0;
 
 void Sessionlogs::addSession(int sessionNumber, const QString &sessionDuration, const QString &endTimeOfSession)
 {
-    if (!m_table) {
-        qDebug() << "Erro: QTableWidget não inicializado!";
-        return;
-    }
+    if (!m_table) return;
 
     // 🔹 Se for a cada 4 sessões, adiciona um cabeçalho antes de inserir a nova sessão
     if (sessionCount % 4 == 0 && sessionCount != 0) {
@@ -50,6 +47,14 @@ void Sessionlogs::addSession(int sessionNumber, const QString &sessionDuration, 
     m_table->setItem(row, 1, itemDuration);
     m_table->setItem(row, 2, itemEndTime);
 
+    // 🔽 Atualiza tempo acumulado
+    QStringList timeParts = sessionDuration.split(":");
+    if (timeParts.size() == 2) {
+        int minutes = timeParts[0].toInt();
+        int seconds = timeParts[1].toInt();
+        m_totalAccumulatedFocusSeconds += (minutes * 60) + seconds;
+    }
+
     sessionCount++;
 
     qDebug() << "Sessão adicionada com sucesso na tabela!";
@@ -72,6 +77,7 @@ int Sessionlogs::getTotalTimeFocus()
                 int minutes = timeParts[0].toInt();
                 int seconds = timeParts[1].toInt();
                 totalSeconds += (minutes * 60) + seconds;
+                m_totalAccumulatedFocusSeconds = totalSeconds;
             }
         }
     }
@@ -79,3 +85,22 @@ int Sessionlogs::getTotalTimeFocus()
 
     return totalSeconds; // Retorna o tempo total em segundos
 }
+
+void Sessionlogs::clearTableOnly()
+{
+    if (!m_table) return;
+
+    m_table->clearContents();
+    m_table->setRowCount(0);
+
+    qDebug() << "Conteúdo da tabela limpo (tempo preservado).";
+}
+
+
+
+int Sessionlogs::getAccumulatedFocusSeconds() const
+{
+    return m_totalAccumulatedFocusSeconds;
+}
+
+

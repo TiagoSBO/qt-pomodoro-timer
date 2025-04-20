@@ -15,9 +15,14 @@
 #include <QStringList>
 #include <QMap>
 
-// Estados do Timer
+// Timer States
 enum TimerState {
     FOCUS, SHORT_BREAK, LONG_BREAK
+};
+
+enum MenuTableAction {
+    ClearTableContent,
+    ClearFocusTime
 };
 
 QT_BEGIN_NAMESPACE

@@ -13,8 +13,14 @@ public:
     void addSession(int sessionNumber, const QString &sessionDuration, const QString &endTimeOfSession);
     int getTotalTimeFocus();
 
+    void clearTableOnly();
+    int getAccumulatedFocusSeconds() const;
+
+
 private:
     QTableWidget *m_table;  // Ponteiro para a tabela
+
+    int m_totalAccumulatedFocusSeconds = 0;
 };
 
 #endif // SESSIONLOGS_H
