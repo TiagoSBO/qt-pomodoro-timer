@@ -97,15 +97,27 @@ QMenu::item:selected{
     background-color: #2b2b2b;
     color: #ffffff;
     border: 1px solid #444;
-    padding: 8px 16px;
+    padding: 8px 15px;
     border-radius: 5px;
     font-weight: bold;
+    min-width: 45px;
 }
 
-#layout_buttonsTimer QPushButton:hover {
+#layout_buttonsTimer[focusState="FOCUS"] QPushButton:hover{
     background-color: #a33232;
     border: 1px solid #cc4444;
-    color: #ffffff;
+}
+
+/* SHORT BREAK */
+#layout_buttonsTimer[focusState="SHORT_BREAK"] QPushButton:hover {
+    background-color: #3cb371;
+    border: 1px solid #2e944e;
+}
+
+/* LONG BREAK */
+#layout_buttonsTimer[focusState="LONG_BREAK"] QPushButton:hover{
+    background-color: #3c6eac;
+    border: 1px solid #2b507e;
 }
 
 /* --- StatusBar --- */

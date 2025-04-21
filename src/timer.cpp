@@ -355,6 +355,19 @@ void MainWindow::updateStyleBasedOnState()
     ui->tableSessionLogs->horizontalHeader()->style()->unpolish(ui->tableSessionLogs->horizontalHeader());
     ui->tableSessionLogs->horizontalHeader()->style()->polish(ui->tableSessionLogs->horizontalHeader());
 
+    ui->layout_buttonsTimer->setProperty("focusState", state);
+    ui->layout_buttonsTimer->style()->unpolish(ui->layout_buttonsTimer);
+    ui->layout_buttonsTimer->style()->polish(ui->layout_buttonsTimer);
+
+    // --- 🚀 AQUI: percorre os filhos e atualiza o estilo dinamicamente
+    const auto &children = ui->layout_buttonsTimer->findChildren<QPushButton*>();
+    for (QPushButton *btn : children) {
+        btn->setProperty("focusState", state);  // <- importante
+        btn->style()->unpolish(btn);
+        btn->style()->polish(btn);
+        btn->update();
+    }
+
     ui->tableSessionLogs->repaint();
 }
 

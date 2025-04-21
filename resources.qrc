@@ -29,5 +29,6 @@
         <file>styles/timer.qss</file>
         <file>styles/sessionlogs.qss</file>
         <file>styles/settingsdialog.qss</file>
+        <file>styles/helpwindow.qss</file>
     </qresource>
 </RCC>

@@ -27,7 +27,8 @@ int main(int argc, char *argv[])
     QStringList styleSheets = {
         ":/styles/styles/timer.qss",
         ":/styles/styles/sessionlogs.qss",
-        ":/styles/styles/settingsdialog.qss"
+        ":/styles/styles/settingsdialog.qss",
+        ":/styles/styles/helpwindow.qss"
     };
 
     QString combinedStyle = loadStyleSheet(styleSheets);
