@@ -18,11 +18,13 @@ qt_add_executable(pomodoro_timer
     src/sessionlogs.cpp
     src/soundmanager.cpp
     src/helpwindow.cpp
+    src/systemtrayiconhandler.cpp
     includes/timer.h
     includes/settingsdialog.h
     includes/sessionlogs.h
     includes/soundmanager.h
     includes/helpwindow.h
+    includes/systemtrayiconhandler.h
     ui/mainwindow.ui
     ui/settingsdialog.ui
     ui/helpwindow.ui

@@ -31,6 +31,16 @@ MainWindow::MainWindow(QWidget *parent)
     versionLabel->setText(QStringLiteral("Version %1").arg(APP_VERSION));
     statusBar()->addWidget(versionLabel);
 
+    //System Tray Icon
+    systemTrayIcon = new SystemTrayiconHandler(this);
+    connect(systemTrayIcon, &QSystemTrayIcon::activated, this, &MainWindow::restoreFromTrayIcon);
+    connect(systemTrayIcon, &SystemTrayiconHandler::minimizeRequested, this, &MainWindow::hide);
+    connect(systemTrayIcon, &SystemTrayiconHandler::restoreRequested, this, [this]() {
+        this->showNormal();
+        this->raise();
+        this->activateWindow();
+    });
+
     //Config - Table View
     sessionLogs = new Sessionlogs(ui->tableSessionLogs);
     ui->tableSessionLogs->verticalHeader()->setVisible(false);
@@ -431,3 +441,29 @@ void MainWindow::openHelpDialog()
     helpWindow->exec();
 }
 
+void MainWindow::restoreFromTrayIcon(QSystemTrayIcon::ActivationReason reason)
+{
+    if (reason == QSystemTrayIcon::Trigger) {
+        this->showNormal();
+        this->raise();
+        this->activateWindow();
+    }
+}
+
+void MainWindow::closeEvent(QCloseEvent *event)
+{
+    static bool notifiedOnce = false;
+
+    if (systemTrayIcon && systemTrayIcon->isVisible()) {
+        this->hide();
+        event->ignore();
+
+        if (!notifiedOnce) {
+            systemTrayIcon->showMessage("Pomodoro Timer",
+                "The application has been minimized to the notification area.",
+                QSystemTrayIcon::Information, 1000);
+            notifiedOnce = true;
+
+        }
+    }
+}

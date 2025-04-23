@@ -5,6 +5,8 @@
 #include "helpwindow.h"
 #include "sessionlogs.h"
 #include "settingsdialog.h"
+#include "systemtrayiconhandler.h"
+#include <QCloseEvent>
 #include "QMessageBox"
 #include <QDateTime>
 #include <QDir>
@@ -22,7 +24,6 @@ enum TimerState {
 
 enum MenuTableAction {
     ClearTableContent,
-    ClearFocusTime
 };
 
 QT_BEGIN_NAMESPACE
@@ -48,16 +49,13 @@ private slots:
     void btton_reset_clicked();
     void btton_settings_clicked();
     void btton_skip_clicked();
-
     //Update Configs
     void updatePomodoroDuration(int newTime);
     void updateShortBreakDuration(int newTime);
     void updateLongBreakDuration(int newTime);
     void updatePomodoroRounds(int newRounds);
-
     //Slot Timer
     void onTimerOut();
-
     //Table button
     void button_configTable_clicked();
     //Help dialog window
@@ -69,6 +67,10 @@ private:
     Settings *settingsScreen;
     Sessionlogs *sessionLogs;
     HelpWindow *helpWindow;
+
+    SystemTrayiconHandler *systemTrayIcon;
+    void restoreFromTrayIcon(QSystemTrayIcon::ActivationReason reason);
+    void closeEvent(QCloseEvent *event) override;
 
     QTimer *timer;
     TimerState currentStatusTimer;
