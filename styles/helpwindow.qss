@@ -5,7 +5,7 @@
 }
 
 #labelTitle {
-    font-size: 18px;
+    font-size: 17px;
     color: #ffffff;
     font-weight: bold;
     padding: 8px;
