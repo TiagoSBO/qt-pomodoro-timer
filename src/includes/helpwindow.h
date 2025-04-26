@@ -19,4 +19,4 @@ private:
     Ui::HelpWindow *ui;
 };
 
-#endif // HELPWINDOW_H
+#endif

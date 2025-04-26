@@ -71,26 +71,25 @@ private:
     SystemTrayiconHandler *systemTrayIcon;
     void restoreFromTrayIcon(QSystemTrayIcon::ActivationReason reason);
     void closeEvent(QCloseEvent *event) override;
+    bool isExiting = false;
 
-    QTimer *timer;
-    TimerState currentStatusTimer;
     SoundManager soundManager;
-
-    void setSession(TimerState session);
     QString formatTime(int seconds);
 
-    int timerStarted;
-
-    // Funções específicas para cada tipo de sessão
+    //Timer
+    QTimer *timer;
+    TimerState currentStatusTimer;
     void pomodoroSession();
     void startShortBreak();
     void startLongBreak();
     void handleSessionCompletion();
+    void setSession(TimerState session);
 
     //Style
     void updateStyleBasedOnState();
 
-    //Others
+    //
+    int timerStarted;
     int currentPomodorSessions;
     int defaultPomodoroDuration;
     int defaultShortBreakDuration;
@@ -98,10 +97,10 @@ private:
     int defaultRoundsSessions;
     int timeRemaining;
     int running;
-    int sessionsDoneCount; // Contador de sessões finalizadas
+    int sessionsDoneCount;
 
     int selectedISoundIndex = 0;
     void updateTotalFocusTime();
 };
 
-#endif // TIMER_H
+#endif

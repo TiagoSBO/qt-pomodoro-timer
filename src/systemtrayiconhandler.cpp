@@ -4,14 +4,15 @@ SystemTrayiconHandler::SystemTrayiconHandler(QWidget *parent)
     : QSystemTrayIcon(parent)
 {
     trayMenu = new QMenu();
+    restoreAction = new QAction("Open window", this);
     minimizeAction = new QAction("Minimize window", this);
-    restoreAction = new QAction("Restore window", this);
     quitAction = new QAction("Quit", this);
 
     connect(minimizeAction, &QAction::triggered, this, &SystemTrayiconHandler::minimizeRequested);
     connect(restoreAction, &QAction::triggered, this, &SystemTrayiconHandler::restoreRequested);
-    connect(quitAction, &QAction::triggered, this, &QApplication::quit, Qt::QueuedConnection);
-
+    connect(quitAction, &QAction::triggered, this, [this]() {
+        emit quitRequested();
+    });
     buildTrayIconMenu();
     buildTrayIcon();
     this->show();
@@ -31,6 +32,7 @@ void SystemTrayiconHandler::buildTrayIconMenu()
     trayMenu->addAction(minimizeAction);
     trayMenu->addSeparator();
     trayMenu->addAction(restoreAction);
+
     trayMenu->addSeparator();
     trayMenu->addAction(quitAction);
 }

@@ -80,20 +80,19 @@ void Settings::setSpinboxesEnabled(bool enabled)
     ui->boxSetLongDuration->setEnabled(enabled);
     ui->boxSetIntervalDuration->setEnabled(enabled);
     if (!enabled) {
-        // Aplica uma dica de "não disponível" com um QToolTip
+        //ToolTip
         ui->boxSetTimerDuration->setToolTip("You can only change the Timer values ​​when the timer is paused or reset");
         ui->boxSetShortDuration->setToolTip("You can only change the Timer values ​​when the timer is paused or reset");
         ui->boxSetLongDuration->setToolTip("You can only change the Timer values ​​when the timer is paused or reset");
         ui->boxSetIntervalDuration->setToolTip("You can only change the Timer values ​​when the timer is paused or reset");
     } else {
-        // Remove as dicas de aviso
         ui->boxSetTimerDuration->setToolTip("");
         ui->boxSetShortDuration->setToolTip("");
         ui->boxSetLongDuration->setToolTip("");
         ui->boxSetIntervalDuration->setToolTip("");
     }
 }
-
+//Emits signals to change value, if the spinboxes have their values ​​changed.
 void Settings::emitTimeValueChanged()
 {
     QSpinBox *senderSpinBox = qobject_cast<QSpinBox*>(sender());
@@ -133,7 +132,7 @@ void Settings::volume_slider_valueChanged(int value)
 void Settings::soundAlertToggled(bool checked)
 {
     soundManager->setSoundEnabled(checked);
-    emit soundEnabledChanged(checked);  // <--- notifica para o MainWindow
+    emit soundEnabledChanged(checked);
 
 }
 

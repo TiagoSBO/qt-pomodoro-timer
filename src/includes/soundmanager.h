@@ -17,12 +17,12 @@ public:
     void setSoundEnabled(bool enabled);
 
 private:
-    QMediaPlayer *player;      // Gerenciador de áudio
-    QAudioOutput *audioOutput; // Saída de áudio
-    QMap<int, QUrl> soundMap;  // Mapeamento de sons
+    QMediaPlayer *player;
+    QAudioOutput *audioOutput;
+    QMap<int, QUrl> soundMap;
     void loadSounds();
     bool soundEnabled = true;
 
 };
 
-#endif // SOUNDMANAGER_H
+#endif

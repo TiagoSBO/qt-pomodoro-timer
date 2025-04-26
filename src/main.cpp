@@ -3,7 +3,7 @@
 #include <QFile>
 #include <QTextStream>
 
-//Read Qsss files
+//Read QSS files
 QString loadStyleSheet(const QStringList &qssPaths) {
     QString finalStyleSheet;
     for (const QString &path : qssPaths) {

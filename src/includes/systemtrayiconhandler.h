@@ -26,7 +26,8 @@ private:
 signals:
     void minimizeRequested();
     void restoreRequested();
+    void quitRequested();
 
 };
 
-#endif // SYSTEMTRAYICONHANDLER_H
+#endif

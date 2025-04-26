@@ -18,9 +18,9 @@ public:
 
 
 private:
-    QTableWidget *m_table;  // Ponteiro para a tabela
+    QTableWidget *m_table;
 
     int m_totalAccumulatedFocusSeconds = 0;
 };
 
-#endif // SESSIONLOGS_H
+#endif

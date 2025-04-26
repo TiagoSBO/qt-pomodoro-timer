@@ -22,8 +22,12 @@ MainWindow::MainWindow(QWidget *parent)
     //Initial Sets Updates
     updateStyleBasedOnState();
     ui->labelTimer->setText(formatTime(timeRemaining));
+
     //Exit App
-    connect(ui->actionExit, &QAction::triggered, this, &QCoreApplication::quit, Qt::QueuedConnection);
+    connect(ui->actionExit, &QAction::triggered, this, [this]() {
+        isExiting = true;
+        QCoreApplication::quit();
+    });
 
     //Version
     QLabel *versionLabel = new QLabel(this);
@@ -39,6 +43,10 @@ MainWindow::MainWindow(QWidget *parent)
         this->showNormal();
         this->raise();
         this->activateWindow();
+    });
+    connect(systemTrayIcon, &SystemTrayiconHandler::quitRequested, this, [this]() {
+        isExiting = true;
+        QCoreApplication::quit();
     });
 
     //Config - Table View
@@ -119,7 +127,6 @@ void MainWindow::onTimerOut()
             ui->labelTimer->setText(formatTime(timeRemaining));
         }else {
             timer->stop();
-            //notification
             handleSessionCompletion();
     }
 }
@@ -132,7 +139,7 @@ void MainWindow::btton_startResume_clicked()
         ui->button_resumePause->setText("Resume");
         qDebug() << "Pause Clicked / CurrentState -> " << currentStatusTimer;
     }else{
-        timer->start(2);
+        timer->start(1000);
         timerStarted = true;
         ui->button_resumePause->setText("Pause");
         qDebug() << "Start/Resume clicked / CurrentState -> " << currentStatusTimer;
@@ -142,7 +149,7 @@ void MainWindow::btton_startResume_clicked()
 
 void MainWindow::btton_reset_clicked()
 {
-    // Restaura o tempo com base na sessão atual
+    // Restores the time based on the current session
     qDebug() << "Botão Reset clicado: " << currentStatusTimer;
     timer->stop();
 
@@ -311,6 +318,7 @@ void MainWindow::startLongBreak()
     ui->labelTimer->setText(QString(formatTime(timeRemaining)));
 }
 
+//Function responsible for managing focus and rest
 void MainWindow::handleSessionCompletion()
 {
     if (currentStatusTimer == FOCUS){
@@ -319,7 +327,7 @@ void MainWindow::handleSessionCompletion()
         // Sound Notifcation
         soundManager.playSound(selectedISoundIndex);
 
-        int focusTimeSpent = defaultPomodoroDuration * 60;  // Duração total da sessão
+        int focusTimeSpent = defaultPomodoroDuration * 60;  // Total session duration
         QString formattedFocusTime = formatTime(focusTimeSpent);
         QString endTime = QDateTime::currentDateTime().toString("HH:mm");
 
@@ -337,7 +345,7 @@ void MainWindow::handleSessionCompletion()
             startShortBreak();
         }
     }
-    else if (currentStatusTimer == SHORT_BREAK || currentStatusTimer == LONG_BREAK) { //se a sessão encerrada foi SHORT OU LONG
+    else if (currentStatusTimer == SHORT_BREAK || currentStatusTimer == LONG_BREAK){
         qDebug() <<  "Starting a new Pomodoro session.";
         pomodoroSession();
     }
@@ -355,12 +363,12 @@ void MainWindow::updateStyleBasedOnState()
         state = "LONG_BREAK";
     }
 
-    // Aplica ao layout do timer
+    // Applies style to the timer layout
     ui->layout_timer->setProperty("focusState", state);
     ui->layout_timer->style()->unpolish(ui->layout_timer);
     ui->layout_timer->style()->polish(ui->layout_timer);
 
-    // Aplica à tabela
+    // Applies style to the table
     ui->tableSessionLogs->horizontalHeader()->setProperty("focusState", state);
     ui->tableSessionLogs->horizontalHeader()->style()->unpolish(ui->tableSessionLogs->horizontalHeader());
     ui->tableSessionLogs->horizontalHeader()->style()->polish(ui->tableSessionLogs->horizontalHeader());
@@ -369,15 +377,14 @@ void MainWindow::updateStyleBasedOnState()
     ui->layout_buttonsTimer->style()->unpolish(ui->layout_buttonsTimer);
     ui->layout_buttonsTimer->style()->polish(ui->layout_buttonsTimer);
 
-    // --- 🚀 AQUI: percorre os filhos e atualiza o estilo dinamicamente
+    // Here iterate through the children and dynamically updates the style
     const auto &children = ui->layout_buttonsTimer->findChildren<QPushButton*>();
     for (QPushButton *btn : children) {
-        btn->setProperty("focusState", state);  // <- importante
+        btn->setProperty("focusState", state);
         btn->style()->unpolish(btn);
         btn->style()->polish(btn);
         btn->update();
     }
-
     ui->tableSessionLogs->repaint();
 }
 
@@ -385,23 +392,23 @@ void MainWindow::updateStyleBasedOnState()
 //Table Label - Total focus time
 void MainWindow::updateTotalFocusTime()
 {
-    int totalSeconds = sessionLogs->getAccumulatedFocusSeconds(); // Obtém o tempo total de foco em segundos
+    int totalSeconds = sessionLogs->getAccumulatedFocusSeconds(); // Gets the total focus time in seconds
 
-    // Calcular as horas e minutos a partir dos segundos totais
-    int hours = totalSeconds / 3600;  // Calcula o número de horas
-    int minutes = (totalSeconds % 3600) / 60;  // Calcula os minutos restantes
+    // Calculate hours and minutes from total seconds
+    int hours = totalSeconds / 3600;
+    int minutes = (totalSeconds % 3600) / 60;
 
-    // Verifica se o tempo total de foco é menor que 1 hora
+    // Check if total focus time is less than 1 hour
     if (hours > 0) {
-        // Exibe o tempo no formato "Xh:YYmin" se tiver 1 ou mais horas
+        // Display time in "Xh:YYmin" format if it is 1 or more hours
         ui->label_setTotalFocus->setText(QString("%1h %2min").arg(hours).arg(minutes, 2, 10, QChar('0')));
     } else {
-        // Exibe apenas os minutos se o tempo for menor que 1 hora
+        // Display only minutes if time is less than 1 hour
         ui->label_setTotalFocus->setText(QString("%1 min").arg(minutes));
     }
 }
 
-//Table Button - Clear table data
+//Config table Button - Action-> Clear table data
 void MainWindow::button_configTable_clicked(){
 
     QAction *action = qobject_cast<QAction*>(sender());
@@ -425,7 +432,7 @@ void MainWindow::button_configTable_clicked(){
         break;
     }
     default:
-        qDebug() << "Ação desconhecida.";
+        qDebug() << "Unknown action";
     }
 }
 
@@ -441,6 +448,7 @@ void MainWindow::openHelpDialog()
     helpWindow->exec();
 }
 
+//TrayIcon Action Functions
 void MainWindow::restoreFromTrayIcon(QSystemTrayIcon::ActivationReason reason)
 {
     if (reason == QSystemTrayIcon::Trigger) {
@@ -454,6 +462,11 @@ void MainWindow::closeEvent(QCloseEvent *event)
 {
     static bool notifiedOnce = false;
 
+    if (isExiting) {
+        event->accept();
+        return;
+    }
+
     if (systemTrayIcon && systemTrayIcon->isVisible()) {
         this->hide();
         event->ignore();
@@ -463,7 +476,6 @@ void MainWindow::closeEvent(QCloseEvent *event)
                 "The application has been minimized to the notification area.",
                 QSystemTrayIcon::Information, 1000);
             notifiedOnce = true;
-
         }
     }
 }

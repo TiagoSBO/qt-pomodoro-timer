@@ -22,12 +22,12 @@ void SoundManager::loadSounds()
 void SoundManager::playSound(int index)
 {
     if (!soundEnabled) {
-        qDebug() << "Som está desativado. Nenhum som será reproduzido.";
+        qDebug() << "Sound is muted. No sound will be played.";
         return;
     }
 
     if (soundMap.contains(index)) {
-        qDebug() << "Tocando som do índice:" << index << "URL:" << soundMap[index];
+        qDebug() << "Playing index sound:" << index << "URL:" << soundMap[index];
         player->stop();                // Para qualquer som que esteja tocando
         player->setSource(soundMap[index]); // Define o novo som
         player->play();                 // Toca o som
@@ -39,14 +39,14 @@ void SoundManager::setVolume(int volume)
     if (audioOutput) {
         float normalizedVolume = static_cast<float>(volume) / 100.0;
         audioOutput->setVolume(normalizedVolume);
-        qDebug() << "Volume atualizado para:" << normalizedVolume;
+        qDebug() << "Volume updated to:" << normalizedVolume;
     }
 }
 
 void SoundManager::setSoundEnabled(bool enabled)
 {
     soundEnabled = enabled;
-    qDebug() << "Som habilitado:" << soundEnabled;
+    qDebug() << "Sound enabled:" << soundEnabled;
 }
 
 
