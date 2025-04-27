@@ -30,6 +30,7 @@ qt_add_executable(PomodoroTimer
     src/ui/settingsdialog.ui
     src/ui/helpwindow.ui
     resources.qrc
+    app_icon.rc
 )
 
 # O nome real do arquivo gerado (sem underline ou tudo minúsculo)

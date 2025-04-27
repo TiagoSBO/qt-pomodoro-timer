@@ -17,13 +17,14 @@
         <file>assets/icons/endtime.png</file>
         <file>assets/icons/play.png</file>
         <file>assets/icons/pause.png</file>
-        <file>assets/icons/Pomodoro Icon.png</file>
+        <file>assets/icons/pomodoroIcon.png</file>
         <file>assets/icons/skip.png</file>
         <file>assets/icons/toggle_off.png</file>
         <file>assets/icons/toggle_on.png</file>
         <file>assets/icons/down-arrow.png</file>
         <file>assets/icons/down-chevron.png</file>
         <file>assets/icons/down-chevron-up.png</file>
+        <file>assets/icons/pomodoroIcon.ico</file>
     </qresource>
     <qresource prefix="/styles">
         <file>styles/timer.qss</file>
