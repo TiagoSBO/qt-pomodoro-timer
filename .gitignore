@@ -35,6 +35,8 @@ Thumbs.db
 *.rc
 /.qmake.cache
 /.qmake.stash
+releases/
+
 
 # qtcreator generated files
 *.pro.user*
@@ -81,3 +83,4 @@ CMakeLists.txt.user*
 .rcc/
 .uic/
 /build*/
+
