@@ -22,7 +22,7 @@ SystemTrayiconHandler::~SystemTrayiconHandler(){}
 
 void SystemTrayiconHandler::buildTrayIcon()
 {
-    this->setIcon(QIcon(":/icons/assets/icons/Pomodoro Icon.png"));
+    this->setIcon(QIcon(":/icons/assets/icons/pomodoroIcon.png"));
     this->setToolTip("Pomodoro Timer");
     this->setContextMenu(trayMenu);
 }

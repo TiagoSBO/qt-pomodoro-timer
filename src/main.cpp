@@ -1,5 +1,7 @@
 #include "timer.h"
 #include <QApplication>
+#include <QStyleFactory>
+#include <QSysInfo>
 #include <QFile>
 #include <QTextStream>
 
@@ -23,6 +25,12 @@ QString loadStyleSheet(const QStringList &qssPaths) {
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
+
+    //Check Windows Operating System
+    QString osProductVersion = QSysInfo::productVersion();
+    if (osProductVersion.startsWith("10")) {
+        a.setStyle(QStyleFactory::create("Fusion"));
+    }
 
     QStringList styleSheets = {
         ":/styles/styles/timer.qss",
