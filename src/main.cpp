@@ -1,5 +1,6 @@
 #include "timer.h"
 #include <QApplication>
+#include "singleapplication.h"
 #include <QStyleFactory>
 #include <QSysInfo>
 #include <QFile>
@@ -24,12 +25,17 @@ QString loadStyleSheet(const QStringList &qssPaths) {
 
 int main(int argc, char *argv[])
 {
-    QApplication a(argc, argv);
+    SingleApplication app(argc, argv, true);
+
+    if (app.isSecondary()) {
+        app.sendMessage("raise");
+        return 0;
+    }
 
     //Check Windows Operating System
     QString osProductVersion = QSysInfo::productVersion();
     if (osProductVersion.startsWith("10")) {
-        a.setStyle(QStyleFactory::create("Fusion"));
+        app.setStyle(QStyleFactory::create("Fusion"));
     }
 
     QStringList styleSheets = {
@@ -40,10 +46,18 @@ int main(int argc, char *argv[])
     };
 
     QString combinedStyle = loadStyleSheet(styleSheets);
-    a.setStyleSheet(combinedStyle);
+    app.setStyleSheet(combinedStyle);
 
     MainWindow w;
+
+    QObject::connect(&app, &SingleApplication::receivedMessage, &w, [&](quint32, QByteArray) {
+        if (w.isMinimized())
+            w.showNormal();
+        w.activateWindow();
+        w.raise();
+    });
+
     w.show();
 
-    return a.exec();
+    return app.exec();
 }
