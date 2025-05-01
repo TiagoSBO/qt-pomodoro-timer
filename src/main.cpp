@@ -51,10 +51,11 @@ int main(int argc, char *argv[])
     MainWindow w;
 
     QObject::connect(&app, &SingleApplication::receivedMessage, &w, [&](quint32, QByteArray) {
-        if (w.isMinimized())
+        if (w.isMinimized()){
             w.showNormal();
-        w.activateWindow();
-        w.raise();
+            w.activateWindow();
+            w.raise();
+        }
     });
 
     w.show();
