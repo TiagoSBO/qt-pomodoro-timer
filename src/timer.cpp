@@ -13,7 +13,7 @@ MainWindow::MainWindow(QWidget *parent)
 , defaultPomodoroDuration(25)
 , defaultShortBreakDuration(5)
 , defaultLongBreakDuration(15)
-, defaultRoundsSessions(4) //Long break interval
+, defaultRoundsSessions(4)
 , timeRemaining(defaultPomodoroDuration * 60)
 , timerStarted(false)
 {
@@ -372,6 +372,8 @@ void MainWindow::updateStyleBasedOnState()
     ui->tableSessionLogs->horizontalHeader()->setProperty("focusState", state);
     ui->tableSessionLogs->horizontalHeader()->style()->unpolish(ui->tableSessionLogs->horizontalHeader());
     ui->tableSessionLogs->horizontalHeader()->style()->polish(ui->tableSessionLogs->horizontalHeader());
+    ui->tableSessionLogs->horizontalHeader()->update();
+    ui->tableSessionLogs->horizontalHeader()->repaint();
 
     ui->layout_buttonsTimer->setProperty("focusState", state);
     ui->layout_buttonsTimer->style()->unpolish(ui->layout_buttonsTimer);
@@ -386,6 +388,7 @@ void MainWindow::updateStyleBasedOnState()
         btn->update();
     }
     ui->tableSessionLogs->repaint();
+
 }
 
 

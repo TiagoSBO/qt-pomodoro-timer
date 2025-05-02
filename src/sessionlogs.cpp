@@ -97,7 +97,6 @@ void Sessionlogs::clearTableOnly()
 }
 
 
-
 int Sessionlogs::getAccumulatedFocusSeconds() const
 {
     return m_totalAccumulatedFocusSeconds;

@@ -32,7 +32,6 @@ int main(int argc, char *argv[])
         return 0;
     }
 
-    //Check Windows Operating System
     QString osProductVersion = QSysInfo::productVersion();
     if (osProductVersion.startsWith("10")) {
         app.setStyle(QStyleFactory::create("Fusion"));
@@ -47,6 +46,7 @@ int main(int argc, char *argv[])
 
     QString combinedStyle = loadStyleSheet(styleSheets);
     app.setStyleSheet(combinedStyle);
+
 
     MainWindow w;
 
