@@ -17,6 +17,10 @@ The application operates in the system tray, providing discreet access to timer 
 -   **⚙️ Configuration Settings:** Fine-tune various aspects of the application, from timer durations to sound preferences, ensuring a tailored experience.
 - **🎨 Multiple Themes:** Multiple themes to change the look of the application.
 
+### Demonstration
+![funcionalidades](https://github.com/user-attachments/assets/2bcd69c3-4b2a-4a1a-9757-4776e201d8f7)
+
+
 ## Technologies used
 
 - ``C++``
@@ -56,7 +60,7 @@ Once the build process is complete, you can run the application directly from th
 ```
 The application will start in the system tray.
 
-## Future Developments
+## Upcoming Features
 
 - **Improved Session Analytics:** Provides more detailed statistics and visuals for session analysis.
 
