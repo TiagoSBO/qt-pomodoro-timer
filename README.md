@@ -1,7 +1,6 @@
 # 🍎Pomodoro Timer Application
 
 [![In Development](https://img.shields.io/badge/Status-In%20Development-yellow)](https://shields.io/)
-![GitHub Org's stars](https://img.shields.io/github/stars/TiagoSBO?style=social)
 
 ## Description
 
@@ -17,6 +16,12 @@ The application operates in the system tray, providing discreet access to timer 
 -   **📈 Session Logs:** Detailed logs of your Pomodoro sessions are maintained, allowing you to track your productivity over time.
 -   **⚙️ Configuration Settings:** Fine-tune various aspects of the application, from timer durations to sound preferences, ensuring a tailored experience.
 - **🎨 Multiple Themes:** Multiple themes to change the look of the application.
+
+## Technologies used
+
+- ``C++``
+- ``QT``
+- ``CMake``
 
 ## Building the Project
 
