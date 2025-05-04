@@ -3,7 +3,7 @@
 #include <QDebug>
 
 Sessionlogs::Sessionlogs(QTableWidget *table)
-    : m_table(table)  // Inicializa com o ponteiro da tabela
+    : m_table(table)
 {}
 
 Sessionlogs::~Sessionlogs() {}

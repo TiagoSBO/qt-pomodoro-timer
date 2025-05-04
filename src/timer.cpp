@@ -369,12 +369,18 @@ void MainWindow::updateStyleBasedOnState()
     ui->layout_timer->style()->polish(ui->layout_timer);
 
     // Applies style to the table
+    ui->tableSessionLogs->horizontalHeader()->setObjectName("sessionHeader");
     ui->tableSessionLogs->horizontalHeader()->setProperty("focusState", state);
-    ui->tableSessionLogs->horizontalHeader()->style()->unpolish(ui->tableSessionLogs->horizontalHeader());
-    ui->tableSessionLogs->horizontalHeader()->style()->polish(ui->tableSessionLogs->horizontalHeader());
-    ui->tableSessionLogs->horizontalHeader()->update();
-    ui->tableSessionLogs->horizontalHeader()->repaint();
+    auto *header = ui->tableSessionLogs->horizontalHeader();
+    header->setProperty("focusState", state);
+    header->style()->unpolish(header);
+    header->style()->polish(header);
 
+    header->updateGeometry();
+    header->viewport()->update();
+    header->repaint();
+
+    // Applies style to the layout of the timer buttons
     ui->layout_buttonsTimer->setProperty("focusState", state);
     ui->layout_buttonsTimer->style()->unpolish(ui->layout_buttonsTimer);
     ui->layout_buttonsTimer->style()->polish(ui->layout_buttonsTimer);
@@ -387,8 +393,13 @@ void MainWindow::updateStyleBasedOnState()
         btn->style()->polish(btn);
         btn->update();
     }
+
+    ui->tableSessionLogs->viewport()->update();
     ui->tableSessionLogs->repaint();
 
+    this->style()->unpolish(this);
+    this->style()->polish(this);
+    this->update();
 }
 
 
