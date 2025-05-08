@@ -36,6 +36,7 @@ Thumbs.db
 /.qmake.cache
 /.qmake.stash
 releases/
+updates_server/
 
 
 # qtcreator generated files

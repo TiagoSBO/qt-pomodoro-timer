@@ -13,7 +13,7 @@ public:
     void checkForUpdates();
 
 private:
-    const QString updateUrl = "https://seusite.netlify.app/update.json";
+    QString updateUrl = "https://qtpomorotimer.netlify.app/version.json";
     const QString currentVersion = "1.0.0";
 
     void downloadInstaller(const QString &installerUrl);
