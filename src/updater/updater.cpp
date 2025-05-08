@@ -9,7 +9,8 @@
 #include <QStandardPaths>
 #include <QProcess>
 #include <QMessageBox>
-#include <qapplication.h>
+#include <QApplication>
+#include <QUrl>
 
 Updater::Updater(QObject *parent) : QObject(parent) {}
 
@@ -20,6 +21,7 @@ void Updater::checkForUpdates() {
 
     connect(reply, &QNetworkReply::finished, this, [this, reply]() {
         if (reply->error() != QNetworkReply::NoError) {
+            QMessageBox::warning(nullptr, "Erro", "Erro ao verificar atualizações.");
             reply->deleteLater();
             return;
         }
@@ -48,7 +50,7 @@ void Updater::checkForUpdates() {
 }
 
 bool Updater::isNewVersionAvailable(const QString &latestVersion) {
-    return latestVersion > currentVersion; // simples comparação
+    return latestVersion > currentVersion;
 }
 
 void Updater::downloadInstaller(const QString &installerUrl) {
@@ -56,7 +58,7 @@ void Updater::downloadInstaller(const QString &installerUrl) {
     QNetworkRequest request((QUrl(installerUrl)));
     QNetworkReply *reply = manager->get(request);
 
-    connect(reply, &QNetworkReply::finished, this, [this, reply]() {
+    connect(reply, &QNetworkReply::finished, this, [this, reply, installerUrl]() {
         if (reply->error() != QNetworkReply::NoError) {
             QMessageBox::warning(nullptr, "Erro", "Erro ao baixar instalador.");
             reply->deleteLater();
@@ -65,15 +67,22 @@ void Updater::downloadInstaller(const QString &installerUrl) {
 
         QByteArray data = reply->readAll();
         QString tempPath = QStandardPaths::writableLocation(QStandardPaths::TempLocation);
-        QString installerFile = tempPath + "/PomodoroSetup_Update.exe";
+        QString fileName = QUrl(installerUrl).fileName();  // extrai nome do arquivo da URL
+        QString installerFile = tempPath + "/" + fileName;
 
         QFile file(installerFile);
         if (file.open(QIODevice::WriteOnly)) {
             file.write(data);
             file.close();
+        } else {
+            QMessageBox::critical(nullptr, "Erro", "Não foi possível salvar o instalador.");
+            reply->deleteLater();
+            return;
         }
 
+        QMessageBox::information(nullptr, "Download concluído", "Instalador salvo em:\n" + installerFile);
         QMessageBox::information(nullptr, "Atualizando", "A aplicação será fechada para aplicar a atualização.");
+
         QProcess::startDetached(installerFile); // executa instalador
         QApplication::quit();
 

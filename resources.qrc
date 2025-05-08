@@ -33,6 +33,6 @@
         <file>styles/helpwindow.qss</file>
     </qresource>
     <qresource prefix="/files">
-        <file>update_server/update.json</file>
+        <file>update_server/version.json</file>
     </qresource>
 </RCC>
