@@ -10,6 +10,7 @@ set(CMAKE_AUTOUIC_SEARCH_PATHS ${CMAKE_CURRENT_SOURCE_DIR}/src/ui)
 find_package(Qt6 6.5 REQUIRED COMPONENTS Core Widgets Sql Multimedia)
 find_dependency(Qt6 REQUIRED COMPONENTS Core Network REQUIRED)
 
+
 qt_add_executable(PomodoroTimer
     WIN32 MACOSX_BUNDLE
     src/main.cpp
@@ -21,6 +22,7 @@ qt_add_executable(PomodoroTimer
     src/systemtrayiconhandler.cpp
     src/singleApplication/singleapplication.cpp
     src/singleApplication/singleapplication_p.cpp
+    src/updater/updater.cpp
     src/includes/timer.h
     src/includes/settingsdialog.h
     src/includes/sessionlogs.h
@@ -29,17 +31,18 @@ qt_add_executable(PomodoroTimer
     src/includes/systemtrayiconhandler.h
     src/includes/singleApplication/singleapplication.h
     src/includes/singleApplication/singleapplication_p.h
+    src/includes/updater/updater.h
     src/ui/mainwindow.ui
     src/ui/settingsdialog.ui
     src/ui/helpwindow.ui
     resources.qrc
     app_icon.rc
-
 )
 
 set_target_properties(PomodoroTimer PROPERTIES
     OUTPUT_NAME "Pomodoro Timer"
 )
+
 
 target_include_directories(PomodoroTimer
     PRIVATE
@@ -49,6 +52,7 @@ target_include_directories(PomodoroTimer
 target_link_libraries(PomodoroTimer
     PRIVATE Qt::Core Qt::Widgets Qt6::Multimedia
 )
+
 
 include(GNUInstallDirs)
 

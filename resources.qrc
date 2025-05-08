@@ -32,4 +32,7 @@
         <file>styles/settingsdialog.qss</file>
         <file>styles/helpwindow.qss</file>
     </qresource>
+    <qresource prefix="/files">
+        <file>update_server/update.json</file>
+    </qresource>
 </RCC>

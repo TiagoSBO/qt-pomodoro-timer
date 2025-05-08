@@ -1,6 +1,7 @@
 #include "timer.h"
 #include <QApplication>
 #include "singleapplication.h"
+#include "updater/updater.h"
 #include <QStyleFactory>
 #include <QSysInfo>
 #include <QFile>
@@ -47,6 +48,9 @@ int main(int argc, char *argv[])
     QString combinedStyle = loadStyleSheet(styleSheets);
     app.setStyleSheet(combinedStyle);
 
+    // VERIFICADOR DE ATUALIZAÇÃO
+    Updater updater;
+    updater.checkForUpdates();
 
     MainWindow w;
 
