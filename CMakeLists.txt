@@ -32,6 +32,7 @@ qt_add_executable(PomodoroTimer
     src/includes/singleApplication/singleapplication.h
     src/includes/singleApplication/singleapplication_p.h
     src/includes/updater/updater.h
+    src/includes/app_version.h
     src/ui/mainwindow.ui
     src/ui/settingsdialog.ui
     src/ui/helpwindow.ui

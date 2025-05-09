@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QWidget>
+#include <QString>
 
 class Updater : public QObject
 {
@@ -12,10 +13,10 @@ public:
     explicit Updater(QObject *parent = nullptr);
     void checkForUpdates();
 
-private:
-    QString updateUrl = "https://qtpomodoro-timer.netlify.app/update_server/version.json";
-    const QString currentVersion = "1.0.6";
+    static const QString currentVersion;
+    static QString updateUrl;
 
+private:
     void downloadInstaller(const QString &installerUrl);
     bool isNewVersionAvailable(const QString &latestVersion);
 };

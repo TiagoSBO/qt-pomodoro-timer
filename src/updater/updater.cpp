@@ -11,13 +11,24 @@
 #include <QMessageBox>
 #include <QApplication>
 #include <QUrl>
+#include <QTimer>
+#include <app_version.h>
 
 Updater::Updater(QObject *parent) : QObject(parent) {}
+
+const QString Updater::currentVersion = QString(APP_VERSION);
+QString Updater::updateUrl = "https://qtpomodoro-timer.netlify.app/update_server/version.json";
 
 void Updater::checkForUpdates() {
     QNetworkAccessManager *manager = new QNetworkAccessManager(this);
     QNetworkRequest request((QUrl(updateUrl)));
     QNetworkReply *reply = manager->get(request);
+
+    QTimer::singleShot(5000, this, [reply]() {
+        if (reply->isRunning()) {
+            reply->abort();
+        }
+    });
 
     connect(reply, &QNetworkReply::finished, this, [this, reply]() {
         if (reply->error() != QNetworkReply::NoError) {
@@ -53,6 +64,9 @@ void Updater::checkForUpdates() {
         qDebug() << "Error: " << reply->errorString();
         qDebug() << "Raw response: " << QString(response);
 
+        qDebug() << "App current version:" << currentVersion;
+        qDebug() << "Latest version from server:" << latestVersion;
+
         if (isNewVersionAvailable(latestVersion)) {
             int ret = QMessageBox::information(nullptr, "Update Avaliable",
                                                QString("New version %1 avaliable!\n\n%2\n\nDo you want to update now?")
@@ -69,8 +83,22 @@ void Updater::checkForUpdates() {
 }
 
 bool Updater::isNewVersionAvailable(const QString &latestVersion) {
-    return latestVersion > currentVersion;
+    const QStringList latestParts = latestVersion.split(".");
+    const QStringList currentParts = currentVersion.split(".");
+
+    for (int i = 0; i < std::min(latestParts.size(), currentParts.size()); ++i) {
+        int latest = latestParts[i].toInt();
+        int current = currentParts[i].toInt();
+
+        if (latest > current)
+            return true;
+        else if (latest < current)
+            return false;
+    }
+
+    return latestParts.size() > currentParts.size();
 }
+
 
 void Updater::downloadInstaller(const QString &installerUrl) {
     QNetworkAccessManager *manager = new QNetworkAccessManager(this);
