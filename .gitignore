@@ -71,6 +71,7 @@ CMakeLists.txt.user*
 
 # Python byte code
 *.pyc
+build_deploy.py
 
 # Binaries
 # --------

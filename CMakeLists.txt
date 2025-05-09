@@ -37,6 +37,7 @@ qt_add_executable(PomodoroTimer
     src/ui/helpwindow.ui
     resources.qrc
     app_icon.rc
+    build_deploy.py
 )
 
 set_target_properties(PomodoroTimer PROPERTIES
