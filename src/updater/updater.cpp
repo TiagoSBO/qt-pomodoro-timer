@@ -21,7 +21,7 @@ void Updater::checkForUpdates() {
 
     connect(reply, &QNetworkReply::finished, this, [this, reply]() {
         if (reply->error() != QNetworkReply::NoError) {
-            QMessageBox::warning(nullptr, "Erro", "Erro ao verificar atualizações.");
+            QMessageBox::warning(nullptr, "Failed", "Error checking for updates.");
             reply->deleteLater();
             return;
         }
@@ -35,8 +35,8 @@ void Updater::checkForUpdates() {
         QString url = obj["url"].toString();
 
         if (isNewVersionAvailable(latestVersion)) {
-            int ret = QMessageBox::information(nullptr, "Atualização disponível",
-                                               QString("Nova versão %1 disponível!\n\n%2\n\nDeseja atualizar agora?")
+            int ret = QMessageBox::information(nullptr, "Update Avaliable",
+                                               QString("New version %1 avaliable!\n\n%2\n\nDo you want to update now?")
                                                    .arg(latestVersion, changelog),
                                                QMessageBox::Yes | QMessageBox::No);
 
@@ -60,14 +60,14 @@ void Updater::downloadInstaller(const QString &installerUrl) {
 
     connect(reply, &QNetworkReply::finished, this, [this, reply, installerUrl]() {
         if (reply->error() != QNetworkReply::NoError) {
-            QMessageBox::warning(nullptr, "Erro", "Erro ao baixar instalador.");
+            QMessageBox::warning(nullptr, "Failed", "Error downloading installer.");
             reply->deleteLater();
             return;
         }
 
         QByteArray data = reply->readAll();
         QString tempPath = QStandardPaths::writableLocation(QStandardPaths::TempLocation);
-        QString fileName = QUrl(installerUrl).fileName();  // extrai nome do arquivo da URL
+        QString fileName = QUrl(installerUrl).fileName();
         QString installerFile = tempPath + "/" + fileName;
 
         QFile file(installerFile);
@@ -75,15 +75,15 @@ void Updater::downloadInstaller(const QString &installerUrl) {
             file.write(data);
             file.close();
         } else {
-            QMessageBox::critical(nullptr, "Erro", "Não foi possível salvar o instalador.");
+            QMessageBox::critical(nullptr, "Failed", "Unable to save the installer.");
             reply->deleteLater();
             return;
         }
 
-        QMessageBox::information(nullptr, "Download concluído", "Instalador salvo em:\n" + installerFile);
-        QMessageBox::information(nullptr, "Atualizando", "A aplicação será fechada para aplicar a atualização.");
+        QMessageBox::information(nullptr, "Download completed", "Installer saved in:\n" + installerFile);
+        QMessageBox::information(nullptr, "Updating", "The application will close to apply the update.");
 
-        QProcess::startDetached(installerFile); // executa instalador
+        QProcess::startDetached(installerFile);
         QApplication::quit();
 
         reply->deleteLater();
