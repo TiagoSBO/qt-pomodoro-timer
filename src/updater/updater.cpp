@@ -26,6 +26,7 @@ void Updater::checkForUpdates() {
             return;
         }
 
+
         QByteArray response = reply->readAll();
         QJsonDocument doc = QJsonDocument::fromJson(response);
         QJsonObject obj = doc.object();
@@ -33,6 +34,10 @@ void Updater::checkForUpdates() {
         QString latestVersion = obj["version"].toString();
         QString changelog = obj["changelog"].toString();
         QString url = obj["url"].toString();
+
+        qDebug() << "Status Code: " << reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
+        qDebug() << "Error: " << reply->errorString();
+        qDebug() << "Raw response: " << QString(response);
 
         if (isNewVersionAvailable(latestVersion)) {
             int ret = QMessageBox::information(nullptr, "Update Avaliable",

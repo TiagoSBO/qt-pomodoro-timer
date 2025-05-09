@@ -2,7 +2,7 @@
 #include "ui_mainwindow.h"
 #include <QDebug>
 #include <QFile>
-#define APP_VERSION "1.0.5"
+#define APP_VERSION "1.0.6"
 
 MainWindow::MainWindow(QWidget *parent)
 : QMainWindow(parent)

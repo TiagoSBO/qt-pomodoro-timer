@@ -1,5 +1,5 @@
 {
-  "version": "1.0.5",
+  "version": "1.0.6",
   "changelog": "First release. \n Fix bugs and add new features",
-  "url": "https://github.com/TiagoSBO/qt-pomodoro-timer/releases/download/v1.0.5/PomodoroTimerSetup.exe"
+  "url": "https://qtpomodoro-timer.netlify.app/PomodoroTimerSetup.exe"
 }
