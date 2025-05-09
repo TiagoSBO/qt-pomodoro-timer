@@ -13,7 +13,7 @@ public:
     void checkForUpdates();
 
 private:
-    QString updateUrl = "https://qtpomodoro-timer.netlify.app/version.json";
+    QString updateUrl = "https://qtpomodoro-timer.netlify.app/update_server/version.json";
     const QString currentVersion = "1.0.6";
 
     void downloadInstaller(const QString &installerUrl);
