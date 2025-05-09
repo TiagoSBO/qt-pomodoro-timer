@@ -26,9 +26,23 @@ void Updater::checkForUpdates() {
             return;
         }
 
-
         QByteArray response = reply->readAll();
-        QJsonDocument doc = QJsonDocument::fromJson(response);
+        QJsonParseError parseError;
+        QJsonDocument doc = QJsonDocument::fromJson(response, &parseError);
+
+        if (parseError.error != QJsonParseError::NoError) {
+            QMessageBox::critical(nullptr, "Update Error", "Failed to parse update information:\n" + parseError.errorString());
+            qDebug() << "JSON parse error:" << parseError.errorString();
+            qDebug() << "Raw response:" << QString(response);
+            reply->deleteLater();
+            return;
+        }
+
+        if (!doc.isObject()) {
+            QMessageBox::critical(nullptr, "Update Error", "Update information is invalid (not a JSON object).");
+            reply->deleteLater();
+            return;
+        }
         QJsonObject obj = doc.object();
 
         QString latestVersion = obj["version"].toString();

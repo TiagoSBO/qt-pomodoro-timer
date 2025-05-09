@@ -150,7 +150,7 @@ void MainWindow::btton_startResume_clicked()
 void MainWindow::btton_reset_clicked()
 {
     // Restores the time based on the current session
-    qDebug() << "Botão Reset clicado: " << currentStatusTimer;
+    qDebug() << "Reset button clicked: " << currentStatusTimer;
     timer->stop();
 
     switch (currentStatusTimer) {
@@ -412,12 +412,9 @@ void MainWindow::updateTotalFocusTime()
     int hours = totalSeconds / 3600;
     int minutes = (totalSeconds % 3600) / 60;
 
-    // Check if total focus time is less than 1 hour
     if (hours > 0) {
-        // Display time in "Xh:YYmin" format if it is 1 or more hours
         ui->label_setTotalFocus->setText(QString("%1h %2min").arg(hours).arg(minutes, 2, 10, QChar('0')));
     } else {
-        // Display only minutes if time is less than 1 hour
         ui->label_setTotalFocus->setText(QString("%1 min").arg(minutes));
     }
 }
