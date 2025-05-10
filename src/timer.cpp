@@ -271,9 +271,8 @@ void MainWindow::pomodoroSession()
     ui->button_resumePause->setText("Start");
     ui->labelShowState->setText("Time to Focus");
     updateStyleBasedOnState();
-    timeRemaining = defaultPomodoroDuration * 60; //defaultPomodoroDuration
+    timeRemaining = defaultPomodoroDuration * 60;
 
-    // qDebug() << "Session Count --> " << currentPomodorSessions;
     ui->labelTimer->setText(formatTime(timeRemaining));
 }
 
