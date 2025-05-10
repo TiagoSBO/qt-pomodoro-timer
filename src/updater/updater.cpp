@@ -12,6 +12,7 @@
 #include <QApplication>
 #include <QUrl>
 #include <QTimer>
+#include <QDebug>
 #include <app_version.h>
 
 Updater::Updater(QObject *parent) : QObject(parent) {}
@@ -26,7 +27,7 @@ void Updater::checkForUpdates() {
 
     connect(reply, &QNetworkReply::finished, this, [this, reply]() {
         if (reply->error() != QNetworkReply::NoError) {
-            QMessageBox::warning(nullptr, "Failed", "Error checking for updates.");
+            QMessageBox::warning(nullptr, "Erro", "Erro ao verificar atualizações.");
             reply->deleteLater();
             return;
         }
@@ -36,34 +37,28 @@ void Updater::checkForUpdates() {
         QJsonDocument doc = QJsonDocument::fromJson(response, &parseError);
 
         if (parseError.error != QJsonParseError::NoError) {
-            QMessageBox::critical(nullptr, "Update Error", "Failed to parse update information:\n" + parseError.errorString());
-            qDebug() << "JSON parse error:" << parseError.errorString();
-            qDebug() << "Raw response:" << QString(response);
+            QMessageBox::critical(nullptr, "Erro de Atualização", "Erro ao analisar JSON:\n" + parseError.errorString());
             reply->deleteLater();
             return;
         }
 
         if (!doc.isObject()) {
-            QMessageBox::critical(nullptr, "Update Error", "Update information is invalid (not a JSON object).");
+            QMessageBox::critical(nullptr, "Erro de Atualização", "Resposta do servidor inválida.");
             reply->deleteLater();
             return;
         }
-        QJsonObject obj = doc.object();
 
+        QJsonObject obj = doc.object();
         QString latestVersion = obj["version"].toString();
         QString changelog = obj["changelog"].toString();
         QString url = obj["url"].toString();
 
-        qDebug() << "Status Code: " << reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
-        qDebug() << "Error: " << reply->errorString();
-        qDebug() << "Raw response: " << QString(response);
-
-        qDebug() << "App current version:" << currentVersion;
-        qDebug() << "Latest version from server:" << latestVersion;
+        qDebug() << "Versão atual:" << currentVersion;
+        qDebug() << "Nova versão:" << latestVersion;
 
         if (isNewVersionAvailable(latestVersion)) {
             int ret = QMessageBox::information(nullptr, "Update Avaliable",
-                                               QString("New version %1 avaliable!\n\n%2\n\nDo you want to update now?")
+                                               QString("New version %1 avaliable!\n\n%2\n\nDo you want to install it now?")
                                                    .arg(latestVersion, changelog),
                                                QMessageBox::Yes | QMessageBox::No);
 
@@ -77,31 +72,38 @@ void Updater::checkForUpdates() {
 }
 
 bool Updater::isNewVersionAvailable(const QString &latestVersion) {
-    const QStringList latestParts = latestVersion.split(".");
-    const QStringList currentParts = currentVersion.split(".");
+    QStringList latestParts = latestVersion.split(".");
+    QStringList currentParts = currentVersion.split(".");
 
     for (int i = 0; i < std::min(latestParts.size(), currentParts.size()); ++i) {
         int latest = latestParts[i].toInt();
         int current = currentParts[i].toInt();
 
-        if (latest > current)
-            return true;
-        else if (latest < current)
-            return false;
+        if (latest > current) return true;
+        else if (latest < current) return false;
     }
 
     return latestParts.size() > currentParts.size();
 }
 
-
 void Updater::downloadInstaller(const QString &installerUrl) {
+    QMessageBox *progressBox = new QMessageBox(QMessageBox::Information,
+                                               "Downloading update",
+                                               "Update is downloading...",
+                                               QMessageBox::NoButton);
+    progressBox->setAttribute(Qt::WA_DeleteOnClose);
+    progressBox->show();
+
     QNetworkAccessManager *manager = new QNetworkAccessManager(this);
     QNetworkRequest request((QUrl(installerUrl)));
     QNetworkReply *reply = manager->get(request);
 
-    connect(reply, &QNetworkReply::finished, this, [this, reply, installerUrl]() {
+    connect(reply, &QNetworkReply::finished, this, [reply, installerUrl, progressBox]() {
+        progressBox->hide();
+        progressBox->deleteLater();
+
         if (reply->error() != QNetworkReply::NoError) {
-            QMessageBox::warning(nullptr, "Failed", "Error downloading installer.");
+            QMessageBox::warning(nullptr, "Error", "Error downloading installer.");
             reply->deleteLater();
             return;
         }
@@ -112,18 +114,16 @@ void Updater::downloadInstaller(const QString &installerUrl) {
         QString installerFile = tempPath + "/" + fileName;
 
         QFile file(installerFile);
-        if (file.open(QIODevice::WriteOnly)) {
-            file.write(data);
-            file.close();
-        } else {
-            QMessageBox::critical(nullptr, "Failed", "Unable to save the installer.");
+        if (!file.open(QIODevice::WriteOnly)) {
+            QMessageBox::critical(nullptr, "Error", "Could not save installer.");
             reply->deleteLater();
             return;
         }
 
-        QMessageBox::information(nullptr, "Download completed", "Installer saved in:\n" + installerFile);
-        QMessageBox::information(nullptr, "Updating", "The application will close to apply the update.");
+        file.write(data);
+        file.close();
 
+        QMessageBox::information(nullptr, "Update!", "The application will be closed to apply the update.");
         QProcess::startDetached(installerFile);
         QApplication::quit();
 

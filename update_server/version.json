@@ -1,5 +1,5 @@
 {
-  "version": "1.0.8",
-  "changelog": "Udates and Fixes: \n - Fix bugs.",
+  "version": "1.0.9",
+  "changelog": "Udates and Fixes: \n - Fix crash and update the installer.",
   "url": "https://pomodoro-timer-files.netlify.app/PomodoroTimerSetup.exe"
 }
