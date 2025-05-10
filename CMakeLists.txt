@@ -10,6 +10,9 @@ set(CMAKE_AUTOUIC_SEARCH_PATHS ${CMAKE_CURRENT_SOURCE_DIR}/src/ui)
 find_package(Qt6 6.5 REQUIRED COMPONENTS Core Widgets Sql Multimedia)
 find_dependency(Qt6 REQUIRED COMPONENTS Core Network REQUIRED)
 
+if (MINGW)
+    enable_language(RC)
+endif()
 
 qt_add_executable(PomodoroTimer
     WIN32 MACOSX_BUNDLE
