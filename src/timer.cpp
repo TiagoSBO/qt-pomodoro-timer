@@ -104,7 +104,6 @@ MainWindow::MainWindow(QWidget *parent)
     //Help window
     helpWindow = new HelpWindow(this);
     connect(ui->actionHelp, &QAction::triggered, this, &MainWindow::openHelpDialog);
-
 }
 
 MainWindow::~MainWindow()
@@ -450,7 +449,10 @@ QString MainWindow::formatTime(int seconds)
 {
     int minutes = seconds / 60;
     int remainingSeconds = seconds % 60;
+
     return QString("%1:%2").arg(minutes, 2, 10, QChar('0')).arg(remainingSeconds, 2, 10, QChar('0'));
+
+
 }
 
 void MainWindow::openHelpDialog()
