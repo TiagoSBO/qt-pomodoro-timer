@@ -8,6 +8,10 @@ Pomodoro Timer is a project based on the pomodoro technique developed by the aut
 
 The application operates in the system tray, providing discreet access to timer controls and settings. Users can customize the length of work periods and breaks, set up sound alerts, and review their session history through detailed logs.
 
+## Technologies used
+
+<img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/cplusplus/cplusplus-original.svg" width="30" height="30"/> <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/python/python-original.svg" width="30" height="30" /> <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/qt/qt-original.svg" width="30" height="30"/> <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/cmake/cmake-original.svg" width="30" height="30" /> <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/netlify/netlify-original.svg" width="30" height="30" />
+          
 ## Features
 
 -   **🪟 System Tray Integration:** The application runs minimized in the system tray, keeping your workspace clean and organized.
@@ -18,48 +22,13 @@ The application operates in the system tray, providing discreet access to timer 
 - **🎨 Multiple Themes:** Multiple themes to change the look of the application.
 
 ### Demonstration
-![funcionalidades](https://github.com/user-attachments/assets/2bcd69c3-4b2a-4a1a-9757-4776e201d8f7)
-
-
-## Technologies used
-
-- ``C++``
-- ``QT``
-- ``CMake``
+![funcionalidades (1)](https://github.com/user-attachments/assets/86bc6873-f589-42eb-8605-68def035ff2b)
 
 ## Building the Project
-
 Follow these steps to build the Pomodoro Timer application from source:
 
-1.  **Prerequisites:**
-    -   Qt development environment (with Qt Creator is recommended).
-    -   C++ compiler (compatible with your Qt version).
-    -   QMake build system.
-
-2.  **Clone the Repository:**
-```
-    git clone [repository_url]
-    cd [project_directory]
-```
-3.  **Build with QMake:**
-```
-    qmake
-    make # or nmake on Windows 
-```
-## Running the Project
-
-Once the build process is complete, you can run the application directly from the build directory:
-
-1.  **Navigate to the Build Directory:**
-```
-    cd build-directory # Usually in the project directory
-```
-2.  **Execute the Application:**
-```
-    ./pomodoro-timer # or pomodoro-timer.exe on Windows
-```
-The application will start in the system tray.
-
+In soon...
+    
 ## Upcoming Features
 
 - **Improved Session Analytics:** Provides more detailed statistics and visuals for session analysis.
