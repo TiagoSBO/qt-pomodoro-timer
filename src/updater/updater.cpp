@@ -24,12 +24,6 @@ void Updater::checkForUpdates() {
     QNetworkRequest request((QUrl(updateUrl)));
     QNetworkReply *reply = manager->get(request);
 
-    QTimer::singleShot(5000, this, [reply]() {
-        if (reply->isRunning()) {
-            reply->abort();
-        }
-    });
-
     connect(reply, &QNetworkReply::finished, this, [this, reply]() {
         if (reply->error() != QNetworkReply::NoError) {
             QMessageBox::warning(nullptr, "Failed", "Error checking for updates.");
