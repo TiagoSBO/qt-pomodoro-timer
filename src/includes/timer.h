@@ -2,10 +2,13 @@
 #define TIMER_H
 #include <QMainWindow>
 #include <QTimer>
+#include <QObject>
+#include <QEvent>
 #include "helpwindow.h"
 #include "sessionlogs.h"
 #include "settingsdialog.h"
 #include "systemtrayiconhandler.h"
+#include "minitimerwindow.h"
 #include <QCloseEvent>
 #include "QMessageBox"
 #include <QDateTime>
@@ -40,8 +43,10 @@ public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+
 public slots:
     void setAlarmSound(int index);
+    void updateMiniTimer(const QString &timeString);
 
 private slots:
     //Buttons
@@ -60,6 +65,14 @@ private slots:
     void button_configTable_clicked();
     //Help dialog window
     void openHelpDialog();
+
+    void labelTimer_clicked();
+    void miniTimerWindow_doubleClicked();
+    void updateMiniTimerDisplay(const QString &timeString);
+
+signals:
+    void timerUpdated(const QString &timeString);
+
 
 private:
     Ui::MainWindow *ui;
@@ -85,6 +98,8 @@ private:
     void handleSessionCompletion();
     void setSession(TimerState session);
 
+    MiniTimerWindow *miniTimerWindow;
+
     //Style
     void updateStyleBasedOnState();
 
@@ -101,6 +116,7 @@ private:
 
     int selectedISoundIndex = 0;
     void updateTotalFocusTime();
+    bool eventFilter(QObject *watched, QEvent *event);
 };
 
 #endif

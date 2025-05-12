@@ -16,6 +16,7 @@ MainWindow::MainWindow(QWidget *parent)
 , defaultRoundsSessions(4)
 , timeRemaining(defaultPomodoroDuration * 60)
 , timerStarted(false)
+, miniTimerWindow(nullptr)
 {
     ui->setupUi(this);
 
@@ -95,11 +96,22 @@ MainWindow::MainWindow(QWidget *parent)
     timer = new QTimer(this);
     connect(timer, &QTimer::timeout, this, &MainWindow::onTimerOut);
 
+    // Connect timer updates to miniTimerWindow
+    connect(timer, &QTimer::timeout, this, &MainWindow::onTimerOut);
+
     //Connect Timer - MainWindow buttons
     connect(ui->button_settings, &QPushButton::clicked, this, &MainWindow::btton_settings_clicked);
     connect(ui->button_resumePause, &QPushButton::clicked, this, &MainWindow::btton_startResume_clicked);
     connect(ui->button_reset, &QPushButton::clicked, this, &MainWindow::btton_reset_clicked);
     connect(ui->button_skip, &QPushButton::clicked, this, &MainWindow::btton_skip_clicked);
+
+    // Mini Timer Window
+    miniTimerWindow = new MiniTimerWindow(this);
+    connect(miniTimerWindow, &MiniTimerWindow::doubleClicked, this, &MainWindow::miniTimerWindow_doubleClicked);
+    // Connect click on labelTimer to show mini window
+    ui->labelTimer->setCursor(Qt::PointingHandCursor); // Indicate it's clickable
+    ui->labelTimer->installEventFilter(this); // Install event filter to capture clicks
+
 
     //Help window
     helpWindow = new HelpWindow(this);
@@ -111,6 +123,8 @@ MainWindow::~MainWindow()
     delete ui;
     delete settingsScreen;
     delete sessionLogs;
+    delete miniTimerWindow;
+
 }
 
 void MainWindow::setAlarmSound(int index)
@@ -122,12 +136,14 @@ void MainWindow::setAlarmSound(int index)
 void MainWindow::onTimerOut()
 {
     if (timeRemaining > 0) {
-            timeRemaining--;
-            ui->labelTimer->setText(formatTime(timeRemaining));
-        }else {
-            timer->stop();
-            handleSessionCompletion();
+        timeRemaining--;
+        ui->labelTimer->setText(formatTime(timeRemaining));
+    }else {
+        timer->stop();
+        handleSessionCompletion();
     }
+    QString formattedTime = formatTime(timeRemaining);
+    updateMiniTimerDisplay(formattedTime);
 }
 
 void MainWindow::btton_startResume_clicked()
@@ -142,6 +158,11 @@ void MainWindow::btton_startResume_clicked()
         timerStarted = true;
         ui->button_resumePause->setText("Pause");
         qDebug() << "Start/Resume clicked / CurrentState -> " << currentStatusTimer;
+    }
+
+    if (miniTimerWindow) {
+        this->hide();  // Esconde janela principal, se desejar
+        miniTimerWindow->show();
     }
     running = !running;
 }
@@ -468,6 +489,45 @@ void MainWindow::restoreFromTrayIcon(QSystemTrayIcon::ActivationReason reason)
         this->raise();
         this->activateWindow();
     }
+}
+
+//Mini Timer Window
+void MainWindow::labelTimer_clicked()
+{
+    qDebug() << "labelTimer clicked. Showing mini window.";
+    this->hide();
+    if (miniTimerWindow) {
+        miniTimerWindow->show();
+    }
+}
+void MainWindow::miniTimerWindow_doubleClicked()
+{
+    qDebug() << "MiniTimerWindow double-clicked. Showing main window.";
+    if (miniTimerWindow) {
+        miniTimerWindow->hide();
+    }
+    this->showNormal();
+}
+
+void MainWindow::updateMiniTimerDisplay(const QString &timeString) {
+    if (miniTimerWindow && miniTimerWindow->labelTimer) {
+        miniTimerWindow->labelTimer->setText(timeString);
+    }
+}
+
+void MainWindow::updateMiniTimer(const QString &timeString)
+{
+    if (miniTimerWindow && miniTimerWindow->labelTimer) {
+        miniTimerWindow->labelTimer->setText(timeString);
+    }
+}
+
+bool MainWindow::eventFilter(QObject *obj, QEvent *event)
+{
+    if (obj == ui->labelTimer && event->type() == QEvent::MouseButtonPress) {
+        labelTimer_clicked();
+    }
+    return QMainWindow::eventFilter(obj, event);
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)

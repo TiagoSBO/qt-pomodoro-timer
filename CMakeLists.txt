@@ -7,7 +7,7 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOUIC_SEARCH_PATHS ${CMAKE_CURRENT_SOURCE_DIR}/src/ui)
 
-find_package(Qt6 6.5 REQUIRED COMPONENTS Core Widgets Sql Multimedia)
+find_package(Qt6 6.5 REQUIRED COMPONENTS Core Widgets Sql Multimedia UiTools )
 find_dependency(Qt6 REQUIRED COMPONENTS Core Network REQUIRED)
 
 if (MINGW)
@@ -26,7 +26,7 @@ qt_add_executable(PomodoroTimer
     src/singleApplication/singleapplication.cpp
     src/singleApplication/singleapplication_p.cpp
     src/updater/updater.cpp
-
+    src/minitimerwindow.cpp
     src/includes/timer.h
     src/includes/settingsdialog.h
     src/includes/sessionlogs.h
@@ -37,11 +37,11 @@ qt_add_executable(PomodoroTimer
     src/includes/singleApplication/singleapplication_p.h
     src/includes/updater/updater.h
     src/includes/app_version.h
-
+    src/includes/minitimerwindow.h
     src/ui/mainwindow.ui
     src/ui/settingsdialog.ui
     src/ui/helpwindow.ui
-
+    src/ui/minitimerwindow.ui
     resources.qrc
     app_icon.rc
     build_deploy.py
@@ -58,7 +58,7 @@ target_include_directories(PomodoroTimer
 )
 
 target_link_libraries(PomodoroTimer
-    PRIVATE Qt::Core Qt::Widgets Qt6::Multimedia
+    PRIVATE Qt::Core Qt::Widgets Qt6::Multimedia Qt6::UiTools
 )
 
 
