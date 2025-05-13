@@ -1,5 +1,5 @@
 {
   "version": "1.0.9",
-  "changelog": "Udates and Fixes: \n - Fix crash and update the installer.",
+  "changelog": "**Versão 1.0.9 - 13/05/2025**\\n\\n**Fixes:**\\n- Corrigido problema que causava travamentos ao iniciar o app.\\n- Corrigido erro ao detectar tempo restante no modo de foco.\\n\\n**What's new:**\\n- Instalador atualizado para compatibilidade com Windows 11.\\n- Redução do consumo de memória.\\n\\n**Others:**\\n- Atualizado o logo do instalador.\\n- Pequenas melhorias visuais na interface.",
   "url": "https://pomodoro-timer-files.netlify.app/PomodoroTimerSetup.exe"
 }

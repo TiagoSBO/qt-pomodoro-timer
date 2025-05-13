@@ -1,6 +1,7 @@
 #include "floatingtimerwindow.h"
 #include "ui_floatingtimerwindow.h"
 #include <QMessageBox>
+#include <qshortcut.h>
 
 FloatingTimerWindow::FloatingTimerWindow(QWidget *parent)
     : QWidget(parent)
@@ -10,6 +11,12 @@ FloatingTimerWindow::FloatingTimerWindow(QWidget *parent)
     setWindowModality(Qt::NonModal);
     setWindowFlags(Qt::Window | Qt::FramelessWindowHint | Qt::CustomizeWindowHint | Qt::WindowStaysOnTopHint);
     setAttribute(Qt::WA_TranslucentBackground);
+
+    QShortcut *shortcut = new QShortcut(QKeySequence("Ctrl+0"), this);
+    connect(shortcut, &QShortcut::activated, this, [this]() {
+        emit requestMainWindowShow();
+        this->hide();
+    });
 }
 
 FloatingTimerWindow::~FloatingTimerWindow()

@@ -42,13 +42,13 @@ int main(int argc, char *argv[])
         ":/styles/styles/timer.qss",
         ":/styles/styles/sessionlogs.qss",
         ":/styles/styles/settingsdialog.qss",
-        ":/styles/styles/helpwindow.qss"
+        ":/styles/styles/helpwindow.qss",
+        ":/styles/styles/floatingTimer.qss"
     };
 
     QString combinedStyle = loadStyleSheet(styleSheets);
     app.setStyleSheet(combinedStyle);
 
-    // VERIFICADOR DE ATUALIZAÇÃO
     Updater updater;
     updater.checkForUpdates();
 

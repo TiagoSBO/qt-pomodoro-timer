@@ -1,4 +1,5 @@
 #include "timer.h"
+#include "src/ui/ui_mainwindow.h"
 #include "ui_mainwindow.h"
 #include <QDebug>
 #include <QFile>
@@ -107,8 +108,8 @@ MainWindow::MainWindow(QWidget *parent)
     //floating Window
     ui->labelTimer->installEventFilter(this);
     connect(systemTrayIcon, &SystemTrayiconHandler::restoreFloatingWindow, this, &MainWindow::handleRestoreFloatingWindow);
-    // QShortcut *shortcut = new QShortcut(QKeySequence("Ctrl+T"), this);
-    // connect(shortcut, &QShortcut::activated, this, &MainWindow::toggleFloatingWindow);
+    QShortcut *shortcut = new QShortcut(QKeySequence("Ctrl+0"), this);
+    connect(shortcut, &QShortcut::activated, this, &MainWindow::toggleFloatingWindow);
 
     ui->labelTimer->setAttribute(Qt::WA_Hover);
     ui->labelTimer->setMouseTracking(true);
@@ -155,7 +156,7 @@ void MainWindow::btton_startResume_clicked()
         ui->button_resumePause->setText("Resume");
         qDebug() << "Pause Clicked / CurrentState -> " << currentStatusTimer;
     }else{
-        timer->start(2);
+        timer->start(1000);
         timerStarted = true;
         ui->button_resumePause->setText("Pause");
         qDebug() << "Start/Resume clicked / CurrentState -> " << currentStatusTimer;
@@ -503,6 +504,27 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
     return QMainWindow::eventFilter(watched, event);
 }
 
+//Shortcut
+void MainWindow::toggleFloatingWindow()
+{
+    if (!floatingTimerWindow) {
+        createFloatingTimerWindowIfNeeded();
+    }
+
+    if (floatingTimerWindow->isVisible()) {
+        floatingTimerWindow->hide();
+        this->show();
+        this->raise();
+        this->activateWindow();
+    } else {
+        floatingTimerWindow->updateTimeDisplay(formatTime(timeRemaining));
+        floatingTimerWindow->show();
+        floatingTimerWindow->raise();
+        floatingTimerWindow->activateWindow();
+        this->hide();
+    }
+}
+
 void MainWindow::showFromFloating()
 {
     this->show();
@@ -510,19 +532,6 @@ void MainWindow::showFromFloating()
     this->activateWindow();
 }
 
-void MainWindow::toggleFloatingWindow()
-{
-    createFloatingTimerWindowIfNeeded();
-
-    if (floatingTimerWindow && floatingTimerWindow->isVisible()) {
-        floatingTimerWindow->updateTimeDisplay(formatTime(timeRemaining));
-
-        if (!this->isVisible()) {
-            floatingTimerWindow->raise();
-            floatingTimerWindow->activateWindow();
-        }
-    }
-}
 
 void MainWindow::handleRestoreFloatingWindow()
 {
