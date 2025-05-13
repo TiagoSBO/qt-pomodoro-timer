@@ -34,6 +34,5 @@
     </qresource>
     <qresource prefix="/files">
         <file>update_server/version.json</file>
-        <file>src/ui/minitimerwindow.ui</file>
     </qresource>
 </RCC>

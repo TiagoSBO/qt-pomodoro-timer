@@ -26,7 +26,7 @@ qt_add_executable(PomodoroTimer
     src/singleApplication/singleapplication.cpp
     src/singleApplication/singleapplication_p.cpp
     src/updater/updater.cpp
-    src/minitimerwindow.cpp
+    src/floatingtimerwindow.cpp
     src/includes/timer.h
     src/includes/settingsdialog.h
     src/includes/sessionlogs.h
@@ -37,11 +37,11 @@ qt_add_executable(PomodoroTimer
     src/includes/singleApplication/singleapplication_p.h
     src/includes/updater/updater.h
     src/includes/app_version.h
-    src/includes/minitimerwindow.h
+    src/includes/floatingtimerwindow.h
     src/ui/mainwindow.ui
     src/ui/settingsdialog.ui
     src/ui/helpwindow.ui
-    src/ui/minitimerwindow.ui
+    src/ui/floatingtimerwindow.ui
     resources.qrc
     app_icon.rc
     build_deploy.py

@@ -2,6 +2,8 @@
 #include "ui_mainwindow.h"
 #include <QDebug>
 #include <QFile>
+#include <QShortcut>
+
 #define APP_VERSION "1.0.9"
 
 MainWindow::MainWindow(QWidget *parent)
@@ -16,7 +18,7 @@ MainWindow::MainWindow(QWidget *parent)
 , defaultRoundsSessions(4)
 , timeRemaining(defaultPomodoroDuration * 60)
 , timerStarted(false)
-, miniTimerWindow(nullptr)
+, floatingTimerWindow(nullptr)
 {
     ui->setupUi(this);
 
@@ -96,21 +98,22 @@ MainWindow::MainWindow(QWidget *parent)
     timer = new QTimer(this);
     connect(timer, &QTimer::timeout, this, &MainWindow::onTimerOut);
 
-    // Connect timer updates to miniTimerWindow
-    connect(timer, &QTimer::timeout, this, &MainWindow::onTimerOut);
-
     //Connect Timer - MainWindow buttons
     connect(ui->button_settings, &QPushButton::clicked, this, &MainWindow::btton_settings_clicked);
     connect(ui->button_resumePause, &QPushButton::clicked, this, &MainWindow::btton_startResume_clicked);
     connect(ui->button_reset, &QPushButton::clicked, this, &MainWindow::btton_reset_clicked);
     connect(ui->button_skip, &QPushButton::clicked, this, &MainWindow::btton_skip_clicked);
 
-    // Mini Timer Window
-    miniTimerWindow = new MiniTimerWindow(this);
-    connect(miniTimerWindow, &MiniTimerWindow::doubleClicked, this, &MainWindow::miniTimerWindow_doubleClicked);
-    // Connect click on labelTimer to show mini window
-    ui->labelTimer->setCursor(Qt::PointingHandCursor); // Indicate it's clickable
-    ui->labelTimer->installEventFilter(this); // Install event filter to capture clicks
+    //floating Window
+    ui->labelTimer->installEventFilter(this);
+    // QShortcut *shortcut = new QShortcut(QKeySequence("Ctrl+T"), this);
+    // connect(shortcut, &QShortcut::activated, this, &MainWindow::toggleFloatingWindow);
+
+    ui->labelTimer->setAttribute(Qt::WA_Hover);
+    ui->labelTimer->setMouseTracking(true);
+    ui->labelTimer->setCursor(Qt::PointingHandCursor);
+    ui->labelTimer->setEnabled(true);
+    ui->labelTimer->setTextInteractionFlags(Qt::NoTextInteraction);
 
 
     //Help window
@@ -123,8 +126,7 @@ MainWindow::~MainWindow()
     delete ui;
     delete settingsScreen;
     delete sessionLogs;
-    delete miniTimerWindow;
-
+    delete floatingTimerWindow;
 }
 
 void MainWindow::setAlarmSound(int index)
@@ -143,7 +145,7 @@ void MainWindow::onTimerOut()
         handleSessionCompletion();
     }
     QString formattedTime = formatTime(timeRemaining);
-    updateMiniTimerDisplay(formattedTime);
+    emit timerUpdated(formattedTime);
 }
 
 void MainWindow::btton_startResume_clicked()
@@ -160,9 +162,9 @@ void MainWindow::btton_startResume_clicked()
         qDebug() << "Start/Resume clicked / CurrentState -> " << currentStatusTimer;
     }
 
-    if (miniTimerWindow) {
+    if (floatingTimerWindow) {
         this->hide();  // Esconde janela principal, se desejar
-        miniTimerWindow->show();
+        floatingTimerWindow->show();
     }
     running = !running;
 }
@@ -472,9 +474,61 @@ QString MainWindow::formatTime(int seconds)
     int remainingSeconds = seconds % 60;
 
     return QString("%1:%2").arg(minutes, 2, 10, QChar('0')).arg(remainingSeconds, 2, 10, QChar('0'));
-
-
 }
+
+// Mainwindow floating timer
+
+bool MainWindow::eventFilter(QObject *watched, QEvent *event)
+{
+    if (watched == ui->labelTimer) {
+        if (event->type() == QEvent::MouseButtonDblClick) {
+            if (!floatingTimerWindow) {
+                floatingTimerWindow = new FloatingTimerWindow();
+                connect(this, &MainWindow::timerUpdated, floatingTimerWindow, &FloatingTimerWindow::updateTimeDisplay);
+                connect(floatingTimerWindow, &FloatingTimerWindow::requestMainWindowShow, this, &MainWindow::showFromFloating);
+            }
+
+            floatingTimerWindow->setTimeText(ui->labelTimer->text());
+            floatingTimerWindow->show();
+            floatingTimerWindow->raise();
+            floatingTimerWindow->activateWindow();
+
+            this->hide(); // Oculta janela principal
+
+            return true;
+        }
+    }
+
+    return QMainWindow::eventFilter(watched, event);
+}
+
+void MainWindow::showFromFloating()
+{
+    this->show();
+    this->raise();
+    this->activateWindow();
+}
+
+void MainWindow::toggleFloatingWindow()
+{
+    if (!floatingTimerWindow) {
+        floatingTimerWindow = new FloatingTimerWindow();
+        connect(this, &MainWindow::timerUpdated, floatingTimerWindow, &FloatingTimerWindow::updateTimeDisplay);
+
+        // Quando a floatingTimerWindow for fechada, mostrar a janela principal de novo
+        connect(floatingTimerWindow, &FloatingTimerWindow::destroyed, this, &MainWindow::show);
+    }
+
+    if (floatingTimerWindow && floatingTimerWindow->isVisible()) {
+        floatingTimerWindow->updateTimeDisplay(formatTime(timeRemaining));
+
+        if (!this->isVisible()) {
+            floatingTimerWindow->raise();
+            floatingTimerWindow->activateWindow();
+        }
+    }
+}
+
 
 void MainWindow::openHelpDialog()
 {
@@ -489,45 +543,6 @@ void MainWindow::restoreFromTrayIcon(QSystemTrayIcon::ActivationReason reason)
         this->raise();
         this->activateWindow();
     }
-}
-
-//Mini Timer Window
-void MainWindow::labelTimer_clicked()
-{
-    qDebug() << "labelTimer clicked. Showing mini window.";
-    this->hide();
-    if (miniTimerWindow) {
-        miniTimerWindow->show();
-    }
-}
-void MainWindow::miniTimerWindow_doubleClicked()
-{
-    qDebug() << "MiniTimerWindow double-clicked. Showing main window.";
-    if (miniTimerWindow) {
-        miniTimerWindow->hide();
-    }
-    this->showNormal();
-}
-
-void MainWindow::updateMiniTimerDisplay(const QString &timeString) {
-    if (miniTimerWindow && miniTimerWindow->labelTimer) {
-        miniTimerWindow->labelTimer->setText(timeString);
-    }
-}
-
-void MainWindow::updateMiniTimer(const QString &timeString)
-{
-    if (miniTimerWindow && miniTimerWindow->labelTimer) {
-        miniTimerWindow->labelTimer->setText(timeString);
-    }
-}
-
-bool MainWindow::eventFilter(QObject *obj, QEvent *event)
-{
-    if (obj == ui->labelTimer && event->type() == QEvent::MouseButtonPress) {
-        labelTimer_clicked();
-    }
-    return QMainWindow::eventFilter(obj, event);
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)
