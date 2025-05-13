@@ -106,6 +106,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     //floating Window
     ui->labelTimer->installEventFilter(this);
+    connect(systemTrayIcon, &SystemTrayiconHandler::restoreFloatingWindow, this, &MainWindow::handleRestoreFloatingWindow);
     // QShortcut *shortcut = new QShortcut(QKeySequence("Ctrl+T"), this);
     // connect(shortcut, &QShortcut::activated, this, &MainWindow::toggleFloatingWindow);
 
@@ -114,7 +115,6 @@ MainWindow::MainWindow(QWidget *parent)
     ui->labelTimer->setCursor(Qt::PointingHandCursor);
     ui->labelTimer->setEnabled(true);
     ui->labelTimer->setTextInteractionFlags(Qt::NoTextInteraction);
-
 
     //Help window
     helpWindow = new HelpWindow(this);
@@ -144,8 +144,7 @@ void MainWindow::onTimerOut()
         timer->stop();
         handleSessionCompletion();
     }
-    QString formattedTime = formatTime(timeRemaining);
-    emit timerUpdated(formattedTime);
+    updateTimerDisplay();
 }
 
 void MainWindow::btton_startResume_clicked()
@@ -156,16 +155,12 @@ void MainWindow::btton_startResume_clicked()
         ui->button_resumePause->setText("Resume");
         qDebug() << "Pause Clicked / CurrentState -> " << currentStatusTimer;
     }else{
-        timer->start(1000);
+        timer->start(2);
         timerStarted = true;
         ui->button_resumePause->setText("Pause");
         qDebug() << "Start/Resume clicked / CurrentState -> " << currentStatusTimer;
     }
-
-    if (floatingTimerWindow) {
-        this->hide();  // Esconde janela principal, se desejar
-        floatingTimerWindow->show();
-    }
+    updateTimerDisplay();
     running = !running;
 }
 
@@ -193,6 +188,7 @@ void MainWindow::btton_reset_clicked()
     }
 
     ui->labelTimer->setText(formatTime(timeRemaining));
+    updateTimerDisplay();
     ui->button_resumePause->setText("Start");
 }
 
@@ -223,6 +219,8 @@ void MainWindow::setSession(TimerState session)
     }else if (session == LONG_BREAK){
         startLongBreak();
     }
+
+    updateTimerDisplay();
 }
 
 void MainWindow::btton_skip_clicked()
@@ -233,6 +231,7 @@ void MainWindow::btton_skip_clicked()
             int focusTimeSpent = (defaultPomodoroDuration * 60 - timeRemaining);
             QString formattedFocusTime = formatTime(focusTimeSpent);
             QString endTime = QDateTime::currentDateTime().toString("HH:mm");
+            updateTimerDisplay();
 
             // Add session to the table
             sessionsDoneCount++;
@@ -351,6 +350,7 @@ void MainWindow::handleSessionCompletion()
         int focusTimeSpent = defaultPomodoroDuration * 60;  // Total session duration
         QString formattedFocusTime = formatTime(focusTimeSpent);
         QString endTime = QDateTime::currentDateTime().toString("HH:mm");
+        updateTimerDisplay();
 
         sessionsDoneCount++;
         sessionLogs->addSession(sessionsDoneCount, formattedFocusTime, endTime);
@@ -440,6 +440,13 @@ void MainWindow::updateTotalFocusTime()
     }
 }
 
+void MainWindow::updateTimerDisplay()
+{
+    QString formattedTime = formatTime(timeRemaining);
+    ui->labelTimer->setText(formattedTime);
+    emit timerUpdated(formattedTime);
+}
+
 //Config table Button - Action-> Clear table data
 void MainWindow::button_configTable_clicked(){
 
@@ -477,24 +484,18 @@ QString MainWindow::formatTime(int seconds)
 }
 
 // Mainwindow floating timer
-
 bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 {
     if (watched == ui->labelTimer) {
         if (event->type() == QEvent::MouseButtonDblClick) {
-            if (!floatingTimerWindow) {
-                floatingTimerWindow = new FloatingTimerWindow();
-                connect(this, &MainWindow::timerUpdated, floatingTimerWindow, &FloatingTimerWindow::updateTimeDisplay);
-                connect(floatingTimerWindow, &FloatingTimerWindow::requestMainWindowShow, this, &MainWindow::showFromFloating);
-            }
+            createFloatingTimerWindowIfNeeded();
 
-            floatingTimerWindow->setTimeText(ui->labelTimer->text());
+            floatingTimerWindow->updateTimeDisplay(formatTime(timeRemaining));
             floatingTimerWindow->show();
             floatingTimerWindow->raise();
             floatingTimerWindow->activateWindow();
 
-            this->hide(); // Oculta janela principal
-
+            this->hide();
             return true;
         }
     }
@@ -511,13 +512,7 @@ void MainWindow::showFromFloating()
 
 void MainWindow::toggleFloatingWindow()
 {
-    if (!floatingTimerWindow) {
-        floatingTimerWindow = new FloatingTimerWindow();
-        connect(this, &MainWindow::timerUpdated, floatingTimerWindow, &FloatingTimerWindow::updateTimeDisplay);
-
-        // Quando a floatingTimerWindow for fechada, mostrar a janela principal de novo
-        connect(floatingTimerWindow, &FloatingTimerWindow::destroyed, this, &MainWindow::show);
-    }
+    createFloatingTimerWindowIfNeeded();
 
     if (floatingTimerWindow && floatingTimerWindow->isVisible()) {
         floatingTimerWindow->updateTimeDisplay(formatTime(timeRemaining));
@@ -529,7 +524,30 @@ void MainWindow::toggleFloatingWindow()
     }
 }
 
+void MainWindow::handleRestoreFloatingWindow()
+{
+    if (floatingTimerWindow) {
+        // Centraliza no centro da tela principal
+        QRect screenGeometry = QGuiApplication::primaryScreen()->geometry();
+        int x = screenGeometry.center().x() - floatingTimerWindow->width() / 2;
+        int y = screenGeometry.center().y() - floatingTimerWindow->height() / 2;
+        floatingTimerWindow->move(x, y);
+        floatingTimerWindow->show();
+        floatingTimerWindow->raise();
+        floatingTimerWindow->activateWindow();
+    }
+}
 
+void MainWindow::createFloatingTimerWindowIfNeeded()
+{
+    if (!floatingTimerWindow) {
+        floatingTimerWindow = new FloatingTimerWindow();
+        connect(this, &MainWindow::timerUpdated, floatingTimerWindow, &FloatingTimerWindow::updateTimeDisplay);
+        connect(floatingTimerWindow, &FloatingTimerWindow::requestMainWindowShow, this, &MainWindow::showFromFloating);
+    }
+}
+
+// Dialog Window
 void MainWindow::openHelpDialog()
 {
     helpWindow->exec();

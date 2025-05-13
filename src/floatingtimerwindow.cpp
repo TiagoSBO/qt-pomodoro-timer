@@ -1,5 +1,6 @@
 #include "floatingtimerwindow.h"
 #include "ui_floatingtimerwindow.h"
+#include <QMessageBox>
 
 FloatingTimerWindow::FloatingTimerWindow(QWidget *parent)
     : QWidget(parent)
@@ -7,7 +8,7 @@ FloatingTimerWindow::FloatingTimerWindow(QWidget *parent)
 {
     ui->setupUi(this);
     setWindowModality(Qt::NonModal);
-    setWindowFlags(Qt::Window | Qt::FramelessWindowHint | Qt::CustomizeWindowHint);
+    setWindowFlags(Qt::Window | Qt::FramelessWindowHint | Qt::CustomizeWindowHint | Qt::WindowStaysOnTopHint);
     setAttribute(Qt::WA_TranslucentBackground);
 }
 
@@ -43,7 +44,7 @@ void FloatingTimerWindow::mousePressEvent(QMouseEvent *event)
 void FloatingTimerWindow::mouseDoubleClickEvent(QMouseEvent *event)
 {
     emit requestMainWindowShow();
-    this->hide(); // Esconde a flutuante
+    this->hide();
 }
 
 void FloatingTimerWindow::mouseMoveEvent(QMouseEvent *event)
@@ -57,7 +58,7 @@ void FloatingTimerWindow::mouseMoveEvent(QMouseEvent *event)
 
 void FloatingTimerWindow::updateTimeDisplay(const QString &time)
 {
-    ui->labelTimer->setText(time); // ou outro QLabel que exibe o tempo
+    ui->labelTimer->setText(time);
 }
 
 void FloatingTimerWindow::closeEvent(QCloseEvent *event)

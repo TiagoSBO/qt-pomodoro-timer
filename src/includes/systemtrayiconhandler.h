@@ -18,7 +18,7 @@ public:
 
 private:
     QMenu *trayMenu;
-    QAction *restoreAction, *minimizeAction, *quitAction;
+    QAction *restoreAction, *minimizeAction, *quitAction, *restoreFloatWindow;
 
     void buildTrayIcon();
     void buildTrayIconMenu();
@@ -26,6 +26,7 @@ private:
 signals:
     void minimizeRequested();
     void restoreRequested();
+    void restoreFloatingWindow();
     void quitRequested();
 
 };

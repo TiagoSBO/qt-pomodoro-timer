@@ -1,6 +1,7 @@
 #ifndef FLOATINGTIMERWINDOW_H
 #define FLOATINGTIMERWINDOW_H
 
+#include "systemtrayiconhandler.h"
 #include <QDialog>
 #include <QWidget>
 #include <QMouseEvent>
@@ -30,14 +31,13 @@ public slots:
     void updateTimeDisplay(const QString &time);
     void mousePressEvent(QMouseEvent *event) override;
     void mouseMoveEvent(QMouseEvent *event) override;
-
     void mouseDoubleClickEvent(QMouseEvent *event) override;
-
     void closeEvent(QCloseEvent *event) override;
 
 private:
     Ui::FloatingTimerWindow *ui;
 
+    SystemTrayiconHandler *trayIcon;
     QPoint dragPosition;
 };
 

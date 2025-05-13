@@ -64,6 +64,9 @@ private slots:
     void button_configTable_clicked();
     //Help dialog window
     void openHelpDialog();
+    //Floating Window
+    void handleRestoreFloatingWindow();
+    void createFloatingTimerWindowIfNeeded();
 
 signals:
     void timerUpdated(const QString &timeString);
@@ -83,6 +86,7 @@ private:
 
     SoundManager soundManager;
     QString formatTime(int seconds);
+    int selectedISoundIndex = 0;
 
     //Timer
     QTimer *timer;
@@ -92,15 +96,6 @@ private:
     void startLongBreak();
     void handleSessionCompletion();
     void setSession(TimerState session);
-
-    FloatingTimerWindow *floatingTimerWindow;
-    void toggleFloatingWindow();
-    void showFromFloating();
-
-    //Style
-    void updateStyleBasedOnState();
-
-    //
     int timerStarted;
     int currentPomodorSessions;
     int defaultPomodoroDuration;
@@ -110,10 +105,18 @@ private:
     int timeRemaining;
     int running;
     int sessionsDoneCount;
-
-    int selectedISoundIndex = 0;
     void updateTotalFocusTime();
+    void updateTimerDisplay();
+
+    //Floating Window
     bool eventFilter(QObject *watched, QEvent *event) override;
+    FloatingTimerWindow *floatingTimerWindow;
+    void toggleFloatingWindow();
+    void showFromFloating();
+
+    //Style
+    void updateStyleBasedOnState();
+
 };
 
 #endif
