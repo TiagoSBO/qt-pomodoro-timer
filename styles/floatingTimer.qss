@@ -1,0 +1,4 @@
+#backgroundFrame{
+    background-color: rgba(30, 30, 30, 180);
+    border-radius: 20px;
+}
