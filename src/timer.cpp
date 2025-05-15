@@ -5,7 +5,7 @@
 #include <QFile>
 #include <QShortcut>
 
-#define APP_VERSION "1.0.9"
+#define APP_VERSION "1.0.0"
 
 MainWindow::MainWindow(QWidget *parent)
 : QMainWindow(parent)
