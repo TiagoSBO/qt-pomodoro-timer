@@ -48,10 +48,12 @@ MainWindow::MainWindow(QWidget *parent)
         this->raise();
         this->activateWindow();
     });
+
     connect(systemTrayIcon, &SystemTrayiconHandler::quitRequested, this, [this]() {
         isExiting = true;
         QCoreApplication::quit();
     });
+    connect(systemTrayIcon, &SystemTrayiconHandler::restoreFloatingWindow, this, &MainWindow::handleRestoreFloatingWindow);
 
     //Config - Table View
     sessionLogs = new Sessionlogs(ui->tableSessionLogs);
@@ -107,9 +109,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     //floating Window
     ui->labelTimer->installEventFilter(this);
-    connect(systemTrayIcon, &SystemTrayiconHandler::restoreFloatingWindow, this, &MainWindow::handleRestoreFloatingWindow);
-    QShortcut *shortcut = new QShortcut(QKeySequence("Ctrl+0"), this);
-    connect(shortcut, &QShortcut::activated, this, &MainWindow::toggleFloatingWindow);
+    // QShortcut *shortcut = new QShortcut(QKeySequence("Ctrl+0"), this);
+    // connect(shortcut, &QShortcut::activated, this, &MainWindow::toggleFloatingWindow);
 
     ui->labelTimer->setAttribute(Qt::WA_Hover);
     ui->labelTimer->setMouseTracking(true);
@@ -117,13 +118,16 @@ MainWindow::MainWindow(QWidget *parent)
     ui->labelTimer->setEnabled(true);
     ui->labelTimer->setTextInteractionFlags(Qt::NoTextInteraction);
 
+
     //Help window
     helpWindow = new HelpWindow(this);
     connect(ui->actionHelp, &QAction::triggered, this, &MainWindow::openHelpDialog);
+
 }
 
 MainWindow::~MainWindow()
 {
+    UnregisterHotKey(HWND(winId()), 1);
     delete ui;
     delete settingsScreen;
     delete sessionLogs;

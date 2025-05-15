@@ -54,6 +54,7 @@ int main(int argc, char *argv[])
 
     MainWindow w;
 
+
     QObject::connect(&app, &SingleApplication::receivedMessage, &w, [&](quint32, QByteArray) {
         if (w.isMinimized()){
             w.showNormal();

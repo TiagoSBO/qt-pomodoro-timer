@@ -27,6 +27,7 @@ qt_add_executable(PomodoroTimer
     src/singleApplication/singleapplication_p.cpp
     src/updater/updater.cpp
     src/floatingtimerwindow.cpp
+
     src/includes/timer.h
     src/includes/settingsdialog.h
     src/includes/sessionlogs.h
@@ -38,6 +39,7 @@ qt_add_executable(PomodoroTimer
     src/includes/updater/updater.h
     src/includes/app_version.h
     src/includes/floatingtimerwindow.h
+
     src/ui/mainwindow.ui
     src/ui/settingsdialog.ui
     src/ui/helpwindow.ui
@@ -51,22 +53,25 @@ set_target_properties(PomodoroTimer PROPERTIES
     OUTPUT_NAME "Pomodoro Timer"
 )
 
-
 target_include_directories(PomodoroTimer
     PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/src/includes
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/includes/singleApplication
+        # ${CMAKE_CURRENT_SOURCE_DIR}/src/includes/qxtglobalshortcut
+        # ${CMAKE_CURRENT_SOURCE_DIR}/src/qxtglobalshortcut
 )
+
 
 target_link_libraries(PomodoroTimer
     PRIVATE Qt::Core Qt::Widgets Qt6::Multimedia Qt6::UiTools
 )
-
 
 include(GNUInstallDirs)
 
 include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/src/includes
     ${CMAKE_CURRENT_SOURCE_DIR}/src/includes/singleApplication
+    # ${CMAKE_CURRENT_SOURCE_DIR}/src/includes/qxtglobalshortcut
 )
 
 install(TARGETS PomodoroTimer

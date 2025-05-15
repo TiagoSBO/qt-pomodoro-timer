@@ -4,6 +4,7 @@
 #include <QTimer>
 #include <QObject>
 #include <QEvent>
+#include <windows.h>
 #include "helpwindow.h"
 #include "sessionlogs.h"
 #include "settingsdialog.h"
@@ -46,6 +47,7 @@ public:
 
 public slots:
     void setAlarmSound(int index);
+    void toggleFloatingWindow();
 
 private slots:
     //Buttons
@@ -67,6 +69,7 @@ private slots:
     //Floating Window
     void handleRestoreFloatingWindow();
     void createFloatingTimerWindowIfNeeded();
+
 
 signals:
     void timerUpdated(const QString &timeString);
@@ -108,14 +111,13 @@ private:
     void updateTotalFocusTime();
     void updateTimerDisplay();
 
+    //Style
+    void updateStyleBasedOnState();
+
     //Floating Window
     bool eventFilter(QObject *watched, QEvent *event) override;
     FloatingTimerWindow *floatingTimerWindow;
-    void toggleFloatingWindow();
     void showFromFloating();
-
-    //Style
-    void updateStyleBasedOnState();
 
 };
 

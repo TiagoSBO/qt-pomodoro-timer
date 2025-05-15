@@ -12,11 +12,11 @@ FloatingTimerWindow::FloatingTimerWindow(QWidget *parent)
     setWindowFlags(Qt::Window | Qt::FramelessWindowHint | Qt::CustomizeWindowHint | Qt::WindowStaysOnTopHint);
     setAttribute(Qt::WA_TranslucentBackground);
 
-    QShortcut *shortcut = new QShortcut(QKeySequence("Ctrl+0"), this);
-    connect(shortcut, &QShortcut::activated, this, [this]() {
-        emit requestMainWindowShow();
-        this->hide();
-    });
+    // QShortcut *shortcut = new QShortcut(QKeySequence("Ctrl+0"), this);
+    // connect(shortcut, &QShortcut::activated, this, [this]() {
+    //     emit requestMainWindowShow();
+    //     this->hide();
+    // });
 }
 
 FloatingTimerWindow::~FloatingTimerWindow()
