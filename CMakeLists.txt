@@ -27,6 +27,8 @@ qt_add_executable(PomodoroTimer
     src/singleApplication/singleapplication_p.cpp
     src/updater/updater.cpp
     src/floatingtimerwindow.cpp
+    src/qHotKey/qhotkey.cpp
+    src/qHotKey/qhotkey_win.cpp
 
     src/includes/timer.h
     src/includes/settingsdialog.h
@@ -39,6 +41,8 @@ qt_add_executable(PomodoroTimer
     src/includes/updater/updater.h
     src/includes/app_version.h
     src/includes/floatingtimerwindow.h
+    src/includes/qHotKey/qhotkey.h
+    src/includes/qHotKey/qhotkey_p.h
 
     src/ui/mainwindow.ui
     src/ui/settingsdialog.ui
@@ -57,8 +61,8 @@ target_include_directories(PomodoroTimer
     PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/src/includes
         ${CMAKE_CURRENT_SOURCE_DIR}/src/includes/singleApplication
-        # ${CMAKE_CURRENT_SOURCE_DIR}/src/includes/qxtglobalshortcut
-        # ${CMAKE_CURRENT_SOURCE_DIR}/src/qxtglobalshortcut
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/includes/qHotKey
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/qHotKey
 )
 
 
@@ -71,7 +75,7 @@ include(GNUInstallDirs)
 include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/src/includes
     ${CMAKE_CURRENT_SOURCE_DIR}/src/includes/singleApplication
-    # ${CMAKE_CURRENT_SOURCE_DIR}/src/includes/qxtglobalshortcut
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/includes/qHotKey
 )
 
 install(TARGETS PomodoroTimer

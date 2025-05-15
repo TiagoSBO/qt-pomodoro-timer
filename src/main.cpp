@@ -1,3 +1,4 @@
+#include "qhotkey.h"
 #include "timer.h"
 #include <QApplication>
 #include "singleapplication.h"
@@ -54,6 +55,10 @@ int main(int argc, char *argv[])
 
     MainWindow w;
 
+    QHotkey *hotkey = new QHotkey(QKeySequence("Ctrl+Shift+0"), true, &w); // 'true' registra automaticamente
+    QObject::connect(hotkey, &QHotkey::activated, &w, [&w]() {
+        w.toggleFloatingWindow();
+    });
 
     QObject::connect(&app, &SingleApplication::receivedMessage, &w, [&](quint32, QByteArray) {
         if (w.isMinimized()){
