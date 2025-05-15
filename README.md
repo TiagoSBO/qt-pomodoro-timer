@@ -17,9 +17,10 @@ The application operates in the system tray, providing discreet access to timer 
 -   **🪟 System Tray Integration:** The application runs minimized in the system tray, keeping your workspace clean and organized.
 -   **⏲️ Customizable Timers:** Adjust the duration of your work sessions, short breaks, and long breaks according to your preferences.
 -   **⏰ Sound Alerts:** Configure custom sound notifications to alert you when a timer ends, ensuring you stay on schedule.
--   **📈 Session Logs:** Detailed logs of your Pomodoro sessions are maintained, allowing you to track your productivity over time.
 -   **⚙️ Configuration Settings:** Fine-tune various aspects of the application, from timer durations to sound preferences, ensuring a tailored experience.
-- **🎨 Multiple Themes:** Multiple themes to change the look of the application.
+### Comming soon:
+ -   **🎨 Multiple Themes:** Multiple themes to change the look of the application.
+ -   **📈 Session Logs:** Detailed logs of your Pomodoro sessions are maintained, allowing you to track your productivity over time.
 
 ### Demonstration
 ![funcionalidades (1)](https://github.com/user-attachments/assets/86bc6873-f589-42eb-8605-68def035ff2b)
@@ -28,16 +29,6 @@ The application operates in the system tray, providing discreet access to timer 
 Follow these steps to build the Pomodoro Timer application from source:
 
 In soon...
-    
-## Upcoming Features
-
-- **Improved Session Analytics:** Provides more detailed statistics and visuals for session analysis.
-
-- **Cloud Sync:** Allows users to sync their settings and session logs across multiple devices.
-
-- **Add More Themes:** New and more attractive themes for the app.
-
-- **More Sound:** Options: More alarm sound options
 
 ## Contributing
 
