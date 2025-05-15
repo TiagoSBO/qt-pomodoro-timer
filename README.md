@@ -15,7 +15,16 @@ The application operates in the system tray, providing discreet access to timer 
 ## Features
 
 -   **🪟 System Tray Integration:** The application runs minimized in the system tray, keeping your workspace clean and organized.
--   **⏲️ Customizable Timers:** Adjust the duration of your work sessions, short breaks, and long breaks according to your preferences.
+
+       - Minimize to tray
+       - Restore from tray
+       - Quit from tray
+       - Restore floating window
+-   **⏲️ Customizable Timers:** Adjust the duration of your work sessions, short breaks, and long breaks according to your preferences.7
+  
+       - Number of Pomodoros completed
+       - Focus time
+       - Session end time
 -   **⏰ Sound Alerts:** Configure custom sound notifications to alert you when a timer ends, ensuring you stay on schedule.
 -   **⚙️ Configuration Settings:** Fine-tune various aspects of the application, from timer durations to sound preferences, ensuring a tailored experience.
 ### Comming soon:
@@ -25,10 +34,52 @@ The application operates in the system tray, providing discreet access to timer 
 ### Demonstration
 ![funcionalidades (1)](https://github.com/user-attachments/assets/86bc6873-f589-42eb-8605-68def035ff2b)
 
-## Building the Project
-Follow these steps to build the Pomodoro Timer application from source:
+## Installation Guide
+You can install the application either by using the provided installer or by building it from source.
 
-In soon...
+### Using the Installer
+- Go to the [Releases](https://github.com/TiagoSBO/qt-pomodoro-timer/releases).
+
+- Download the latest version (*.exe file).
+
+- Run the installer and follow the on-screen instructions.
+
+### Building from Source
+If you prefer to build the application from source, follow these steps:
+
+**Clone the repository:**
+```
+git clone https://github.com/TiagoSBO/qt-pomodoro-timer.`
+git cd qt-pomodoro-timer
+```
+**Install Dependencies:**
+You will need:
+- CMake
+- Qt 6.x (or Qt 5.15+)
+
+> Make sure to add qmake and cmake to your system PATH
+
+On Windows (using Chocolatey):
+```
+bash choco install cmake qt6
+```
+On Linux
+```
+sudo apt install cmake qt6-base-dev qt6-tools-dev-tools build-essential
+```
+**Build the Application:**
+Create a build directory and use CMake to configure and build the project.
+```
+mkdir build
+cd build
+cmake ..
+cmake --build .
+```
+**Run the Application:**
+After a successful build, you can run the application executable. The location of the executable will depend on your build configuration and operating system. It is typically found within the `build` directory or a subdirectory like `build/bin` or `build/debug`.
+```
+./qt-pomodoro-timer
+```
 
 ## Contributing
 
