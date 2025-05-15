@@ -1,7 +1,10 @@
 #include "timer.h"
+#include "src/ui/ui_mainwindow.h"
 #include "ui_mainwindow.h"
 #include <QDebug>
 #include <QFile>
+#include <QShortcut>
+
 #define APP_VERSION "1.0.9"
 
 MainWindow::MainWindow(QWidget *parent)
@@ -16,6 +19,7 @@ MainWindow::MainWindow(QWidget *parent)
 , defaultRoundsSessions(4)
 , timeRemaining(defaultPomodoroDuration * 60)
 , timerStarted(false)
+, floatingTimerWindow(nullptr)
 {
     ui->setupUi(this);
 
@@ -44,10 +48,12 @@ MainWindow::MainWindow(QWidget *parent)
         this->raise();
         this->activateWindow();
     });
+
     connect(systemTrayIcon, &SystemTrayiconHandler::quitRequested, this, [this]() {
         isExiting = true;
         QCoreApplication::quit();
     });
+    connect(systemTrayIcon, &SystemTrayiconHandler::restoreFloatingWindow, this, &MainWindow::handleRestoreFloatingWindow);
 
     //Config - Table View
     sessionLogs = new Sessionlogs(ui->tableSessionLogs);
@@ -101,6 +107,18 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->button_reset, &QPushButton::clicked, this, &MainWindow::btton_reset_clicked);
     connect(ui->button_skip, &QPushButton::clicked, this, &MainWindow::btton_skip_clicked);
 
+    //floating Window
+    ui->labelTimer->installEventFilter(this);
+    // QShortcut *shortcut = new QShortcut(QKeySequence("Ctrl+0"), this);
+    // connect(shortcut, &QShortcut::activated, this, &MainWindow::toggleFloatingWindow);
+
+    ui->labelTimer->setAttribute(Qt::WA_Hover);
+    ui->labelTimer->setMouseTracking(true);
+    ui->labelTimer->setCursor(Qt::PointingHandCursor);
+    ui->labelTimer->setEnabled(true);
+    ui->labelTimer->setTextInteractionFlags(Qt::NoTextInteraction);
+
+
     //Help window
     helpWindow = new HelpWindow(this);
     connect(ui->actionHelp, &QAction::triggered, this, &MainWindow::openHelpDialog);
@@ -109,9 +127,11 @@ MainWindow::MainWindow(QWidget *parent)
 
 MainWindow::~MainWindow()
 {
+    UnregisterHotKey(HWND(winId()), 1);
     delete ui;
     delete settingsScreen;
     delete sessionLogs;
+    delete floatingTimerWindow;
 }
 
 void MainWindow::setAlarmSound(int index)
@@ -123,12 +143,13 @@ void MainWindow::setAlarmSound(int index)
 void MainWindow::onTimerOut()
 {
     if (timeRemaining > 0) {
-            timeRemaining--;
-            ui->labelTimer->setText(formatTime(timeRemaining));
-        }else {
-            timer->stop();
-            handleSessionCompletion();
+        timeRemaining--;
+        ui->labelTimer->setText(formatTime(timeRemaining));
+    }else {
+        timer->stop();
+        handleSessionCompletion();
     }
+    updateTimerDisplay();
 }
 
 void MainWindow::btton_startResume_clicked()
@@ -144,6 +165,7 @@ void MainWindow::btton_startResume_clicked()
         ui->button_resumePause->setText("Pause");
         qDebug() << "Start/Resume clicked / CurrentState -> " << currentStatusTimer;
     }
+    updateTimerDisplay();
     running = !running;
 }
 
@@ -171,6 +193,7 @@ void MainWindow::btton_reset_clicked()
     }
 
     ui->labelTimer->setText(formatTime(timeRemaining));
+    updateTimerDisplay();
     ui->button_resumePause->setText("Start");
 }
 
@@ -201,6 +224,8 @@ void MainWindow::setSession(TimerState session)
     }else if (session == LONG_BREAK){
         startLongBreak();
     }
+
+    updateTimerDisplay();
 }
 
 void MainWindow::btton_skip_clicked()
@@ -211,6 +236,7 @@ void MainWindow::btton_skip_clicked()
             int focusTimeSpent = (defaultPomodoroDuration * 60 - timeRemaining);
             QString formattedFocusTime = formatTime(focusTimeSpent);
             QString endTime = QDateTime::currentDateTime().toString("HH:mm");
+            updateTimerDisplay();
 
             // Add session to the table
             sessionsDoneCount++;
@@ -329,6 +355,7 @@ void MainWindow::handleSessionCompletion()
         int focusTimeSpent = defaultPomodoroDuration * 60;  // Total session duration
         QString formattedFocusTime = formatTime(focusTimeSpent);
         QString endTime = QDateTime::currentDateTime().toString("HH:mm");
+        updateTimerDisplay();
 
         sessionsDoneCount++;
         sessionLogs->addSession(sessionsDoneCount, formattedFocusTime, endTime);
@@ -418,6 +445,13 @@ void MainWindow::updateTotalFocusTime()
     }
 }
 
+void MainWindow::updateTimerDisplay()
+{
+    QString formattedTime = formatTime(timeRemaining);
+    ui->labelTimer->setText(formattedTime);
+    emit timerUpdated(formattedTime);
+}
+
 //Config table Button - Action-> Clear table data
 void MainWindow::button_configTable_clicked(){
 
@@ -450,9 +484,83 @@ QString MainWindow::formatTime(int seconds)
 {
     int minutes = seconds / 60;
     int remainingSeconds = seconds % 60;
+
     return QString("%1:%2").arg(minutes, 2, 10, QChar('0')).arg(remainingSeconds, 2, 10, QChar('0'));
 }
 
+// Mainwindow floating timer
+bool MainWindow::eventFilter(QObject *watched, QEvent *event)
+{
+    if (watched == ui->labelTimer) {
+        if (event->type() == QEvent::MouseButtonDblClick) {
+            createFloatingTimerWindowIfNeeded();
+
+            floatingTimerWindow->updateTimeDisplay(formatTime(timeRemaining));
+            floatingTimerWindow->show();
+            floatingTimerWindow->raise();
+            floatingTimerWindow->activateWindow();
+
+            this->hide();
+            return true;
+        }
+    }
+
+    return QMainWindow::eventFilter(watched, event);
+}
+
+//Shortcut
+void MainWindow::toggleFloatingWindow()
+{
+    if (!floatingTimerWindow) {
+        createFloatingTimerWindowIfNeeded();
+    }
+
+    if (floatingTimerWindow->isVisible()) {
+        floatingTimerWindow->hide();
+        this->show();
+        this->raise();
+        this->activateWindow();
+    } else {
+        floatingTimerWindow->updateTimeDisplay(formatTime(timeRemaining));
+        floatingTimerWindow->show();
+        floatingTimerWindow->raise();
+        floatingTimerWindow->activateWindow();
+        this->hide();
+    }
+}
+
+void MainWindow::showFromFloating()
+{
+    this->show();
+    this->raise();
+    this->activateWindow();
+}
+
+
+void MainWindow::handleRestoreFloatingWindow()
+{
+    if (floatingTimerWindow) {
+        // Centraliza no centro da tela principal
+        QRect screenGeometry = QGuiApplication::primaryScreen()->geometry();
+        int x = screenGeometry.center().x() - floatingTimerWindow->width() / 2;
+        int y = screenGeometry.center().y() - floatingTimerWindow->height() / 2;
+        floatingTimerWindow->move(x, y);
+        floatingTimerWindow->show();
+        floatingTimerWindow->raise();
+        floatingTimerWindow->activateWindow();
+    }
+}
+
+void MainWindow::createFloatingTimerWindowIfNeeded()
+{
+    if (!floatingTimerWindow) {
+        floatingTimerWindow = new FloatingTimerWindow();
+        connect(this, &MainWindow::timerUpdated, floatingTimerWindow, &FloatingTimerWindow::updateTimeDisplay);
+        connect(floatingTimerWindow, &FloatingTimerWindow::requestMainWindowShow, this, &MainWindow::showFromFloating);
+    }
+}
+
+// Dialog Window
 void MainWindow::openHelpDialog()
 {
     helpWindow->exec();

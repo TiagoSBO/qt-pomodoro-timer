@@ -1,5 +1,5 @@
 {
-  "version": "1.0.9",
-  "changelog": "Udates and Fixes: \n - Fix crash and update the installer.",
+  "version": "1.0.0",
+  "changelog": "### 🚀 First release\n\n**Features:**\n\n- **System Tray Integration:** The application runs minimized in the system tray, keeping your workspace clean and organized.\n- **Floating Window:** A movable floating window that displays the time of the timer. This floating window can be activated by clicking on the timer or by pressing the shortcut **Ctrl + Shift + 0**.\n- **Customizable Timers:** Adjust the duration of your work sessions, short breaks, and long breaks according to your preferences.\n- **Sound Alerts:** Configure custom sound notifications to alert you when a timer ends, ensuring you stay on schedule.\n- **Configuration Settings:** Fine-tune various aspects of the application, from timer durations to sound preferences, ensuring a tailored experience.",
   "url": "https://pomodoro-timer-files.netlify.app/PomodoroTimerSetup.exe"
 }

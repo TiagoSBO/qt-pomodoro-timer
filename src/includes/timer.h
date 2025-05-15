@@ -2,10 +2,14 @@
 #define TIMER_H
 #include <QMainWindow>
 #include <QTimer>
+#include <QObject>
+#include <QEvent>
+#include <windows.h>
 #include "helpwindow.h"
 #include "sessionlogs.h"
 #include "settingsdialog.h"
 #include "systemtrayiconhandler.h"
+#include "floatingtimerwindow.h"
 #include <QCloseEvent>
 #include "QMessageBox"
 #include <QDateTime>
@@ -40,8 +44,10 @@ public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+
 public slots:
     void setAlarmSound(int index);
+    void toggleFloatingWindow();
 
 private slots:
     //Buttons
@@ -60,6 +66,14 @@ private slots:
     void button_configTable_clicked();
     //Help dialog window
     void openHelpDialog();
+    //Floating Window
+    void handleRestoreFloatingWindow();
+    void createFloatingTimerWindowIfNeeded();
+
+
+signals:
+    void timerUpdated(const QString &timeString);
+
 
 private:
     Ui::MainWindow *ui;
@@ -75,6 +89,7 @@ private:
 
     SoundManager soundManager;
     QString formatTime(int seconds);
+    int selectedISoundIndex = 0;
 
     //Timer
     QTimer *timer;
@@ -84,11 +99,6 @@ private:
     void startLongBreak();
     void handleSessionCompletion();
     void setSession(TimerState session);
-
-    //Style
-    void updateStyleBasedOnState();
-
-    //
     int timerStarted;
     int currentPomodorSessions;
     int defaultPomodoroDuration;
@@ -98,9 +108,17 @@ private:
     int timeRemaining;
     int running;
     int sessionsDoneCount;
-
-    int selectedISoundIndex = 0;
     void updateTotalFocusTime();
+    void updateTimerDisplay();
+
+    //Style
+    void updateStyleBasedOnState();
+
+    //Floating Window
+    bool eventFilter(QObject *watched, QEvent *event) override;
+    FloatingTimerWindow *floatingTimerWindow;
+    void showFromFloating();
+
 };
 
 #endif
