@@ -14,18 +14,21 @@ The application operates in the system tray, providing discreet access to timer 
           
 ## Features
 
--   **🪟 System Tray Integration:** The application runs minimized in the system tray, keeping your workspace clean and organized.
-
+-   **🔗 System Tray Integration:** The application runs minimized in the system tray, keeping your workspace clean and organized.
        - Minimize to tray
        - Restore from tray
        - Quit from tray
        - Restore floating window
+ 
+-   **⿻ Floating Window:** A movable floating window that displays the time of the timer. This floating window can be activated by clicking on the timer or by pressing the shortcut **Ctrl + Shift + 0**.
+
 -   **⏲️ Customizable Timers:** Adjust the duration of your work sessions, short breaks, and long breaks according to your preferences.7
-  
        - Number of Pomodoros completed
        - Focus time
        - Session end time
+  
 -   **⏰ Sound Alerts:** Configure custom sound notifications to alert you when a timer ends, ensuring you stay on schedule.
+  
 -   **⚙️ Configuration Settings:** Fine-tune various aspects of the application, from timer durations to sound preferences, ensuring a tailored experience.
 ### Comming soon:
  -   **🎨 Multiple Themes:** Multiple themes to change the look of the application.
@@ -33,6 +36,10 @@ The application operates in the system tray, providing discreet access to timer 
 
 ### Demonstration
 ![funcionalidades (1)](https://github.com/user-attachments/assets/86bc6873-f589-42eb-8605-68def035ff2b)
+
+**Floating window:**  It can be activated with the shortcut **Ctrl + shift + 0** or by clicking on the timer label.
+
+![float2 (1)](https://github.com/user-attachments/assets/7dccbef9-e0c1-428b-8a94-9607cb49ee7d)
 
 ## Installation Guide
 You can install the application either by using the provided installer or by building it from source.
