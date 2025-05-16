@@ -1,7 +1,9 @@
 # 🍎Pomodoro Timer Application
 
 [![In Development](https://img.shields.io/badge/Status-In%20Development-yellow)](https://shields.io/)
-[![Netlify Status](https://api.netlify.com/api/v1/badges/e902789a-3c9d-4070-89fb-fd2738033a52/deploy-status?branch=main)](https://app.netlify.com/projects/pomodoro-timer-files/deploys)
+[![Netlify Status](https://api.netlify.com/api/v1/badges/cc0be1bf-2eae-4e81-9ced-627ba616499e/deploy-status)](https://app.netlify.com/projects/qtpomodoro-timer/deploys)
+
+
 
 
 ## Description
