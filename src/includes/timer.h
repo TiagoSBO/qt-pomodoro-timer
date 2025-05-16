@@ -8,6 +8,7 @@
 #include "helpwindow.h"
 #include "sessionlogs.h"
 #include "settingsdialog.h"
+#include "statswindow.h"
 #include "systemtrayiconhandler.h"
 #include "floatingtimerwindow.h"
 #include <QCloseEvent>
@@ -66,6 +67,8 @@ private slots:
     void button_configTable_clicked();
     //Help dialog window
     void openHelpDialog();
+    //Stats dialog window
+    void openStatsDialog();
     //Floating Window
     void handleRestoreFloatingWindow();
     void createFloatingTimerWindowIfNeeded();
@@ -73,7 +76,7 @@ private slots:
 
 signals:
     void timerUpdated(const QString &timeString);
-
+    //TODO:Create signal to json. emit statsUpdated(QJsonArray data);
 
 private:
     Ui::MainWindow *ui;
@@ -81,6 +84,7 @@ private:
     Settings *settingsScreen;
     Sessionlogs *sessionLogs;
     HelpWindow *helpWindow;
+    StatsWindow *statsWindow;
 
     SystemTrayiconHandler *systemTrayIcon;
     void restoreFromTrayIcon(QSystemTrayIcon::ActivationReason reason);

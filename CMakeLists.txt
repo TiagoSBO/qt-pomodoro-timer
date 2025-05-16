@@ -29,6 +29,8 @@ qt_add_executable(PomodoroTimer
     src/floatingtimerwindow.cpp
     src/qHotKey/qhotkey.cpp
     src/qHotKey/qhotkey_win.cpp
+    src/statswindow.cpp
+    src/daterangedialog.cpp
 
     src/includes/timer.h
     src/includes/settingsdialog.h
@@ -43,11 +45,16 @@ qt_add_executable(PomodoroTimer
     src/includes/floatingtimerwindow.h
     src/includes/qHotKey/qhotkey.h
     src/includes/qHotKey/qhotkey_p.h
+    src/includes/statswindow.h
+    src/includes/daterangedialog.h
 
     src/ui/mainwindow.ui
     src/ui/settingsdialog.ui
     src/ui/helpwindow.ui
     src/ui/floatingtimerwindow.ui
+    src/ui/statswindow.ui
+    src/ui/daterangedialog.ui
+
     resources.qrc
     app_icon.rc
     build_deploy.py

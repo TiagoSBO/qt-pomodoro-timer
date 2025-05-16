@@ -1,9 +1,7 @@
 #include "timer.h"
 #include "src/ui/ui_mainwindow.h"
-#include "ui_mainwindow.h"
 #include <QDebug>
 #include <QFile>
-#include <QShortcut>
 
 #define APP_VERSION "1.0.0"
 
@@ -109,8 +107,6 @@ MainWindow::MainWindow(QWidget *parent)
 
     //floating Window
     ui->labelTimer->installEventFilter(this);
-    // QShortcut *shortcut = new QShortcut(QKeySequence("Ctrl+0"), this);
-    // connect(shortcut, &QShortcut::activated, this, &MainWindow::toggleFloatingWindow);
 
     ui->labelTimer->setAttribute(Qt::WA_Hover);
     ui->labelTimer->setMouseTracking(true);
@@ -118,10 +114,14 @@ MainWindow::MainWindow(QWidget *parent)
     ui->labelTimer->setEnabled(true);
     ui->labelTimer->setTextInteractionFlags(Qt::NoTextInteraction);
 
-
     //Help window
     helpWindow = new HelpWindow(this);
     connect(ui->actionHelp, &QAction::triggered, this, &MainWindow::openHelpDialog);
+
+    //Stats window
+    statsWindow = new StatsWindow(this);
+    connect(ui->actionopenStats, &QAction::triggered, this, &MainWindow::openStatsDialog);
+    //TODO: Create connect to json signal. connect(timer, &Timer::statsUpdated, statsWindow, &StatsWindow::setStatsData);
 
 }
 
@@ -561,10 +561,10 @@ void MainWindow::createFloatingTimerWindowIfNeeded()
 }
 
 // Dialog Window
-void MainWindow::openHelpDialog()
-{
-    helpWindow->exec();
-}
+void MainWindow::openHelpDialog(){helpWindow->exec();}
+
+//Stats Wiwdow
+void MainWindow::openStatsDialog(){statsWindow->exec();}
 
 //TrayIcon Action Functions
 void MainWindow::restoreFromTrayIcon(QSystemTrayIcon::ActivationReason reason)
