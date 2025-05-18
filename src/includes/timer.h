@@ -78,7 +78,6 @@ private slots:
 
 signals:
     void timerUpdated(const QString &timeString);
-    //TODO:Create signal to json. emit statsUpdated(QJsonArray data);
 
 private:
     Ui::MainWindow *ui;
