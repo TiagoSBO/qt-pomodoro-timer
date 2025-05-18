@@ -7,7 +7,8 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOUIC_SEARCH_PATHS ${CMAKE_CURRENT_SOURCE_DIR}/src/ui)
 
-find_package(Qt6 6.5 REQUIRED COMPONENTS Core Widgets Sql Multimedia UiTools )
+find_package(Qt6 6.5 REQUIRED COMPONENTS Core Widgets Sql Multimedia UiTools)
+find_package(Python3 REQUIRED)
 find_dependency(Qt6 REQUIRED COMPONENTS Core Network REQUIRED)
 
 if (MINGW)
@@ -31,6 +32,7 @@ qt_add_executable(PomodoroTimer
     src/qHotKey/qhotkey_win.cpp
     src/statswindow.cpp
     src/daterangedialog.cpp
+    src/db/dbstatsmanager.cpp
 
     src/includes/timer.h
     src/includes/settingsdialog.h
@@ -47,6 +49,7 @@ qt_add_executable(PomodoroTimer
     src/includes/qHotKey/qhotkey_p.h
     src/includes/statswindow.h
     src/includes/daterangedialog.h
+    src/includes/db/dbstatsmanager.h
 
     src/ui/mainwindow.ui
     src/ui/settingsdialog.ui
@@ -67,6 +70,7 @@ set_target_properties(PomodoroTimer PROPERTIES
 target_include_directories(PomodoroTimer
     PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/src/includes
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/includes/db
         ${CMAKE_CURRENT_SOURCE_DIR}/src/includes/singleApplication
         ${CMAKE_CURRENT_SOURCE_DIR}/src/includes/qHotKey
         ${CMAKE_CURRENT_SOURCE_DIR}/src/qHotKey
@@ -74,7 +78,7 @@ target_include_directories(PomodoroTimer
 
 
 target_link_libraries(PomodoroTimer
-    PRIVATE Qt::Core Qt::Widgets Qt6::Multimedia Qt6::UiTools
+    PRIVATE Qt::Core Qt::Widgets Qt6::Multimedia Qt6::UiTools Qt6::Sql
 )
 
 include(GNUInstallDirs)

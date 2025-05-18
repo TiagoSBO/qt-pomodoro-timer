@@ -1,0 +1,13 @@
+--
+-- File generated with SQLiteStudio v3.4.17 on Sun May 18 17:27:21 2025
+--
+-- Text encoding used: System
+--
+PRAGMA foreign_keys = off;
+BEGIN TRANSACTION;
+
+-- Table: stats
+CREATE TABLE IF NOT EXISTS stats (id INTEGER PRIMARY KEY AUTOINCREMENT, date TEXT NOT NULL, pomodoros INTEGER, focus_time_minutes INTEGER);
+
+COMMIT TRANSACTION;
+PRAGMA foreign_keys = on;
