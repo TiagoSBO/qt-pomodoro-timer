@@ -44,7 +44,9 @@ int main(int argc, char *argv[])
         ":/styles/styles/sessionlogs.qss",
         ":/styles/styles/settingsdialog.qss",
         ":/styles/styles/helpwindow.qss",
-        ":/styles/styles/floatingTimer.qss"
+        ":/styles/styles/floatingTimer.qss",
+        ":/styles/styles/statsWindow.qss",
+        ":/styles/styles/dataRangeDialog.qss"
     };
 
     QString combinedStyle = loadStyleSheet(styleSheets);

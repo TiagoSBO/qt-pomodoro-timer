@@ -32,6 +32,8 @@
         <file>styles/settingsdialog.qss</file>
         <file>styles/helpwindow.qss</file>
         <file>styles/floatingTimer.qss</file>
+        <file>styles/statsWindow.qss</file>
+        <file>styles/dataRangeDialog.qss</file>
     </qresource>
     <qresource prefix="/files">
         <file>update_server/version.json</file>

@@ -30,8 +30,13 @@ qt_add_executable(PomodoroTimer
     src/floatingtimerwindow.cpp
     src/qHotKey/qhotkey.cpp
     src/qHotKey/qhotkey_win.cpp
+<<<<<<< HEAD
     # src/statswindow.cpp
     # src/daterangedialog.cpp
+=======
+    src/statswindow.cpp
+    src/daterangedialog.cpp
+>>>>>>> temp-recover-dialog
     src/db/dbstatsmanager.cpp
 
     src/includes/timer.h
@@ -47,16 +52,26 @@ qt_add_executable(PomodoroTimer
     src/includes/floatingtimerwindow.h
     src/includes/qHotKey/qhotkey.h
     src/includes/qHotKey/qhotkey_p.h
+<<<<<<< HEAD
     # src/includes/statswindow.h
     # src/includes/daterangedialog.h
+=======
+    src/includes/statswindow.h
+    src/includes/daterangedialog.h
+>>>>>>> temp-recover-dialog
     src/includes/db/dbstatsmanager.h
 
     src/ui/mainwindow.ui
     src/ui/settingsdialog.ui
     src/ui/helpwindow.ui
     src/ui/floatingtimerwindow.ui
+<<<<<<< HEAD
     # src/ui/statswindow.ui
     # src/ui/daterangedialog.ui
+=======
+    src/ui/statswindow.ui
+    src/ui/daterangedialog.ui
+>>>>>>> temp-recover-dialog
 
     resources.qrc
     app_icon.rc
@@ -70,6 +85,7 @@ set_target_properties(PomodoroTimer PROPERTIES
 target_include_directories(PomodoroTimer
     PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/src/includes
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/includes/db
         ${CMAKE_CURRENT_SOURCE_DIR}/src/includes/singleApplication
         ${CMAKE_CURRENT_SOURCE_DIR}/src/includes/qHotKey
         ${CMAKE_CURRENT_SOURCE_DIR}/src/qHotKey

@@ -1,0 +1,41 @@
+#DateRangeDialog {
+    background-color: #123456;
+    color: white;
+    border-radius: 8px;
+}
+
+#label_end {
+    font-weight: bold;
+    color: white;
+}
+#label_start {
+    font-weight: bold;
+    color: white;
+}
+
+#dateEdit_end {
+    background-color: #222;
+    color: white;
+    border: 1px solid #666;
+    padding: 4px;
+    border-radius: 4px;
+}
+
+#dateEdit_start {
+    background-color: #222;
+    color: white;
+    border: 1px solid #666;
+    padding: 4px;
+    border-radius: 4px;
+}
+
+QPushButton#button_confirm {
+    background-color: #4CAF50;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 4px;
+}
+
+QPushButton#button_confirm:hover {
+    background-color: #45a049;
+}

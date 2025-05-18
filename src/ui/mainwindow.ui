@@ -578,12 +578,13 @@
    </widget>
    <widget class="QMenu" name="menuStats">
     <property name="enabled">
-     <bool>false</bool>
+     <bool>true</bool>
     </property>
     <property name="title">
      <string>Stats</string>
     </property>
     <addaction name="separator"/>
+    <addaction name="actionopenStats"/>
    </widget>
    <addaction name="menuStats"/>
    <addaction name="menuHelp"/>
@@ -613,6 +614,11 @@
   <action name="actionHelp">
    <property name="text">
     <string>Help</string>
+   </property>
+  </action>
+  <action name="actionopenStats">
+   <property name="text">
+    <string>Show statistics</string>
    </property>
   </action>
  </widget>
