@@ -49,6 +49,8 @@ public slots:
     void setAlarmSound(int index);
     void toggleFloatingWindow();
 
+    void initDatabase();
+
 private slots:
     //Buttons
     void btton_startResume_clicked();

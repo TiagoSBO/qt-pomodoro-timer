@@ -5,8 +5,7 @@
 #include "updater/updater.h"
 #include <QStyleFactory>
 #include <QSysInfo>
-#include <QFile>
-#include <QTextStream>
+#include <QDebug>
 
 //Read QSS files
 QString loadStyleSheet(const QStringList &qssPaths) {
@@ -24,6 +23,7 @@ QString loadStyleSheet(const QStringList &qssPaths) {
     }
     return finalStyleSheet;
 }
+
 
 int main(int argc, char *argv[])
 {

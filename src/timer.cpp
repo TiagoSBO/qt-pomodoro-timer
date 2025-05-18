@@ -1,6 +1,5 @@
 #include "timer.h"
 #include "src/ui/ui_mainwindow.h"
-#include "ui_mainwindow.h"
 #include <QDebug>
 #include <QFile>
 #include <QShortcut>
