@@ -7,7 +7,8 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOUIC_SEARCH_PATHS ${CMAKE_CURRENT_SOURCE_DIR}/src/ui)
 
-find_package(Qt6 6.5 REQUIRED COMPONENTS Core Widgets Sql Multimedia UiTools )
+find_package(Qt6 6.5 REQUIRED COMPONENTS Core Widgets Sql Multimedia UiTools)
+find_package(Python3 REQUIRED)
 find_dependency(Qt6 REQUIRED COMPONENTS Core Network REQUIRED)
 
 if (MINGW)
@@ -29,6 +30,8 @@ qt_add_executable(PomodoroTimer
     src/floatingtimerwindow.cpp
     src/qHotKey/qhotkey.cpp
     src/qHotKey/qhotkey_win.cpp
+    src/statswindow.cpp
+    src/daterangedialog.cpp
 
     src/includes/timer.h
     src/includes/settingsdialog.h
@@ -43,14 +46,21 @@ qt_add_executable(PomodoroTimer
     src/includes/floatingtimerwindow.h
     src/includes/qHotKey/qhotkey.h
     src/includes/qHotKey/qhotkey_p.h
+    src/includes/statswindow.h
+    src/includes/daterangedialog.h
 
     src/ui/mainwindow.ui
     src/ui/settingsdialog.ui
     src/ui/helpwindow.ui
     src/ui/floatingtimerwindow.ui
+    src/ui/statswindow.ui
+    src/ui/daterangedialog.ui
+
     resources.qrc
     app_icon.rc
     build_deploy.py
+
+
 )
 
 set_target_properties(PomodoroTimer PROPERTIES
@@ -67,7 +77,7 @@ target_include_directories(PomodoroTimer
 
 
 target_link_libraries(PomodoroTimer
-    PRIVATE Qt::Core Qt::Widgets Qt6::Multimedia Qt6::UiTools
+    PRIVATE Qt::Core Qt::Widgets Qt6::Multimedia Qt6::UiTools Qt6::Sql
 )
 
 include(GNUInstallDirs)
