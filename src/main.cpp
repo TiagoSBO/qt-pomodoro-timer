@@ -1,11 +1,13 @@
 #include "qhotkey.h"
 #include "timer.h"
+#include "db/dbstatsmanager.h"
 #include <QApplication>
 #include "singleapplication.h"
 #include "updater/updater.h"
 #include <QStyleFactory>
 #include <QSysInfo>
 #include <QDebug>
+#include <QStandardPaths>
 
 //Read QSS files
 QString loadStyleSheet(const QStringList &qssPaths) {
@@ -32,6 +34,13 @@ int main(int argc, char *argv[])
     if (app.isSecondary()) {
         app.sendMessage("raise");
         return 0;
+    }
+
+    QString dbPath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/pomodorotimer/dbPomodoro_stats.db";
+
+    if (!DbStatsManager::instance().initDatabase(dbPath)) {
+        qCritical() << "Falha ao inicializar o banco de dados.";
+        return -1;
     }
 
     QString osProductVersion = QSysInfo::productVersion();
