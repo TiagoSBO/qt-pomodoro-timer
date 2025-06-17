@@ -1,14 +1,40 @@
 #include "statswindow.h"
+#include "db/dbstatsmanager.h"
 #include "daterangedialog.h"
 #include "ui_statswindow.h"
+#include <QSqlDatabase>
+#include <QSqlQuery>
+#include <QSqlError>
+#include <QSqlRecord>
+#include <QSet>
+#include <QDebug>
+#include <QTimer>
+#include <QMessageBox>
+#include <QSettings>
+#include <QIcon>
 
 StatsWindow::StatsWindow(QWidget *parent)
     : QDialog(parent)
     , ui(new Ui::StatsWindow)
 {
     ui->setupUi(this);
+    setupSessionTable();
 
     connect(ui->comboBox_dateFilter, &QComboBox::currentTextChanged, this, &StatsWindow::dateFilterChanged);
+
+    dateFilterChanged(ui->comboBox_dateFilter->currentText());
+    QIcon customIcon(":/icons/assets/icons/calendar.png");
+    ui->comboBox_dateFilter->setItemIcon(5, customIcon);
+
+    connect(ui->comboBox_dateFilter->view(), &QAbstractItemView::pressed, this, [=](const QModelIndex &index) {
+        QString selectedText = ui->comboBox_dateFilter->itemText(index.row());
+        if (selectedText == "Custom") {
+            showCustomDateDialog();
+        }
+    });
+
+    connect(ui->deleteStats, &QPushButton::clicked, this, &StatsWindow::clearAllData);
+
 }
 
 StatsWindow::~StatsWindow()
@@ -16,50 +42,151 @@ StatsWindow::~StatsWindow()
     delete ui;
 }
 
+void StatsWindow::setupSessionTable()
+{
+    ui->table_sessionData->setColumnCount(4);
+    QStringList headers = {"Sessions", "Duration", "Date", "End time"};
+    ui->table_sessionData->setHorizontalHeaderLabels(headers);
+
+    QHeaderView *header = ui->table_sessionData->horizontalHeader();
+    header->setDefaultAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
+
+    ui->table_sessionData->verticalHeader()->setVisible(false);
+    ui->table_sessionData->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    ui->table_sessionData->horizontalHeader()->setSectionsClickable(false);
+    ui->table_sessionData->horizontalHeader()->setStretchLastSection(true);
+    ui->table_sessionData->setEditTriggers(QAbstractItemView::NoEditTriggers);
+
+    ui->table_sessionData->setSelectionBehavior(QAbstractItemView::SelectRows);
+    ui->table_sessionData->setSelectionMode(QAbstractItemView::NoSelection);
+    ui->table_sessionData->setAlternatingRowColors(true);
+    ui->table_sessionData->setShowGrid(false);
+
+}
+
+void StatsWindow::showEvent(QShowEvent *event)
+{
+    QDialog::showEvent(event);
+    dateFilterChanged(ui->comboBox_dateFilter->currentText());
+}
+
+
 void StatsWindow::filterStatsByDateRange(const QDate &start, const QDate &end)
 {
 
-    // QFile file(":/data/pomodoros.json"); // ou caminho real no disco
-    // if (!file.open(QIODevice::ReadOnly)) {
-    //     qWarning() << "Não foi possível abrir o arquivo JSON.";
-    //     return;
-    // }
+    QSqlDatabase db = DbStatsManager::instance().database();
 
-    // QByteArray jsonData = file.readAll();
-    // QJsonDocument doc = QJsonDocument::fromJson(jsonData);
-    // file.close();
+    if (!db.isOpen()) {
+        qWarning() << "Banco de dados não está aberto!";
+        return;
+    }
 
-    // if (!doc.isArray()) {
-    //     qWarning() << "Formato JSON inválido.";
-    //     return;
-    // }
+    QSqlQuery query(db);
+    query.prepare(R"(
+        SELECT start_time, duration_minutes, end_time
+        FROM focus_sessions
+        WHERE date(start_time) BETWEEN ? AND ?
+        ORDER BY start_time ASC
+    )");
 
-    // QJsonArray array = doc.array();
+    query.addBindValue(start.toString("yyyy-MM-dd"));
+    query.addBindValue(end.toString("yyyy-MM-dd"));
 
-    // int totalPomodoros = 0;
-    // int totalMinutes = 0;
-    // QSet<QDate> workDays;
+    if (!query.exec()) {
+        qWarning() << "Erro ao executar consulta:" << query.lastError().text();
+        return;
+    }
 
+    int totalPomodoros = 0;
+    int totalMinutes = 0;
+    QSet<QString> workDays;
 
-    // Atualizar os labels (supondo que você tenha QLabel chamados label_pomodoros etc.)
-    // ui->label_pomodoros_value->setText(QString::number(totalPomodoros));
-    // ui->label_timeSpent_value->setText(QString("%1h %2m").arg(totalMinutes / 60).arg(totalMinutes % 60));
-    // ui->label_workDays_value->setText(QString::number(workDays.size()));
+    struct SessionInfo {
+        QDate date;
+        int duration;
+        QString endTimeStr;
+    };
 
-    // if (!workDays.isEmpty())
-    //     ui->label_avgFocus_value->setText(QString("%1h %2m")
-    //                                           .arg((totalMinutes / workDays.size()) / 60)
-    //                                           .arg((totalMinutes / workDays.size()) % 60));
-    // else
-    //     ui->label_avgFocus_value->setText("0h 0m");
-    // }
+    QList<SessionInfo> sessionData;
+
+    while (query.next()) {
+        QString dateStr = query.value("start_time").toString();
+        QDateTime startDateTime = QDateTime::fromString(dateStr, Qt::ISODate);
+        QDate sessionDate = startDateTime.date();
+
+        QString endTimeStr;
+        if (!query.value("end_time").isNull()) {
+            QDateTime endDateTime = QDateTime::fromString(query.value("end_time").toString(), Qt::ISODate);
+            endTimeStr = endDateTime.time().toString("HH:mm");
+        } else {
+            endTimeStr = "-";
+        }
+
+        int duration = query.value("duration_minutes").toInt();
+        totalPomodoros++;
+        totalMinutes += duration;
+        workDays.insert(sessionDate.toString("yyyy-MM-dd"));
+        sessionData.append({sessionDate, duration, endTimeStr});
+    }
+
+    // Update general labels
+    ui->labelValue_pomodoros->setText(QString::number(totalPomodoros));
+    ui->labelValue_totalTime->setText(QString("%1h %2m").arg(totalMinutes / 60).arg(totalMinutes % 60));
+    ui->labelValue_workDays->setText(QString::number(workDays.size()));
+
+    if (!workDays.isEmpty()) {
+        int avg = totalMinutes / workDays.size();
+        ui->labelValue_avgFocus->setText(QString("%1h %2m").arg(avg / 60).arg(avg % 60));
+    } else {
+        ui->labelValue_avgFocus->setText("0h 0m");
+    }
+
+    // Label Focus
+    double focusPercentage = calculateFocusPercentage(totalPomodoros, totalMinutes);
+    ui->labelValue_focus->setText(QString("%1%").arg(static_cast<int>(focusPercentage)));
+
+    // Update sessions table
+    ui->table_sessionData->setRowCount(sessionData.size());
+
+    for (int i = 0; i < sessionData.size(); ++i) {
+        const SessionInfo &info = sessionData[i];
+
+        ui->table_sessionData->setItem(i, 0, new QTableWidgetItem(QString::number(i + 1)));
+        ui->table_sessionData->setItem(i, 1, new QTableWidgetItem(QString("%1 min").arg(info.duration)));
+        ui->table_sessionData->setItem(i, 2, new QTableWidgetItem(info.date.toString("dd/MM/yyyy")));
+        ui->table_sessionData->setItem(i, 3, new QTableWidgetItem(info.endTimeStr));
+
+        for (int col = 0; col < 4; ++col)
+            ui->table_sessionData->item(i, col)->setTextAlignment(Qt::AlignCenter);
+    }
+
+    // Table height
+    int maxVisibleRows = 5;
+
+    if (ui->table_sessionData->rowCount() > maxVisibleRows) {
+        ui->table_sessionData->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+
+        int headerHeight = ui->table_sessionData->horizontalHeader()->height();
+        int rowHeight = ui->table_sessionData->rowHeight(0);
+        int maxHeight = headerHeight + (rowHeight * maxVisibleRows);
+
+        ui->table_sessionData->setMaximumHeight(maxHeight);
+        ui->table_sessionData->setMinimumHeight(maxHeight);
+    } else {
+        int totalHeight = ui->table_sessionData->horizontalHeader()->height();
+        for (int row = 0; row < ui->table_sessionData->rowCount(); ++row)
+            totalHeight += ui->table_sessionData->rowHeight(row);
+
+        ui->table_sessionData->setFixedHeight(totalHeight + 2);
+    }
+    ui->table_sessionData->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
 }
-
 
 void StatsWindow::dateFilterChanged(const QString &text)
 {
     QDate today = QDate::currentDate();
     QDate start, end;
+
 
     if (text == "Today") {
         start = today;
@@ -70,35 +197,62 @@ void StatsWindow::dateFilterChanged(const QString &text)
         end = start;
     }
     else if (text == "This week") {
-        int dayOfWeek = today.dayOfWeek(); // 1 (Monday) - 7 (Sunday)
+        int dayOfWeek = today.dayOfWeek();
         start = today.addDays(-dayOfWeek + 1);
-        end = today;
+        end = start.addDays(6);
     }
     else if (text == "This month") {
         start = QDate(today.year(), today.month(), 1);
-        end = today;
+        end = start.addMonths(1).addDays(-1);
     }
     else if (text == "This year") {
         start = QDate(today.year(), 1, 1);
-        end = today;
+        end = QDate(today.year(), 12, 31);
     }
     else if (text == "Custom") {
-        DateRangeDialog dialog(this);
-
-        if (dialog.exec() == QDialog::Accepted) {
-            start = dialog.startDate();
-            end = dialog.endDate();
-        } else {
-            ui->comboBox_dateFilter->setCurrentText("This week");
-            return;
-        }
-    } else {
-        qWarning() << "Filtro de data desconhecido:" << text;
         return;
     }
-
-    // Aplica o filtro com o intervalo definido
     filterStatsByDateRange(start, end);
+}
+
+void StatsWindow::showCustomDateDialog()
+{
+    DateRangeDialog dialog(this);
+
+    if (dialog.exec() == QDialog::Accepted) {
+        QDate start = dialog.startDate();
+        QDate end = dialog.endDate();
+        filterStatsByDateRange(start, end);
+    }
+}
+
+double StatsWindow::calculateFocusPercentage(int totalPomodoros, int totalMinutesReal)
+{
+    QSettings settings("QtPomodoro-Timer", "QtPomodoroApp");
+    int configuredDuration = settings.value("pomodoroDuration", 25).toInt();
+
+    if (totalPomodoros == 0 || configuredDuration == 0)
+        return 0.0;
+
+    int expectedTotalTime = totalPomodoros * configuredDuration;
+
+    double percentage = (static_cast<double>(totalMinutesReal) / expectedTotalTime) * 100.0;
+    return qBound(0.0, percentage, 100.0);
+}
+
+void StatsWindow::clearAllData() {
+
+    if (DbStatsManager::instance().clearAllSessions()) {
+        QMessageBox::StandardButton clearAllSessions = QMessageBox::question(this, "Danger Zone",
+                "Are you sure you want to DELETE ALL DATA?",
+                QMessageBox::Yes | QMessageBox::No);
+        if (clearAllSessions == QMessageBox::Yes) {
+            dateFilterChanged(ui->comboBox_dateFilter->currentText());
+            qDebug() << "Sessões removidas com sucesso.";
+        }
+    } else {
+        qWarning() << "Erro ao remover sessões.";
+    }
 }
 
 

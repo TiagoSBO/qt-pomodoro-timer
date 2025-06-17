@@ -1,5 +1,6 @@
 #include "settingsdialog.h"
 #include "ui_settingsdialog.h"
+#include <QSettings>
 #include <QMessageBox>
 
 Settings::Settings(QWidget *parent)
@@ -21,10 +22,43 @@ Settings::Settings(QWidget *parent)
 
     ui->label_setVolumeValue->setText(QString::number(ui->volume_slider->value()));
     soundManager->setSoundEnabled(ui->checkBox_sound_alert->isChecked());
+
+    //QSettings
+    QSettings settings("QtPomodoro-Timer", "QtPomodoroApp");
+
+    int pomodoro = settings.value("pomodoroDuration", 25).toInt();
+    int shortBreak = settings.value("shortBreakDuration", 5).toInt();
+    int longBreak = settings.value("longBreakDuration", 15).toInt();
+    int rounds = settings.value("pomodoroRounds", 4).toInt();
+
+    int volume = settings.value("volume", 100).toInt();
+    int soundIndex = settings.value("soundIndex", 0).toInt();
+    bool alertEnabled = settings.value("soundAlertEnabled", true).toBool();
+
+    setPomodorDuration(pomodoro);
+    setShortBreakDuration(shortBreak);
+    setLongBreakDuration(longBreak);
+    setPomodoroRounds(rounds);
+
+    ui->volume_slider->setValue(volume);
+    ui->combBox_Alarm_sound->setCurrentIndex(soundIndex);
+    ui->checkBox_sound_alert->setChecked(alertEnabled);
 }
+
 
 Settings::~Settings()
 {
+    //QSettings
+    QSettings settings("QtPomodoro-Timer", "QtPomodoroApp");
+
+    settings.setValue("pomodoroDuration", getPomodoroDuration());
+    settings.setValue("shortBreakDuration", getShortBreakDuration());
+    settings.setValue("longBreakDuration", getLongBreakDuration());
+    settings.setValue("pomodoroRounds", getPomodoroRounds());
+    settings.setValue("volume", ui->volume_slider->value());
+    settings.setValue("soundIndex", ui->combBox_Alarm_sound->currentIndex());
+    settings.setValue("soundAlertEnabled", ui->checkBox_sound_alert->isChecked());
+
     delete ui;
     delete soundManager;
     delete audioOutput;
@@ -98,16 +132,30 @@ void Settings::emitTimeValueChanged()
     QSpinBox *senderSpinBox = qobject_cast<QSpinBox*>(sender());
     if (!senderSpinBox) return;
 
-    if (senderSpinBox == ui->boxSetTimerDuration)
-        emit pomodoroDurationChanged(ui->boxSetTimerDuration->value());
-    else if(senderSpinBox == ui->boxSetShortDuration)
-        emit shortBreakDurationChanged(ui->boxSetShortDuration->value());
-    else if(senderSpinBox == ui->boxSetLongDuration)
-        emit longBreakDurationChanged(ui->boxSetLongDuration->value());
-    else if (senderSpinBox == ui->boxSetIntervalDuration){
-        emit pomodoroRoundsChanged(ui->boxSetIntervalDuration->value());
+    QSettings settings("QtPomodoro-Timer", "QtPomodoroApp");
+
+    if (senderSpinBox == ui->boxSetTimerDuration) {
+        int value = ui->boxSetTimerDuration->value();
+        settings.setValue("pomodoroDuration", value);
+        emit pomodoroDurationChanged(value);
+    }
+    else if (senderSpinBox == ui->boxSetShortDuration) {
+        int value = ui->boxSetShortDuration->value();
+        settings.setValue("shortBreakDuration", value);
+        emit shortBreakDurationChanged(value);
+    }
+    else if (senderSpinBox == ui->boxSetLongDuration) {
+        int value = ui->boxSetLongDuration->value();
+        settings.setValue("longBreakDuration", value);
+        emit longBreakDurationChanged(value);
+    }
+    else if (senderSpinBox == ui->boxSetIntervalDuration) {
+        int value = ui->boxSetIntervalDuration->value();
+        settings.setValue("pomodoroRounds", value);
+        emit pomodoroRoundsChanged(value);
     }
 }
+
 
 void Settings::setAlarm_sound()
 {

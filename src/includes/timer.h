@@ -29,6 +29,7 @@ enum TimerState {
 
 enum MenuTableAction {
     ClearTableContent,
+    ClearTotalFocusTime
 };
 
 QT_BEGIN_NAMESPACE
@@ -45,12 +46,9 @@ public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
-
 public slots:
     void setAlarmSound(int index);
     void toggleFloatingWindow();
-
-    void initDatabase();
 
 private slots:
     //Buttons
@@ -95,6 +93,8 @@ private:
     SoundManager soundManager;
     QString formatTime(int seconds);
     int selectedISoundIndex = 0;
+
+    QDateTime focusStartTime;
 
     //Timer
     QTimer *timer;

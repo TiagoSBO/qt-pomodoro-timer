@@ -16,12 +16,23 @@ public:
     ~StatsWindow();
 
     void filterStatsByDateRange(const QDate &start, const QDate &end);
+    void addStats(int pomodoros, const QString &totalTimeSpent, const QString &averageFocusPerDay, const QString &workDays);
 
 private slots:
     void dateFilterChanged(const QString &text);
+    void clearAllData();
 
 private:
     Ui::StatsWindow *ui;
+
+    void setupSessionTable();
+    void showCustomDateDialog();
+    double calculateFocusPercentage(int totalPomodoros, int totalMinutesReal);
+
+
+protected:
+    void showEvent(QShowEvent *event) override;
+
 };
 
 #endif // STATSWINDOW_H

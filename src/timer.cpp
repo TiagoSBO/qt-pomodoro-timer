@@ -1,7 +1,12 @@
 #include "timer.h"
+#include "db/dbstatsmanager.h"
 #include "src/ui/ui_mainwindow.h"
 #include <QDebug>
+#include <QSqlQuery>
+#include <QSqlError>
 #include <QFile>
+#include <QSettings>
+#include <QWidgetAction>
 
 #define APP_VERSION "1.0.0"
 
@@ -15,14 +20,22 @@ MainWindow::MainWindow(QWidget *parent)
 , defaultShortBreakDuration(5)
 , defaultLongBreakDuration(15)
 , defaultRoundsSessions(4)
-, timeRemaining(defaultPomodoroDuration * 60)
+, timeRemaining(0)
 , timerStarted(false)
 , floatingTimerWindow(nullptr)
 {
     ui->setupUi(this);
 
+    //QSettings
+    QSettings settings("QtPomodoro-Timer", "QtPomodoroApp");
+    defaultPomodoroDuration = settings.value("pomodoroDuration", 25).toInt();
+    defaultShortBreakDuration = settings.value("shortBreakDuration", 5).toInt();
+    defaultLongBreakDuration = settings.value("longBreakDuration", 15).toInt();
+    defaultRoundsSessions = settings.value("pomodoroRounds", 4).toInt();
+
     //Initial Sets Updates
     updateStyleBasedOnState();
+    timeRemaining = defaultPomodoroDuration * 60;
     ui->labelTimer->setText(formatTime(timeRemaining));
 
     //Exit App
@@ -58,7 +71,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->tableSessionLogs->verticalHeader()->setVisible(false);
     ui->tableSessionLogs->setColumnCount(3);
     ui->tableSessionLogs->setColumnWidth(0, 150);
-    QTableWidgetItem *headerItem0 = new QTableWidgetItem(QIcon(":/icons/assets/icons/Pomodoro Icon.png"), "Pomodoros Done");
+    QTableWidgetItem *headerItem0 = new QTableWidgetItem(QIcon(":/icons/assets/icons/pomodoroIcon.png"), "Pomodoros Done");
     QTableWidgetItem *headerItem1 = new QTableWidgetItem(QIcon(":/icons/assets/icons/timer3.png"), "Focus Time");
     QTableWidgetItem *headerItem2 = new QTableWidgetItem(QIcon(":/icons/assets/icons/endtime.png"), "End Time");
 
@@ -77,13 +90,27 @@ MainWindow::MainWindow(QWidget *parent)
     QMenu *menu = new QMenu(this);
     menu->setFocusPolicy(Qt::NoFocus);
 
-    QAction *deleteTableData = new QAction("Clear table data 🗑", this);
-    deleteTableData->setData(ClearTableContent);
+    QPushButton *tableData = new QPushButton("Clear table data 🗑", this);
+    tableData->setFlat(true);
+    tableData->setObjectName("tableDataButton");
 
+    QWidgetAction *deleteTableData = new QWidgetAction(this);
+    deleteTableData->setDefaultWidget(tableData);
     menu->addAction(deleteTableData);
-    ui->button_configTable->setMenu(menu);
 
-    connect(deleteTableData, &QAction::triggered, this, &MainWindow::button_configTable_clicked);
+    QPushButton *totalFocusTime = new QPushButton("Clear total focus time 🗑", this);
+    totalFocusTime->setFlat(true);
+    totalFocusTime->setObjectName("totalFocusTimeButton");
+
+    QWidgetAction *deleteTotalFocusTime = new QWidgetAction(this);
+    deleteTotalFocusTime->setDefaultWidget(totalFocusTime);
+    menu->addAction(deleteTotalFocusTime);
+
+    // Conectando botões
+    connect(tableData, &QPushButton::clicked, this, &MainWindow::button_configTable_clicked);
+    connect(totalFocusTime, &QPushButton::clicked, this, &MainWindow::button_configTable_clicked);
+
+    ui->button_configTable->setMenu(menu);
 
     //Connect Settings buttons
     settingsScreen = new Settings(this);
@@ -121,13 +148,13 @@ MainWindow::MainWindow(QWidget *parent)
     //Stats window
     statsWindow = new StatsWindow(this);
     connect(ui->actionopenStats, &QAction::triggered, this, &MainWindow::openStatsDialog);
-    //TODO: Create connect to json signal. connect(timer, &Timer::statsUpdated, statsWindow, &StatsWindow::setStatsData);
 
 }
 
 MainWindow::~MainWindow()
 {
     UnregisterHotKey(HWND(winId()), 1);
+
     delete ui;
     delete settingsScreen;
     delete sessionLogs;
@@ -147,6 +174,7 @@ void MainWindow::onTimerOut()
         ui->labelTimer->setText(formatTime(timeRemaining));
     }else {
         timer->stop();
+        focusStartTime = QDateTime::currentDateTime();
         handleSessionCompletion();
     }
     updateTimerDisplay();
@@ -160,7 +188,7 @@ void MainWindow::btton_startResume_clicked()
         ui->button_resumePause->setText("Resume");
         qDebug() << "Pause Clicked / CurrentState -> " << currentStatusTimer;
     }else{
-        timer->start(1000);
+        timer->start(2);
         timerStarted = true;
         ui->button_resumePause->setText("Pause");
         qDebug() << "Start/Resume clicked / CurrentState -> " << currentStatusTimer;
@@ -241,9 +269,22 @@ void MainWindow::btton_skip_clicked()
             // Add session to the table
             sessionsDoneCount++;
             sessionLogs->addSession(sessionsDoneCount, formattedFocusTime, endTime);
-            updateTotalFocusTime();
             timerStarted = false;
             qDebug() << "Focus session skipped! Time spent: " << formattedFocusTime;
+
+            // Salva no banco de dados
+            int focusDurationMinutes = focusTimeSpent / 60; // convertendo para minutos inteiros
+            QDateTime focusEndTime = QDateTime::currentDateTime();
+
+            if (!focusStartTime.isValid()) {
+                focusStartTime = focusEndTime.addSecs(-focusTimeSpent);
+                qWarning() << "focusStartTime estava inválido. Definido automaticamente.";
+            }
+
+            if (!DbStatsManager::instance().saveFocusSession(focusStartTime, focusEndTime, focusDurationMinutes)) {
+                qWarning() << "Erro ao salvar sessão no banco de dados.";
+            }
+            updateTotalFocusTime();
         }
 
         if (currentPomodorSessions >= defaultRoundsSessions) {
@@ -352,15 +393,25 @@ void MainWindow::handleSessionCompletion()
         // Sound Notifcation
         soundManager.playSound(selectedISoundIndex);
 
-        int focusTimeSpent = defaultPomodoroDuration * 60;  // Total session duration
+        int focusTimeSpent = defaultPomodoroDuration * 60;
         QString formattedFocusTime = formatTime(focusTimeSpent);
         QString endTime = QDateTime::currentDateTime().toString("HH:mm");
         updateTimerDisplay();
 
         sessionsDoneCount++;
         sessionLogs->addSession(sessionsDoneCount, formattedFocusTime, endTime);
-
         updateTotalFocusTime();
+
+        QDateTime focusEndTime = QDateTime::currentDateTime();
+        int focusDurationMinutes = focusTimeSpent / 60;
+
+        if (focusStartTime.isValid()) {
+            if (!DbStatsManager::instance().saveFocusSession(focusStartTime, focusEndTime, focusDurationMinutes)) {
+                qWarning() << "Erro ao salvar sessão no banco de dados.";
+            }
+        } else {
+            qWarning() << "focusStartTime inválido! Sessão não será salva.";
+        }
 
         if (currentPomodorSessions >= defaultRoundsSessions){
             currentPomodorSessions = 0;
@@ -455,28 +506,32 @@ void MainWindow::updateTimerDisplay()
 //Config table Button - Action-> Clear table data
 void MainWindow::button_configTable_clicked(){
 
-    QAction *action = qobject_cast<QAction*>(sender());
-    if (!action) return;
+    QObject *clicked = sender();
+    if (!clicked) return;
 
-    QVariant data = action->data();
-    if (!data.isValid()) return;
+    QString id = clicked->objectName();
 
-    int value = data.toInt();
-
-    switch (value) {
-    case ClearTableContent: {
+    if (id == "tableDataButton") {
         QMessageBox::StandardButton clearTableAnswer = QMessageBox::question(this, "Confirmation",
-            "Are you sure you want to clear the table data?",
-            QMessageBox::Yes | QMessageBox::No);
+        "Are you sure you want to clear the table data?",
+        QMessageBox::Yes | QMessageBox::No);
 
         if (clearTableAnswer == QMessageBox::Yes) {
             sessionLogs->clearTableOnly();
             updateTotalFocusTime();
         }
-        break;
-    }
-    default:
-        qDebug() << "Unknown action";
+
+    } else if (id == "totalFocusTimeButton") {
+        QMessageBox::StandardButton clearTotalFocusAnswer = QMessageBox::question(this, "Confirmation",
+             "Are you sure you want to clear the total focus time?",
+            QMessageBox::Yes | QMessageBox::No);
+
+        if (clearTotalFocusAnswer == QMessageBox::Yes) {
+            sessionLogs->clearTotalFocusOnly();
+            updateTotalFocusTime();
+        }
+    } else {
+        qDebug() << "Unknown button pressed";
     }
 }
 
@@ -504,7 +559,6 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
             return true;
         }
     }
-
     return QMainWindow::eventFilter(watched, event);
 }
 

@@ -33,7 +33,7 @@ void Sessionlogs::addSession(int sessionNumber, const QString &sessionDuration, 
 
     QTableWidgetItem *itemSession = new QTableWidgetItem(QString::number(sessionNumber));
     itemSession->setTextAlignment(Qt::AlignCenter);
-    itemSession->setFlags(itemSession->flags() & ~Qt::ItemIsEditable); // Removes editing ability
+    itemSession->setFlags(itemSession->flags() & ~Qt::ItemIsEditable);
 
     QTableWidgetItem *itemDuration = new QTableWidgetItem(sessionDuration);
     itemDuration->setTextAlignment(Qt::AlignCenter);
@@ -100,6 +100,12 @@ void Sessionlogs::clearTableOnly()
 int Sessionlogs::getAccumulatedFocusSeconds() const
 {
     return m_totalAccumulatedFocusSeconds;
+}
+
+void Sessionlogs::clearTotalFocusOnly()
+{
+    if (!m_table) return;
+    m_totalAccumulatedFocusSeconds = 0;
 }
 
 

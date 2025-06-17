@@ -16,6 +16,8 @@ public:
     void clearTableOnly();
     int getAccumulatedFocusSeconds() const;
 
+    void clearTotalFocusOnly();
+
 
 private:
     QTableWidget *m_table;
