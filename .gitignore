@@ -85,4 +85,6 @@ build_deploy.py
 .rcc/
 .uic/
 /build*/
+db/dbPomodoro_stats.db
+/executables
 

@@ -75,6 +75,18 @@ QMenu::item:selected{
     border-radius: 6px;
 }
 
+/* --- Buttons config table --- */
+#tableDataButton, #totalFocusTimeButton{
+    text-align: right;
+    padding: 6px;
+    background: transparent;
+    border: none;
+    color: white;
+}
+#tableDataButton:hover, #totalFocusTimeButton:hover {
+    background-color: #444;
+}
+
 /* --- Layouts --- */
 #layout_timer {
     border: 5px;

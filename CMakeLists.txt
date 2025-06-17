@@ -33,6 +33,7 @@ qt_add_executable(PomodoroTimer
     src/statswindow.cpp
     src/daterangedialog.cpp
     src/db/dbstatsmanager.cpp
+    src/models/focussession.cpp
 
     src/includes/timer.h
     src/includes/settingsdialog.h
@@ -50,6 +51,7 @@ qt_add_executable(PomodoroTimer
     src/includes/statswindow.h
     src/includes/daterangedialog.h
     src/includes/db/dbstatsmanager.h
+    src/includes/models/focussession.h
 
     src/ui/mainwindow.ui
     src/ui/settingsdialog.ui
@@ -74,6 +76,7 @@ target_include_directories(PomodoroTimer
         ${CMAKE_CURRENT_SOURCE_DIR}/src/includes/singleApplication
         ${CMAKE_CURRENT_SOURCE_DIR}/src/includes/qHotKey
         ${CMAKE_CURRENT_SOURCE_DIR}/src/qHotKey
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/models
 )
 
 
@@ -87,6 +90,8 @@ include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/src/includes
     ${CMAKE_CURRENT_SOURCE_DIR}/src/includes/singleApplication
     ${CMAKE_CURRENT_SOURCE_DIR}/src/includes/qHotKey
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/includes/models
+
 )
 
 install(TARGETS PomodoroTimer

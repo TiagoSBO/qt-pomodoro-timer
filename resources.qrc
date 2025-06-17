@@ -25,6 +25,7 @@
         <file>assets/icons/down-chevron.png</file>
         <file>assets/icons/down-chevron-up.png</file>
         <file>assets/icons/pomodoroIcon.ico</file>
+        <file>assets/icons/calendar.png</file>
     </qresource>
     <qresource prefix="/styles">
         <file>styles/timer.qss</file>
@@ -37,5 +38,8 @@
     </qresource>
     <qresource prefix="/files">
         <file>update_server/version.json</file>
+    </qresource>
+    <qresource prefix="/initial_db">
+        <file>db/dbPomodoro_stats.db</file>
     </qresource>
 </RCC>
