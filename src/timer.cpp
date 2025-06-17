@@ -503,7 +503,7 @@ void MainWindow::updateTimerDisplay()
     emit timerUpdated(formattedTime);
 }
 
-//Config table Button - Action-> Clear table data
+//Config table Button
 void MainWindow::button_configTable_clicked(){
 
     QObject *clicked = sender();

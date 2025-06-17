@@ -8,17 +8,19 @@ DateRangeDialog::DateRangeDialog(QWidget *parent)
 {
     ui->setupUi(this);
 
+    this->setFixedSize(230, 150);
+
+
     ui->dateEdit_start->setDisplayFormat("dd/MM/yyyy");
     ui->dateEdit_end->setDisplayFormat("dd/MM/yyyy");
 
     ui->dateEdit_start->setCalendarPopup(true);
     ui->dateEdit_end->setCalendarPopup(true);
 
-    ui->dateEdit_start->setDate(QDate::currentDate().addDays(-7));
-    ui->dateEdit_end->setDate(QDate::currentDate());
+    ui->dateEdit_start->setDate(QDate::currentDate());
+    ui->dateEdit_end->setDate(QDate::currentDate().addDays(+2));
 
     connect(ui->button_confirm, &QPushButton::clicked, this, &QDialog::accept);
-    connect(ui->button_confirm, &QPushButton::clicked, this, &QDialog::reject);
 }
 
 DateRangeDialog::~DateRangeDialog()
