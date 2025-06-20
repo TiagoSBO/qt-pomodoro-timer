@@ -87,30 +87,22 @@
     background-color: #c11919;
 }
 
-
-/*#table_sessionData QScrollBar:vertical {
-    background: #1e1e1e;
-    width: 12px;
-    margin: 0px;
-    border-radius: 6px;
-}
-
-#table_sessionData QScrollBar::handle:vertical {
-    background: #5c5c5c;
-    min-height: 20px;
-    border-radius: 6px;
-}
-
-#table_sessionData QScrollBar::add-line:vertical,
-#table_sessionData QScrollBar::sub-line:vertical {
-    height: 0px;
-    background: none;
+QPushButton#SessionActionButton {
+    background-color: transparent;
     border: none;
+    color: white;
+    padding: 0px;
 }
 
-#table_sessionData QScrollBar::add-page:vertical,
-#table_sessionData QScrollBar::sub-page:vertical {
-    background: none;
+QPushButton#SessionActionButton:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
 }
-*/
 
+QTableWidget#table_sessionData::item:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+QTableWidget#table_sessionData::item:selected {
+    background-color: transparent;
+}

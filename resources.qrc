@@ -26,6 +26,7 @@
         <file>assets/icons/down-chevron-up.png</file>
         <file>assets/icons/pomodoroIcon.ico</file>
         <file>assets/icons/calendar.png</file>
+        <file>assets/icons/bttn_more.png</file>
     </qresource>
     <qresource prefix="/styles">
         <file>styles/timer.qss</file>

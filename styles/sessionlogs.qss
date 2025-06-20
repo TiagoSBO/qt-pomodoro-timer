@@ -44,9 +44,6 @@ QMenu::item {
     padding: 5px 10px;
 }
 
-QMenu::item:selected {
-    background-color: red;
-}
 
 QAction[name="deleteTableData"] {
     color: red;
