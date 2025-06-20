@@ -57,10 +57,18 @@ void Updater::checkForUpdates() {
         qDebug() << "Nova versão:" << latestVersion;
 
         if (isNewVersionAvailable(latestVersion)) {
-            int ret = QMessageBox::information(nullptr, "Update Avaliable",
-                                               QString("New version %1 avaliable!\n\n%2\n\nDo you want to install it now?")
-                                                   .arg(latestVersion, changelog),
-                                               QMessageBox::Yes | QMessageBox::No);
+            QString changelogHtml = changelog;
+            changelogHtml.replace("\n", "<br>");
+
+            QMessageBox msgBox;
+            msgBox.setWindowTitle("Update Available");
+            msgBox.setTextFormat(Qt::RichText);
+            msgBox.setText(QString("<h3>New version %1 available!</h3><br>%2<br><br>Do you want to install it now?")
+                               .arg(latestVersion)
+                               .arg(changelogHtml));
+            msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+
+            int ret = msgBox.exec();
 
             if (ret == QMessageBox::Yes) {
                 downloadInstaller(url);
