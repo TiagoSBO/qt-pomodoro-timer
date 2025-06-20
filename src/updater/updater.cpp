@@ -5,6 +5,7 @@
 #include <QDesktopServices>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QRegularExpression>
 #include <QFile>
 #include <QStandardPaths>
 #include <QProcess>
@@ -22,20 +23,21 @@ QString Updater::updateUrl = "https://qtpomodoro-timer.netlify.app/update_server
 
 QString Updater::markdownToHtml(QString md)
 {
-    md.replace("\n", "<br>");
-    md.replace("### ", "<h3>");
-    md.replace("**", "<b>");
-    md.replace("- ", "&#8226; ");
+    QString html = md;
 
-    if (md.contains("<h3>")) {
-        int end = md.indexOf("<br>");
-        if (end != -1) {
-            md.insert(end, "</h3>");
-        } else {
-            md.append("</h3>");
-        }
-    }
-    return md;
+    static QRegularExpression boldRegex(R"(\*\*(.+?)\*\*)");
+    html.replace(boldRegex, "<b>\\1</b>");
+
+    static QRegularExpression headingRegex(R"(^###\s*(.+)$)", QRegularExpression::MultilineOption);
+    html.replace(headingRegex, "<h3>\\1</h3>");
+
+    static QRegularExpression bulletRegex(R"(^-\s+(.+)$)", QRegularExpression::MultilineOption);
+    html.replace(bulletRegex, "&#8226; \\1");
+
+    // Converter quebras de linha
+    html.replace("\n", "<br>");
+
+    return html;
 }
 
 void Updater::checkForUpdates() {
@@ -68,7 +70,7 @@ void Updater::checkForUpdates() {
 
         QJsonObject obj = doc.object();
         QString latestVersion = obj["version"].toString();
-        QString changelogHtml = obj["changelog"].toString();
+        QString changelogHtml = markdownToHtml(obj["changelog"].toString());
         QString url = obj["url"].toString();
 
         qDebug() << "Versão atual:" << currentVersion;
