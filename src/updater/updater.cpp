@@ -76,17 +76,11 @@ void Updater::checkForUpdates() {
 
         if (isNewVersionAvailable(latestVersion)) {
             QMessageBox msgBox;
-            msgBox.setWindowTitle("Update Available");
+            msgBox.setWindowTitle("NEW UPDATE!");
             msgBox.setTextFormat(Qt::RichText);
-            msgBox.setText(QString(R"(
-                <div style="font-family:'Segoe UI', sans-serif; font-size:10pt; line-height:1.6;">
-                    <h2 style="margin: 0 0 12px 0; font-size:14pt;">New version %1 available!</h2>
-                    %2
-                    <div style="margin-top: 15px; font-weight:bold;">
-                        Do you want to install it now?
-                    </div>
-                </div>
-            )").arg(latestVersion, changelogHtml));
+            msgBox.setText(QString(
+                "<b>New version %1 available!</b><br><br>%2<br><br><b>Do you want to install it now?</b>"
+            ).arg(latestVersion, changelogHtml));
 
             msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
 
