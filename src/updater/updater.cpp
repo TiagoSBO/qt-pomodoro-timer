@@ -79,7 +79,7 @@ void Updater::checkForUpdates() {
             msgBox.setWindowTitle("NEW UPDATE!");
             msgBox.setTextFormat(Qt::RichText);
             msgBox.setText(QString(
-                "<b>New version %1 available!</b><br><br>%2<br><br><b>Do you want to install it now?</b>"
+                "<b> 🚀 New version %1 available!</b><br><br>%2<br><br><b>Do you want to install it now?</b>"
             ).arg(latestVersion, changelogHtml));
 
             msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
