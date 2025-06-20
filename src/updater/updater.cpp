@@ -23,22 +23,57 @@ QString Updater::updateUrl = "https://qtpomodoro-timer.netlify.app/update_server
 
 QString Updater::markdownToHtml(QString md)
 {
-    QString html = md;
+    QString html;
+    // Inicia um container com alinhamento à esquerda e alguns estilos básicos.
+    html.append("<div style='text-align:left; font-family:Arial, sans-serif; font-size:12pt;'>");
 
-    static QRegularExpression boldRegex(R"(\*\*(.+?)\*\*)");
-    html.replace(boldRegex, "<b>\\1</b>");
+    QStringList lines = md.split("\n");
+    bool inList = false;
 
-    static QRegularExpression headingRegex(R"(^###\s*(.+)$)", QRegularExpression::MultilineOption);
-    html.replace(headingRegex, "<h3>\\1</h3>");
+    for (const QString &rawLine : std::as_const(lines)) {
+        QString line = rawLine.trimmed();
 
-    static QRegularExpression bulletRegex(R"(^-\s+(.+)$)", QRegularExpression::MultilineOption);
-    html.replace(bulletRegex, "&#8226; \\1");
+        if (line.startsWith("### ")) {
+            // Se estiver dentro de uma lista, fecha a lista.
+            if (inList) {
+                html.append("</ul>");
+                inList = false;
+            }
+            QString headerText = line.mid(4).trimmed();
+            // Cria um cabeçalho com margem adequada.
+            html.append("<h3 style='margin:10px 0;'>" + headerText + "</h3>");
+        }
+        else if (line.startsWith("- ")) {
+            // Se ainda não está em um bloco de lista, inicia um.
+            if (!inList) {
+                html.append("<ul style='margin:0 0 10px 20px;'>");
+                inList = true;
+            }
+            QString listItem = line.mid(2).trimmed();
+            // Converte negrito: **texto** para <b>texto</b>.
+            listItem.replace(QRegularExpression(R"(\*\*(.+?)\*\*)"), "<b>\\1</b>");
+            html.append("<li>" + listItem + "</li>");
+        }
+        else if (!line.isEmpty()) {
+            // Se estiver em uma lista e encontrar outro tipo de linha, fecha a lista.
+            if (inList) {
+                html.append("</ul>");
+                inList = false;
+            }
+            // Converte negrito dentro de parágrafos.
+            line.replace(QRegularExpression(R"(\*\*(.+?)\*\*)"), "<b>\\1</b>");
+            html.append("<p style='margin:10px 0;'>" + line + "</p>");
+        }
+    }
+    if (inList) {
+        html.append("</ul>");
+    }
 
-    // Converter quebras de linha
-    html.replace("\n", "<br>");
+    html.append("</div>"); // Fecha o container.
 
     return html;
 }
+
 
 void Updater::checkForUpdates() {
     QNetworkAccessManager *manager = new QNetworkAccessManager(this);
@@ -81,7 +116,7 @@ void Updater::checkForUpdates() {
             msgBox.setWindowTitle("NEW UPDATE!");
             msgBox.setTextFormat(Qt::RichText);
             msgBox.setText(QString(
-                "<b> 🚀 New version %1 available!</b><br><br>%2<br><br><b>Do you want to install it now?</b>"
+                "<b> 🚀 New version %1 available!</b><%2<br><b>Do you want to install it now?</b>"
             ).arg(latestVersion, changelogHtml));
 
             msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
