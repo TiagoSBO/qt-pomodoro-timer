@@ -68,20 +68,26 @@ void Updater::checkForUpdates() {
 
         QJsonObject obj = doc.object();
         QString latestVersion = obj["version"].toString();
-        QString changelog = obj["changelog"].toString();
+        QString changelogHtml = obj["changelog"].toString();
         QString url = obj["url"].toString();
 
         qDebug() << "Versão atual:" << currentVersion;
         qDebug() << "Nova versão:" << latestVersion;
 
         if (isNewVersionAvailable(latestVersion)) {
-            QString changelogHtml = markdownToHtml(changelog);
-
             QMessageBox msgBox;
             msgBox.setWindowTitle("Update Available");
             msgBox.setTextFormat(Qt::RichText);
-            msgBox.setText(QString("<h3>New version %1 available!</h3><br>%2<br><br>Do you want to install it now?")
-                               .arg(latestVersion, changelogHtml));
+            msgBox.setText(QString(R"(
+                <div style="font-family:'Segoe UI', sans-serif; font-size:10pt; line-height:1.6;">
+                    <h2 style="margin: 0 0 12px 0; font-size:14pt;">New version %1 available!</h2>
+                    %2
+                    <div style="margin-top: 15px; font-weight:bold;">
+                        Do you want to install it now?
+                    </div>
+                </div>
+            )").arg(latestVersion, changelogHtml));
+
             msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
 
             int ret = msgBox.exec();

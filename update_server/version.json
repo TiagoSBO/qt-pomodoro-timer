@@ -1,5 +1,5 @@
 {
   "version": "1.1.0",
-  "changelog": "<h3>🚀 New update! Version 1.1.0</h3><p><b>News:</b></p><ul><li><b>Stats window:</b> View and control your progress with the statistics table; delete unwanted stats/sessions; filter sessions by date or period, and more...</li></ul>",
+  "changelog": "<div><b>🚀 New update! Version 1.1.0</b><ul><li><b>Stats window:</b> View and control your progress with the statistics table.</li><li><b>Persistent settings:</b> Persistent settings: Timer and notification settings now remain intact when the program is closed and opened. Filter sessions by date or period.</li><li><b>Cleanup:</b> Delete unwanted sessions easily.</li></ul></div>",
   "url": "https://pomodoro-timer-files.netlify.app/PomodoroTimerSetup.exe"
 }
