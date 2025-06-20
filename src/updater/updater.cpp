@@ -20,6 +20,24 @@ Updater::Updater(QObject *parent) : QObject(parent) {}
 const QString Updater::currentVersion = QString(APP_VERSION);
 QString Updater::updateUrl = "https://qtpomodoro-timer.netlify.app/update_server/version.json";
 
+QString Updater::markdownToHtml(QString md)
+{
+    md.replace("\n", "<br>");
+    md.replace("### ", "<h3>");
+    md.replace("**", "<b>");
+    md.replace("- ", "&#8226; ");
+
+    if (md.contains("<h3>")) {
+        int end = md.indexOf("<br>");
+        if (end != -1) {
+            md.insert(end, "</h3>");
+        } else {
+            md.append("</h3>");
+        }
+    }
+    return md;
+}
+
 void Updater::checkForUpdates() {
     QNetworkAccessManager *manager = new QNetworkAccessManager(this);
     QNetworkRequest request((QUrl(updateUrl)));
@@ -57,8 +75,7 @@ void Updater::checkForUpdates() {
         qDebug() << "Nova versão:" << latestVersion;
 
         if (isNewVersionAvailable(latestVersion)) {
-            QString changelogHtml = changelog;
-            changelogHtml.replace("\n", "<br>");
+            QString changelogHtml = markdownToHtml(changelog);
 
             QMessageBox msgBox;
             msgBox.setWindowTitle("Update Available");
@@ -77,6 +94,7 @@ void Updater::checkForUpdates() {
         reply->deleteLater();
     });
 }
+
 
 bool Updater::isNewVersionAvailable(const QString &latestVersion) {
     QStringList latestParts = latestVersion.split(".");

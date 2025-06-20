@@ -15,6 +15,7 @@ public:
 
     static const QString currentVersion;
     static QString updateUrl;
+    static QString markdownToHtml(QString md);
 
 private:
     void downloadInstaller(const QString &installerUrl);
