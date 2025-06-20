@@ -1,17 +1,11 @@
 #include "statswindow.h"
-#include "db/dbstatsmanager.h"
+#include <db/dbstatsmanager.h>
 #include "daterangedialog.h"
-#include "ui_statswindow.h"
-#include <QSqlDatabase>
+#include <models/focussession.h>
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QSqlRecord>
-#include <QSet>
-#include <QDebug>
-#include <QTimer>
-#include <QMessageBox>
-#include <QSettings>
-#include <QIcon>
+
 
 StatsWindow::StatsWindow(QWidget *parent)
     : QDialog(parent)
@@ -44,9 +38,12 @@ StatsWindow::~StatsWindow()
 
 void StatsWindow::setupSessionTable()
 {
-    ui->table_sessionData->setColumnCount(4);
-    QStringList headers = {"Sessions", "Duration", "Date", "End time"};
+    ui->table_sessionData->setColumnCount(5);
+    QStringList headers = {"Sessions", "Duration", "Date", "End time", "❌"};
     ui->table_sessionData->setHorizontalHeaderLabels(headers);
+
+    ui->table_sessionData->horizontalHeader()->setSectionResizeMode(4, QHeaderView::Fixed);
+    ui->table_sessionData->setColumnWidth(4, 50);
 
     QHeaderView *header = ui->table_sessionData->horizontalHeader();
     header->setDefaultAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
@@ -62,6 +59,7 @@ void StatsWindow::setupSessionTable()
     ui->table_sessionData->setAlternatingRowColors(true);
     ui->table_sessionData->setShowGrid(false);
 
+    ui->table_sessionData->setEditTriggers(QAbstractItemView::DoubleClicked | QAbstractItemView::SelectedClicked);
 }
 
 void StatsWindow::showEvent(QShowEvent *event)
@@ -73,7 +71,6 @@ void StatsWindow::showEvent(QShowEvent *event)
 
 void StatsWindow::filterStatsByDateRange(const QDate &start, const QDate &end)
 {
-
     QSqlDatabase db = DbStatsManager::instance().database();
 
     if (!db.isOpen()) {
@@ -83,7 +80,7 @@ void StatsWindow::filterStatsByDateRange(const QDate &start, const QDate &end)
 
     QSqlQuery query(db);
     query.prepare(R"(
-        SELECT start_time, duration_minutes, end_time
+        SELECT id, start_time, duration_minutes, end_time
         FROM focus_sessions
         WHERE date(start_time) BETWEEN ? AND ?
         ORDER BY start_time ASC
@@ -102,6 +99,7 @@ void StatsWindow::filterStatsByDateRange(const QDate &start, const QDate &end)
     QSet<QString> workDays;
 
     struct SessionInfo {
+        int id;
         QDate date;
         int duration;
         QString endTimeStr;
@@ -126,7 +124,8 @@ void StatsWindow::filterStatsByDateRange(const QDate &start, const QDate &end)
         totalPomodoros++;
         totalMinutes += duration;
         workDays.insert(sessionDate.toString("yyyy-MM-dd"));
-        sessionData.append({sessionDate, duration, endTimeStr});
+        int sessionId = query.value(0).toInt();
+        sessionData.append({sessionId, sessionDate, duration, endTimeStr});
     }
 
     // Update general labels
@@ -156,10 +155,36 @@ void StatsWindow::filterStatsByDateRange(const QDate &start, const QDate &end)
         ui->table_sessionData->setItem(i, 2, new QTableWidgetItem(info.date.toString("dd/MM/yyyy")));
         ui->table_sessionData->setItem(i, 3, new QTableWidgetItem(info.endTimeStr));
 
-        for (int col = 0; col < 4; ++col)
-            ui->table_sessionData->item(i, col)->setTextAlignment(Qt::AlignCenter);
-    }
+        // Widget de alinhamento
+        QWidget *cellWidget = new QWidget();
+        QHBoxLayout *layout = new QHBoxLayout(cellWidget);
+        layout->setContentsMargins(0, 0, 0, 0);
+        layout->setSpacing(0);
+        layout->setAlignment(Qt::AlignCenter);
 
+        //Table row delete button
+        QPushButton *actionBtn = new QPushButton();
+        actionBtn->setObjectName("SessionActionButton");
+        actionBtn->setProperty("sessionId", info.id);
+        actionBtn->setProperty("rowIndex", i);
+        actionBtn->setCursor(Qt::PointingHandCursor);
+        actionBtn->setFlat(true);
+        actionBtn->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+
+        QIcon menuIcon(":/icons/assets/icons/bttn_more.png");
+        actionBtn->setIcon(menuIcon);
+        layout->addWidget(actionBtn);
+
+        connect(actionBtn, &QPushButton::clicked, this, &StatsWindow::showSessionMenu);
+
+        // ui->table_sessionData->setCellWidget(i, 4, actionBtn);
+        ui->table_sessionData->setCellWidget(i, 4, cellWidget);
+
+        for (int col = 0; col < 4; ++col) {
+            QTableWidgetItem *item = ui->table_sessionData->item(i, col);
+            if (item) item->setTextAlignment(Qt::AlignCenter);
+        }
+    }
     // Table height
     int maxVisibleRows = 5;
 
@@ -240,6 +265,7 @@ double StatsWindow::calculateFocusPercentage(int totalPomodoros, int totalMinute
     return qBound(0.0, percentage, 100.0);
 }
 
+
 void StatsWindow::clearAllData() {
 
     if (DbStatsManager::instance().clearAllSessions()) {
@@ -254,5 +280,79 @@ void StatsWindow::clearAllData() {
         qWarning() << "Erro ao remover sessões.";
     }
 }
+
+void StatsWindow::showSessionMenu()
+{
+    QPushButton *btn = qobject_cast<QPushButton *>(sender());
+    if (!btn) return;
+
+    int sessionId = btn->property("sessionId").toInt();
+    int rowIndex = btn->property("rowIndex").toInt();
+
+    QMenu menu;
+    QAction *deleteAction = menu.addAction("Delete session");
+
+    QAction *selected = menu.exec(QCursor::pos());
+    if (selected == deleteAction) {
+        QMessageBox::StandardButton clearSelectedSession = QMessageBox::question(this, "Delete session?",
+            "Are you sure you want to delete this session?",
+             QMessageBox::Yes | QMessageBox::No);
+        if (clearSelectedSession == QMessageBox::Yes) {
+            deleteSessionById(sessionId, rowIndex);
+            qDebug() << "Sessão removida com sucesso.";
+        } else {
+            qWarning() << "Erro ao remover sessão.";
+        }
+    }
+}
+
+void StatsWindow::deleteSessionById(int sessionId, int rowIndex)
+{
+    QSqlDatabase db = DbStatsManager::instance().database();
+
+    if (!db.isOpen()) {
+        qWarning() << "Banco não aberto.";
+        return;
+    }
+
+    QSqlQuery query(db);
+    query.prepare("DELETE FROM focus_sessions WHERE id = :id");
+    query.bindValue(":id", sessionId);
+
+    if (query.exec()) {
+        ui->table_sessionData->removeRow(rowIndex);
+    } else {
+        qWarning() << "Erro ao deletar sessão:" << query.lastError().text();
+    }
+
+    adjustTableHeight(ui->table_sessionData->rowCount());
+    dateFilterChanged(ui->comboBox_dateFilter->currentText());
+}
+
+
+
+void StatsWindow::adjustTableHeight(int rowCount)
+{
+    const int maxVisibleRows = 5;
+
+    if (rowCount > maxVisibleRows) {
+        ui->table_sessionData->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+        int headerHeight = ui->table_sessionData->horizontalHeader()->height();
+        int rowHeight = ui->table_sessionData->rowHeight(0);
+        int maxHeight = headerHeight + (rowHeight * maxVisibleRows);
+
+        ui->table_sessionData->setMaximumHeight(maxHeight);
+        ui->table_sessionData->setMinimumHeight(maxHeight);
+    } else {
+        int totalHeight = ui->table_sessionData->horizontalHeader()->height();
+        for (int row = 0; row < rowCount; ++row)
+            totalHeight += ui->table_sessionData->rowHeight(row);
+
+        ui->table_sessionData->setFixedHeight(totalHeight + 2);
+    }
+
+    ui->table_sessionData->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
+}
+
 
 

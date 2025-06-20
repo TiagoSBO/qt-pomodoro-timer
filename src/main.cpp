@@ -36,7 +36,8 @@ int main(int argc, char *argv[])
         return 0;
     }
 
-    QString dbPath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/pomodorotimer/dbPomodoro_stats.db";
+    QString dbPath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/pomodorotimer/db/dbPomodoro_stats.db";
+
 
     if (!DbStatsManager::instance().initDatabase(dbPath)) {
         qCritical() << "Falha ao inicializar o banco de dados.";

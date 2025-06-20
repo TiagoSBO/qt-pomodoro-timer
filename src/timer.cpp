@@ -8,7 +8,7 @@
 #include <QSettings>
 #include <QWidgetAction>
 
-#define APP_VERSION "1.0.0"
+#define APP_VERSION "1.1.0"
 
 MainWindow::MainWindow(QWidget *parent)
 : QMainWindow(parent)
@@ -106,7 +106,6 @@ MainWindow::MainWindow(QWidget *parent)
     deleteTotalFocusTime->setDefaultWidget(totalFocusTime);
     menu->addAction(deleteTotalFocusTime);
 
-    // Conectando botões
     connect(tableData, &QPushButton::clicked, this, &MainWindow::button_configTable_clicked);
     connect(totalFocusTime, &QPushButton::clicked, this, &MainWindow::button_configTable_clicked);
 
@@ -188,7 +187,7 @@ void MainWindow::btton_startResume_clicked()
         ui->button_resumePause->setText("Resume");
         qDebug() << "Pause Clicked / CurrentState -> " << currentStatusTimer;
     }else{
-        timer->start(2);
+        timer->start(1000);
         timerStarted = true;
         ui->button_resumePause->setText("Pause");
         qDebug() << "Start/Resume clicked / CurrentState -> " << currentStatusTimer;
@@ -272,13 +271,12 @@ void MainWindow::btton_skip_clicked()
             timerStarted = false;
             qDebug() << "Focus session skipped! Time spent: " << formattedFocusTime;
 
-            // Salva no banco de dados
-            int focusDurationMinutes = focusTimeSpent / 60; // convertendo para minutos inteiros
+            // Save to the db
+            int focusDurationMinutes = focusTimeSpent / 60;
             QDateTime focusEndTime = QDateTime::currentDateTime();
 
             if (!focusStartTime.isValid()) {
                 focusStartTime = focusEndTime.addSecs(-focusTimeSpent);
-                qWarning() << "focusStartTime estava inválido. Definido automaticamente.";
             }
 
             if (!DbStatsManager::instance().saveFocusSession(focusStartTime, focusEndTime, focusDurationMinutes)) {

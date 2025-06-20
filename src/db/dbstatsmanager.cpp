@@ -36,9 +36,16 @@ bool DbStatsManager::initDatabase(const QString& path) {
 
     if (!QFile::exists(path)) {
         QString resourcePath = ":/initial_db/db/dbPomodoro_stats.db";
+
         if (!QFile::copy(resourcePath, path)) {
             qWarning() << "Falha ao copiar banco de dados inicial do recurso.";
             return false;
+        }
+
+        // IMPORTANTE: Ajustar permissões para permitir escrita
+        QFile dbFile(path);
+        if (!dbFile.setPermissions(QFileDevice::ReadOwner | QFileDevice::WriteOwner)) {
+            qWarning() << "Falha ao ajustar permissões do banco de dados para leitura/escrita.";
         }
 
         qDebug() << "Banco de dados inicial copiado para:" << path;
