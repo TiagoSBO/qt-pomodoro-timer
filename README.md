@@ -34,9 +34,10 @@ The application operates in the system tray, providing discreet access to timer 
 -   **⏰ Sound Alerts:** Configure custom sound notifications to alert you when a timer ends, ensuring you stay on schedule.
   
 -   **⚙️ Configuration Settings:** Fine-tune various aspects of the application, from timer durations to sound preferences, ensuring a tailored experience.
+-   **📈 Session Logs:** Detailed logs of your Pomodoro sessions are maintained, allowing you to track your productivity over time.
+
 ### Comming soon:
  -   **🎨 Multiple Themes:** Multiple themes to change the look of the application.
- -   **📈 Session Logs:** Detailed logs of your Pomodoro sessions are maintained, allowing you to track your productivity over time.
 
 ### Demonstration
 ![funcionalidades (1)](https://github.com/user-attachments/assets/86bc6873-f589-42eb-8605-68def035ff2b)
@@ -44,6 +45,9 @@ The application operates in the system tray, providing discreet access to timer 
 **Floating window:**  It can be activated with the shortcut **Ctrl + shift + 0** or by clicking on the timer label.
 
 ![float2 (1)](https://github.com/user-attachments/assets/7dccbef9-e0c1-428b-8a94-9607cb49ee7d)
+
+**Stats window:**  View and control your progress with the statistics table, filter your sessions by custom date or by periods.
+![statswindow (1)](https://github.com/user-attachments/assets/df826a3e-5509-43d6-b2c5-a46546b34171)
 
 ## Installation Guide
 You can install the application either by using the provided installer or by building it from source.
