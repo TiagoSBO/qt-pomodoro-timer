@@ -47,6 +47,7 @@ The application operates in the system tray, providing discreet access to timer 
 ![float2 (1)](https://github.com/user-attachments/assets/7dccbef9-e0c1-428b-8a94-9607cb49ee7d)
 
 **Stats window:**  View and control your progress with the statistics table, filter your sessions by custom date or by periods.
+
 ![statswindow (1)](https://github.com/user-attachments/assets/df826a3e-5509-43d6-b2c5-a46546b34171)
 
 ## Installation Guide
@@ -95,6 +96,13 @@ After a successful build, you can run the application executable. The location o
 ```
 ./qt-pomodoro-timer
 ```
+
+## Acknowledgements:
+
+For this program to work as expected, it would not be possible without using incredible projects like:
+
+- [QHotkey](https://github.com/Skycoder42/QHotkey) from user [Skycoder42](https://github.com/Skycoder42).
+- [SingleApplication](https://github.com/itay-grudev/SingleApplication) from user [Itay Grudev](https://github.com/itay-grudev).
 
 ## Contributing
 
