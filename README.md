@@ -1,3 +1,5 @@
+🔗 Leia em [Português Brasileiro 🇧🇷](https://github.com/TiagoSBO/qt-pomodoro-timer/blob/main/README.pt-br.md)
+
 # 🍎Pomodoro Timer Application
 
 [![In Development](https://img.shields.io/badge/Status-In%20Development-yellow)](https://shields.io/)
